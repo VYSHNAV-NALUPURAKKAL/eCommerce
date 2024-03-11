@@ -6,9 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Tables - Admin One Tailwind CSS Admin Dashboard</title>
 
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
   <!-- Tailwind is included -->
   <link rel="stylesheet" href="/public/adminAssets/css/main.css?v=1628755089081">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png"/>
@@ -46,91 +48,6 @@
 </head>
 <body>
 
-<div id="app">
-
-<nav id="navbar-main" class="navbar is-fixed-top">
-  <div class="navbar-brand">
-    <a class="navbar-item mobile-aside-button">
-      <span class="icon"><i class="mdi mdi-forwardburger mdi-24px"></i></span>
-    </a>
-    <div class="navbar-item">
-      <div class="control"><input placeholder="Search everywhere..." class="input"></div>
-    </div>
-  </div>
-  <div class="navbar-brand is-right">
-    <a class="navbar-item --jb-navbar-menu-toggle" data-target="navbar-menu">
-      <span class="icon"><i class="mdi mdi-dots-vertical mdi-24px"></i></span>
-    </a>
-  </div>
-  <div class="navbar-menu" id="navbar-menu">
-    <div class="navbar-end">
-      <div class="navbar-item dropdown has-divider">
-        <a class="navbar-link">
-          <span class="icon"><i class="mdi mdi-menu"></i></span>
-          <span>Sample Menu</span>
-          <span class="icon">
-            <i class="mdi mdi-chevron-down"></i>
-          </span>
-        </a>
-        <div class="navbar-dropdown">
-          <a href="profile.html" class="navbar-item">
-            <span class="icon"><i class="mdi mdi-account"></i></span>
-            <span>My Profile</span>
-          </a>
-          <a class="navbar-item">
-            <span class="icon"><i class="mdi mdi-settings"></i></span>
-            <span>Settings</span>
-          </a>
-          <a class="navbar-item">
-            <span class="icon"><i class="mdi mdi-email"></i></span>
-            <span>Messages</span>
-          </a>
-          <hr class="navbar-divider">
-          <a class="navbar-item">
-            <span class="icon"><i class="mdi mdi-logout"></i></span>
-            <span>Log Out</span>
-          </a>
-        </div>
-      </div>
-      <div class="navbar-item dropdown has-divider has-user-avatar">
-        <a class="navbar-link">
-          <div class="user-avatar">
-            <img src="https://avatars.dicebear.com/v2/initials/john-doe.svg" alt="John Doe" class="rounded-full">
-          </div>
-          <div class="is-user-name"><span>John Doe</span></div>
-          <span class="icon"><i class="mdi mdi-chevron-down"></i></span>
-        </a>
-        <div class="navbar-dropdown">
-          <a href="profile.html" class="navbar-item">
-            <span class="icon"><i class="mdi mdi-account"></i></span>
-            <span>My Profile</span>
-          </a>
-          <a class="navbar-item">
-            <span class="icon"><i class="mdi mdi-settings"></i></span>
-            <span>Settings</span>
-          </a>
-          <a class="navbar-item">
-            <span class="icon"><i class="mdi mdi-email"></i></span>
-            <span>Messages</span>
-          </a>
-          <hr class="navbar-divider">
-          <a class="navbar-item">
-            <span class="icon"><i class="mdi mdi-logout"></i></span>
-            <span>Log Out</span>
-          </a>
-        </div>
-      </div>
-      <a href="https://justboil.me/tailwind-admin-templates" class="navbar-item has-divider desktop-icon-only">
-        <span class="icon"><i class="mdi mdi-help-circle-outline"></i></span>
-        <span>About</span>
-      </a>
-      <a title="Log out" class="navbar-item desktop-icon-only">
-        <span class="icon"><i class="mdi mdi-logout"></i></span>
-        <span>Log out</span>
-      </a>
-    </div>
-  </div>
-</nav>
 
 <aside class="aside is-placed-left is-expanded">
   <div class="aside-tools">
@@ -162,6 +79,12 @@
           <span class="menu-item-label">Categories</span>
         </a>
       </li>
+      <li class="--set-active-forms-html">
+        <a href="/admin/coupon">
+          <span class="icon"><i class="mdi mdi-table"></i></span>
+          <span class="menu-item-label">Coupons</span>
+        </a>
+      </li>
       <li class="active">
         <a href="/admin/products">
           <span class="icon"><i class="mdi mdi-square-edit-outline"></i></span>
@@ -169,13 +92,19 @@
         </a>
       </li>
       <li class="--set-active-profile-html">
-        <a href="profile.html">
+        <a href="/admin/orders">
+          <span class="icon"><i class="mdi mdi-square-edit-outline"></i></span>
+          <span class="menu-item-label">Orders</span>
+        </a>
+      </li>
+      <li class="--set-active-profile-html">
+        <a href="#">
           <span class="icon"><i class="mdi mdi-account-circle"></i></span>
           <span class="menu-item-label">Profile</span>
         </a>
       </li>
       <li>
-        <a href="login.html">
+        <a href="#">
           <span class="icon"><i class="mdi mdi-lock"></i></span>
           <span class="menu-item-label">Login</span>
         </a>
@@ -200,31 +129,9 @@
         </ul>
       </li>
     </ul>
-    <p class="menu-label">About</p>
-      <li>
-        <a href="https://justboil.me/tailwind-admin-templates" class="has-icon">
-          <span class="icon"><i class="mdi mdi-help-circle"></i></span>
-          <span class="menu-item-label">About</span>
-        </a>
-      </li>
-      <li>
-        <a href="https://github.com/justboil/admin-one-tailwind" class="has-icon">
-          <span class="icon"><i class="mdi mdi-github-circle"></i></span>
-          <span class="menu-item-label">GitHub</span>
-        </a>
-      </li>
-    </ul>
   </div>
 </aside>
 
-<section class="is-title-bar">
-  <div class="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
-    <ul>
-      <li>Admin</li>
-      <li>Products</li>
-    </ul>
-  </div>
-</section>
 <section class="is-title-bar">
   <div class="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
     <ul>
@@ -246,83 +153,66 @@
     </div>
       <h2 class="my-3">Products</h2>
       <div class="row">
-        <div class="col-8">
-          <table class="table table-bordered">
-            <thead>
-              <tr>
-                <th scope="col">Image</th>
-          <th scope="col">Name</th>
-          <th scope="col">Category</th>
-          <th scope="col">Prices</th>
-          <th scope="col">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% if(locals.products.length>0){ products.forEach((item)=>{ %>
-          <tr>
-            <td class="product-img pb-0">
-                <div class="image-row">
-                    <% if(item.images.length > 0) { %>
-                        <img src="/public/adminAssets/product-images/<%= item.images[0] %>" alt="Product Image" />
-                    <% }else { %>
-                      <span>No image available</span>
-                      <% }%>
-                </div>
-            </td>
-          <td>
-            <%= console.log("name:",item.name)%>
-            <p><%= item.name %></p>
-          </td>
-          <td>
-            <%= console.log("item:", item); %>
-            <%= console.log("Category ID:", item.category); %>
-              <%=item.category%>
-        </td>
-          <td class="product-prices">
-              <h4 class="text-danger">&#8377; <%= item.price %></h4>
-            </div>
-          </td>
-          <td class="product-actions d-flex flex-column justify-content-evenly">
-            <button
-              class="btn <%= item.listed?'btn-danger':'btn-success' %>"
-              data-id="<%= item._id %>"
-              onclick="confirmShow(this)"
-              id="<%= item._id %>"
-            >
-              <%= item.isBlocked?'Unlist':'List' %>
-            </button>
-            <a href="/admin/editProduct/<%= item._id %>">
-            <button class="btn btn-dark" onclick="openEditProductModal('<%= item._id %>')">Edit</button>
-            </a>
-          </td>
-        </tr>
-        <% })}else{ %>
-        <tr>
-          <td class="text-center">No products found</td>
-        </tr>
-        <% } %>
-      </tbody>
-    </table>
-  </div>
-</div>
-<div class="modal fade" id="product-stock-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Add stock</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="col-12">
+          <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+              <thead class="thead-dark">
+                <tr>
+                  <th scope="col">Image</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Category</th>
+                  <th scope="col">Price</th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% if (locals.products.length > 0) { 
+                  products.forEach((item) => { %>
+                    <tr>
+                      <td class="product-img">
+                        <div class="image-container">
+                          <% if (item.images.length > 0) { %>
+                            <img src="/public/adminAssets/product-images/<%= item.images[0] %>" alt="Product Image" class="img-thumbnail" />
+                          <% } else { %>
+                            <span class="no-image">No image available</span>
+                          <% } %>
+                        </div>
+                      </td>
+                      <td class="product-name">
+                        <%= item.name %>
+                      </td>
+                      <td>
+                        <span class="badge bg-primary"><%= item.category %></span>
+                      </td>
+                      <td class="product-price">
+                        <h4 class="text-danger">&#8377; <%= item.price %></h4>
+                      </td>
+                      <td class="product-actions">
+                        <div class="btn-group" role="group" aria-label="Product Actions">
+                          <button class="btn <%= item.isBlocked ? 'btn-danger' : 'btn-success' %>"
+                                  data-id="<%= item._id %>"
+                                  onclick="confirmShow(this)"
+                                  id="<%= item._id %>">
+                            <%= item.isBlocked===1 ? 'Unlist' : 'List' %>
+                          </button>
+                          &nbsp;&nbsp;
+                          <a href="/admin/editProduct/<%= item._id %> " class="btn btn-dark">
+                            <i class="bi bi-pencil"></i> Edit</a>
+                        </div>
+                      </td>
+                    </tr>
+                <% })} else { %>
+                  <tr>
+                    <td colspan="5" class="text-center no-data">No products found</td>
+                  </tr>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
-      <div class="modal-body">
-        <input type="number" class="form-control-plaintext border border-1 border-dark ps-3" id="product-quantity" name="quantity" placeholder="Please add values greater than zero" min="1" oninput="this.value = Math.abs(this.value)" required>
-        <input type="hidden" name="id" id="product-id" value="">
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick="sendStockRequest()">Add stock</button>
-      </div>
-    </div>
-  </div>
-</div>
+      
+
 
 
 <!-- Confirm Modal -->
@@ -367,52 +257,23 @@
   </div>
 </div>
 
-    
-        
-<footer class="footer">
-  <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0">
-    <div class="flex items-center justify-start space-x-3">
-      <div></div>
-  </div>
-</footer>
+<style>
+  .modal-backdrop{
+    position: relative;
+  }
+  .image-container {
+    width: 100px; /* Set the desired width */
+    height: 100px; /* Set the desired height */
+    overflow: hidden;
+    border-radius: 5px;
+  }
 
-
-<div id="sample-modal" class="modal">
-  <div class="modal-background --jb-modal-close"></div>
-  <div class="modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title">Sample modal</p>
-    </header>
-    <section class="modal-card-body">
-      <p>Lorem ipsum dolor sit amet <b>adipiscing elit</b></p>
-      <p>This is sample modal</p>
-    </section>
-    <footer class="modal-card-foot">
-      <button class="button --jb-modal-close">Cancel</button>
-      <button class="button red --jb-modal-close">Confirm</button>
-    </footer>
-  </div>
-</div>
-
-<div id="sample-modal-2" class="modal">
-  <div class="modal-background --jb-modal-close"></div>
-  <div class="modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title">Sample modal</p>
-    </header>
-    <section class="modal-card-body">
-      <p>Lorem ipsum dolor sit amet <b>adipiscing elit</b></p>
-      <p>This is sample modal</p>
-    </section>
-    <footer class="modal-card-foot">
-      <button class="button --jb-modal-close">Cancel</button>
-      <button class="button blue --jb-modal-close">Confirm</button>
-    </footer>
-  </div>
-</div>
-
-</div>
-
+  .image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+</style>
 <!-- Scripts below are for demo only -->
 <script type="text/javascript" src="/public/adminAssets/js/main.min.js?v=1628755089081"></script>
 
@@ -423,7 +284,7 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 
 
-<script>
+<!-- <script>
   !function(f,b,e,v,n,t,s)
   {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
     n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -434,7 +295,7 @@
     'https://connect.facebook.net/en_US/fbevents.js');
   fbq('init', '658339141622648');
   fbq('track', 'PageView');
-</script>
+</script> -->
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=658339141622648&ev=PageView&noscript=1"/></noscript>
 
 <!-- Icons below are for demo only. Feel free to use any icon pack. Docs: https://bulma.io/documentation/elements/icon/ -->
@@ -443,73 +304,8 @@
 
 <!-- modal for edit product  -->
 
-<div class="modal" id="editProductModal">
-  <div class="modal-content">
-    <span class="close" onclick="closeEditProductModal()">&times;</span>
-    <h2>Edit Product</h2>
-    <form id="editProductForm" method="post" enctype="multipart/form-data">
-      <!-- Include the same form fields as in the add product page -->
-      <!-- Use JavaScript to populate these fields with the existing product details -->
-      <div class="field">
-        <label class="label">Product Name</label>
-        <div class="control icons-left">
-          <input class="input" type="text" name="name" id="editProductName" placeholder="Product Name" required>
-          <span class="icon left"><i class="mdi mdi-account"></i></span>
-        </div>
-      </div>
-      <div class="field">
-        <label class="label">Description</label>
-        <div class="control">
-          <textarea class="textarea" name="description" id="editProductDescription" placeholder="Product Description" required></textarea>
-        </div>
-      </div>
-      <!-- Add other fields similarly -->
-
-      <hr>
-      <div class="field grouped">
-        <div class="control">
-          <button type="submit" class="button green">
-            Save Changes
-          </button>
-        </div>
-        <div class="control">
-          <button type="button" onclick="closeEditProductModal()" class="button red">
-            Cancel
-          </button>
-        </div>
-      </div>
-    </form>
-  </div>
-</div>
-
 <!-- Add this script to your HTML file -->
-<script>
-  function openEditProductModal(productId) {
-    fetch(`/api/products/${productId}`)
-      .then(response => response.json())
-      .then(data => {
-        // Populate the modal fields with the retrieved product details
-        document.getElementById("editProductName").value = data.name;
-        document.getElementById("editProductDescription").value = data.description;
-        // Similar for other fields
-  
-        // Show the modal
-        document.getElementById("editProductModal").style.display = "block";
-      })
-      .catch(error => console.error('Error fetching product details:', error));
-  }
-  
-  function closeEditProductModal() {
-    document.getElementById("editProductModal").style.display = "none";
-  }
-  
-  // Close the modal if the user clicks outside of it
-  window.onclick = function(event) {
-    if (event.target == document.getElementById("editProductModal")) {
-      closeEditProductModal();
-    }
-  };
-  </script>
+
   
 </body>
 </html>

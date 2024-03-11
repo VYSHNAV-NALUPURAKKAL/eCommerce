@@ -17,10 +17,10 @@ const productSchema = new mongoose.Schema({
     },
     category:{
         type:String,
-        required:true
+        required:true,
         // type:mongoose.Types.ObjectId,
-        // required:true,
-        // ref:'Category'
+        // // required:true,
+        ref:'categories'
     },
     images:[{
         type:String,
@@ -30,6 +30,13 @@ const productSchema = new mongoose.Schema({
         type:Number,
         required:true,
         default:1
+    },
+    quantity:{
+        type:Number,
+        required:true
+    },
+    offer:{
+        type:Number
     }
 })
 

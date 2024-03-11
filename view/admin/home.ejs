@@ -85,7 +85,7 @@
             <span>Messages</span>
           </a>
           <hr class="navbar-divider">
-          <a href="/adminLogout" class="navbar-item">
+          <a href="admin/adminLogout" class="navbar-item">
             <span class="icon"><i class="mdi mdi-logout"></i></span>
             <span>Log Out</span>
           </a>
@@ -166,27 +166,39 @@
         </a>
       </li>
       <li class="--set-active-tables-html">
+        <a href="/admin/coupon">
+          <span class="icon"><i class="mdi mdi-table"></i></span>
+          <span class="menu-item-label">Coupons</span>
+        </a>
+      </li>
+      <li class="--set-active-tables-html">
         <a href="/admin/products">
           <span class="icon"><i class="mdi mdi-table"></i></span>
           <span class="menu-item-label">Products</span>
         </a>
       </li>
+      <li class="--set-active-tables-html">
+        <a href="/admin/orders">
+          <span class="icon"><i class="mdi mdi-table"></i></span>
+          <span class="menu-item-label">Orders</span>
+        </a>
+      </li>
       <li class="--set-active-forms-html">
-        <a href="forms.ejs">
+        <a href="#">
           <span class="icon"><i class="mdi mdi-square-edit-outline"></i></span>
           <span class="menu-item-label">Forms</span>
         </a>
       </li>
       <li class="--set-active-profile-html">
-        <a href="profile.ejs">
+        <a href="#">
           <span class="icon"><i class="mdi mdi-account-circle"></i></span>
           <span class="menu-item-label">Profile</span>
         </a>
       </li>
       <li>
-        <a href="adminLogin.ejs">
+        <a href="/admin/adminLogout">
           <span class="icon"><i class="mdi mdi-lock"></i></span>
-          <span class="menu-item-label">Login</span>
+          <span class="menu-item-label">Logout</span>
         </a>
       </li>
       <li>
@@ -640,7 +652,6 @@
   <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0">
     <div class="flex items-center justify-start space-x-3">
       <div>
-        © 2021, JustBoil.me
       </div>
 
       <div>

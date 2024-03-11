@@ -68,6 +68,8 @@ function confirmShow(item) {
   const actionBtn=document.getElementById('action-btn');
   const actionText=document.getElementById('action-text');
   const actionId=document.getElementById('action-id');
+  // const itemId = document.getElementById('id')
+  // console.log('hello:',item.id);
   confirmModal = new bootstrap.Modal(element);
   let text=item.innerText
   actionText.innerText=text.toLowerCase();
@@ -76,6 +78,41 @@ function confirmShow(item) {
   confirmModal.show();
 
 }
+
+function productList() {
+  const itemId = document.getElementById('action-id').value;
+  const actionText=document.getElementById('action-text');
+  const action = actionText.innerText
+  console.log(itemId);
+  const element = document.getElementById('confirm-modal');
+      const confirmModal = new bootstrap.Modal(element);
+      confirmModal.hide();
+      const endpoint = '/admin/updateProductList';
+
+  // Make the fetch request
+  fetch(endpoint, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ itemId,action }),
+  })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Response from server:', data);
+      // You can handle the response as needed (e.g., update UI, show a message)
+      location.reload();
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      // Handle errors, e.g., show an error message to the user
+    })
+    .finally(() => {
+      // Close the modal after the request is complete (successful or not)
+      
+    });
+}
+
 
 
 async function customerBlock() {
@@ -111,6 +148,7 @@ async function addCategories(item){
     const categoryName = addInput.value.trim();
     console.log(categoryName);
     if(categoryName){
+
       const rawData = await fetch('/admin/add-categories',{
         method:"POST",
         body:JSON.stringify({categoryName:categoryName}),
@@ -162,6 +200,9 @@ async function addCategories(item){
   }
 }
 
+
+//======================================
+
 async function categoryList(item){
   try {
     const actionId=document.getElementById('action-id');
@@ -183,7 +224,9 @@ async function categoryList(item){
     console.log(error);
   }
 }
-// ===========
+
+
+// ===============================================
 
 
 function removeWhiteSpace(item){
@@ -225,7 +268,7 @@ async function sendEditRequest(){
       const data = await rawData.json();
       if(data.status ==="success"){
         const catName = document.querySelector(`[data-name="${id}"]`);
-        catName.innerText = data.message;
+        catName.innerText = name;
         categoryModal.hide();
       }else{
         error.innerText = data.message

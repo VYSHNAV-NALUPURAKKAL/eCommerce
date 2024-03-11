@@ -1,4 +1,5 @@
 const isLogin = async(req,res,next)=>{
+    // console.log("ippo loginil adtha edit productin waiting ");
     try{
         if(req.session.admin_id){
             next()

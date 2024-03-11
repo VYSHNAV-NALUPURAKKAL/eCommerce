@@ -1,0 +1,61 @@
+<%- include('userLayouts/header')%>
+
+<main class="main">
+    <div class="container">
+        <div style="width: 100%; height: 110px; background-color: white;"></div>
+        <div class="tab-pane "  >
+            <h3>Edit Profile</h1>
+            <form action="/editProfile" method="post" id="form">
+                <div class="text-center mb-4">
+                </div>
+                <label>Full name *</label>
+                <input type="text" class="form-control" name="name" id="name"  value="<%= user.name %>" required>
+                <p style="color: red;" id="nameLengthError"></p>
+                <div class="row">  
+                    <div class="col-sm-6">
+                        <label>Email *</label>
+                        <input type="email" class="form-control" name="email" id="email" value="<%= user.email %>" required>
+                        <p style="color: red;" id="emailError"></p>
+                    </div><!-- End .col-sm-6 -->
+                    
+
+                    <div class="col-sm-6">
+                        <label>Mobile *</label>
+                        <input type="NUM" class="form-control" name="mobile" id="mobile" value="<%= user.mobile %>" autocomplete="off" required>
+                        <p style="color: red;" id="mobileLngthErrror"></p>
+                    </div><!-- End .col-sm-6 -->
+                    <div class="col-sm-6">
+                        <label>Current password (leave blank to leave unchanged)</label>
+                        <input type="password" class="form-control" name="currentpswd"  >
+                    </div><!-- End .col-sm-6 -->
+
+                    <div class="col-sm-6">
+                        <label>New password (leave blank to leave unchanged)</label>
+                        <input type="password" class="form-control" id="password" name="newpswd"  >
+                        <p style="color: red;" id="passwordLengthError"></p>
+                    </div><!-- End .col-sm-6 -->
+                </div><!-- End .row -->                                   
+                <div >
+                    <% if (typeof error !== 'undefined') { %>
+                      <p style="color: red;"><%= error %></p>
+                    <% } %>
+                      
+                  </div>
+                <button type="submit" class="btn btn-outline-primary-2">
+                    <span>Save change</span>
+                    <i class="icon-long-arrow-right"></i>
+                </button>
+                <div class="pass">
+                    <br>
+                    <a href="forgotPassword">Forgot Password?</a>
+                </div>
+            </form>
+        </div>
+        <div style="width: 100%; height: 110px; background-color: white;"></div>
+    </div><!-- End .container -->
+</main><!-- End .main -->
+
+
+<script src="/public/userAssets/js/formValidation.js"></script>
+
+<%- include('userLayouts/footer')%>

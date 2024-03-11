@@ -56,14 +56,14 @@
                   <% } %>
                     
                    
-                    
-                <li><a href="#"><span class="icon icon-heart-o"></span></a></li>
+                <% if(user) { %>    
+                <li><a href="/wishlist"><span class="icon icon-heart-o"></span></a></li>
                 <li>
-                  <a href="cart.html" class="site-cart">
+                  <a href="/cart" class="site-cart">
                     <span class="icon icon-shopping_cart"></span>
-                    <span class="count">2</span>
                   </a>
                 </li> 
+                <% } %>
                 <li class="d-inline-block d-md-none ml-md-0"><a href="#" class="site-menu-toggle js-menu-toggle"><span class="icon-menu"></span></a></li>
               </ul>
             </div> 
@@ -92,7 +92,7 @@
             </ul>
           </li>
           <li class="has-children">
-            <a href="about.html">About</a>
+            <a href="#">About</a>
             <ul class="dropdown">
               <li><a href="#">Menu One</a></li>
               <li><a href="#">Menu Two</a></li>
@@ -102,7 +102,7 @@
           <li><a href="/shop">Shop</a></li>
           <li><a href="#">Catalogue</a></li>
           <li><a href="#">New Arrivals</a></li>
-          <li><a href="contact.html">Contact</a></li>
+          <li><a href="#">Contact</a></li>
         </ul>
       </div>
     </nav>

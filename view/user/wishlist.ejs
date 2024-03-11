@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>STREAK-X FRAMES |&mdash;</title>
+  <meta charset="utf-8" 
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mukta:300,400,700" />
+  <link rel="stylesheet" href="/public/userAssets/fonts/icomoon/style.css" />
+
+  <link rel="stylesheet" href="/public/userAssets/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="/public/userAssets/css/magnific-popup.css" />
+  <link rel="stylesheet" href="/public/userAssets/css/jquery-ui.css" />
+  <link rel="stylesheet" href="/public/userAssets/css/owl.carousel.min.css" />
+  <link rel="stylesheet" href="/public/userAssets/css/owl.theme.default.min.css" />
+
+  <link rel="stylesheet" href="/public/userAssets/css/aos.css" />
+  <link rel="stylesheet" href="/public/userAssets/css/style.css" />
+  
+</head>
+
+<body>
+  <div class="site-wrap">
+    <header class="site-navbar" role="banner">
+      <div class="site-navbar-top">
+        <div class="container">
+          <div class="row align-items-center">
+            <div class="col-6 col-md-4 order-2 order-md-1 site-search-icon text-left">
+              <form action="" class="site-block-top-search">
+                <span class="icon icon-search2"></span>
+                <input type="text" class="form-control border-0" placeholder="Search" />
+              </form>
+            </div>
+
+            <div class="col-12 mb-3 mb-md-0 col-md-4 order-1 order-md-2 text-center">
+              <div class="site-logo">
+                <a href="" class="js-logo-clone">STREAK-X FRAMES</a>
+              </div>
+            </div>
+
+            <div class="col-6 col-md-4 order-3 order-md-3 text-right">
+              <div class="site-top-icons">
+                <ul>
+                  <% if (user) { %>
+                    <!-- Display user profile icon if the user is logged in -->
+                    <li>
+                      <a href="/profile"><span class="icon icon-user"></span></a>
+                    </li>
+                    <% } else { %>
+                      <!-- Display login and signup links if the user is not logged in -->
+                      <li><a href="/login">Login</a></li>
+                      <li>&</li>
+                      <li><a href="/signup">Signup</a></li>
+                      <% } %>
+
+                        <li>
+                          <a href="/wishlist"><span class="icon icon-heart-o"></span></a>
+                        </li>
+                        <li>
+                          <a href="/cart" class="site-cart">
+                            <span class="icon icon-shopping_cart"></span>
+                          </a>
+                        </li>
+                        <li class="d-inline-block d-md-none ml-md-0">
+                          <a href="#" class="site-menu-toggle js-menu-toggle"><span class="icon-menu"></span></a>
+                        </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <nav class="site-navigation text-right text-md-center" role="navigation">
+        <div class="container">
+          <ul class="site-menu js-clone-nav d-none d-md-block">
+            <li class="has-children">
+              <a href="/">Home</a>
+              <ul class="dropdown">
+                >
+                <li class="has-children">
+                  <a href="#">Sub Menu</a>
+                  <ul class="dropdown"></ul>
+                </li>
+              </ul>
+            </li>
+            <li class="has-children">
+              <a href="about.html">About</a>
+              <ul class="dropdown"></ul>
+            </li>
+            <li><a href="/shop">Shop</a></li>
+            <li><a href="#">Catalogue</a></li>
+            <li><a href="#">New Arrivals</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+
+    <!-- body of the carrt -->
+
+    <div class="bg-light py-3">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12 mb-0">
+            <a href="/shop">Shop</a> <span class="mx-2 mb-0">/</span>
+            <strong class="text-black">Wishlist</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="site-section">
+        <div class="container">
+          <div class="row mb-5">
+            <div class="col-md-12">
+              <div class="site-blocks-table" id="reloadDiv">
+                <table class="table table-bordered">
+                    <%console.log("wishlist data :",wishlistData)%>
+                    <% if(wishlistData == null || wishlistData.length ==0|| wishlist ===null) {%>
+                    <div class="col-md-6">
+                      <a class="btn btn-outline-primary btn-sm btn-block" href="/shop">
+                        Wishlist is Empty
+                      </a>
+                    </div>
+                    <%} else { %>
+                      <thead>
+                        <tr>
+                          <th class="product-thumbnail">Image</th>
+                          <th class="product-name">Product</th>
+                          <th class="product-price">Price</th>
+                          <th class="product-addToCart"></th>
+                          <th class="product-remove">Remove</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% wishlistData.forEach((item,i)=>{ %>
+                          <tr id="pro<%=i%>">
+                            <td class="product-thumbnail">
+                              <% if(item.productId && item.productId.images && item.productId.images.length> 0) {%>
+                                <img src="public/adminAssets/product-images/<%= item.productId?.images[0] %>" alt="Image"
+                                  class="img-fluid" />
+                                <% } %>
+                            </td>
+                            <td class="product-name">
+                              <h2 class="h5 text-black">
+                                <%= item.productId.name %>
+                              </h2>
+                            </td>
+                            <td>
+                              <%= item.productId.price %>
+                            </td>
+                            <td >
+                              <%= console.log('product  :',item.productId._id)%>
+                              <button class="btn btn-primary" onclick="postToCart('<%= item.productId._id %>')">Add To Cart
+                            </td>
+                            <td>
+                              <a onclick="addToWishlist('<%= item.productId._id%>','pro<%=i%>')"
+                                class="btn btn-primary btn-sm">X</a>
+                            </td>
+                          </tr>
+                          <% }) %>
+                      </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+  
+          
+          <div class="row"></div>
+          <div class="col-md-6 pl-5">
+            <div class="row justify-content-end">
+              <div class="col-md-7">
+                <div class="row mb-5">
+                  <div class="row">
+                    <div class="row mb-3"></div>
+                  </div>
+                  <div class="row mb-5"></div>
+                  <div class="col-md-6 pl-5">
+                    <div class="row justify-content-end">
+                      <div class="col-md-7">
+                        <div class="row"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <% } %>
+  <script>
+
+     function postToCart(productId) {
+      console.log("entereddd");
+        fetch("/postToCart", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ productId }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.value === 1) {
+              swal({
+                title: "Sorry",
+                text: "Product is already added to the cart",
+                icon: "warning",
+                buttons: false,
+                dangerMode: true,
+                timer: 1000,
+              });
+            } else if (data.value === 0) {
+              swal({
+                title: "",
+                text: "Add to cart success!!",
+                icon: "success",
+                timer: 2000
+              });
+            }
+            console.log(data);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+
+      function addToWishlist(productId,pro) {
+        console.log("productId :",productId,
+        "pro :",pro);
+        fetch("/addToWishlist", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({productId:productId})
+        })
+          .then(response => response.json())
+          .then(data => {
+            if(data.add ===true){
+              swal({
+                title: "",
+                text: "Add to wishlist success!!",
+                icon: "success",
+                timer: 2000
+              });
+            }else{
+              swal({
+                title: "Remove Success",
+                text: "product removed from wishlist!!",
+                icon: "success",
+                timer: 2000
+              });
+              console.log("Wishlist updated: ", data);
+              
+              document.getElementById(pro).style.display = "none";
+              $("#reloadDiv").load("/wishlist #reloadDiv")
+            }
+          })
+          .catch(error => {
+            console.error("Error adding product to wishlist: ", error);
+          });
+      }
+
+  </script>
+<%- include("userLayouts/footer") %>

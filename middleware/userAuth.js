@@ -34,7 +34,7 @@ const userBlock = async(req,res,next)=>{
                 user = req.session.user;
                 next();
             }
-            if(await checkBlock(req.session.mail)){
+            if(await checkBlock(req.session.user)){
                 req.session.destroy();
                 res.redirect('/user-blocked')
             }else{

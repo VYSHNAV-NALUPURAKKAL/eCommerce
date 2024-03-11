@@ -1,5 +1,8 @@
 const User = require("../model/userModel");
 const otp = require("../model/otpModel");
+const Product = require("../model/productModel");
+const Category = require("../model/categoryModel");
+const Order = require("../model/orderModel");
 const otpGenerator = require("otp-generator");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
@@ -7,6 +10,7 @@ const randomstring = require("randomstring");
 const config = require("../config/config");
 const { ObjectId } = require("mongodb");
 const dotenv = require("dotenv");
+const { EventEmitterAsyncResource } = require("nodemailer/lib/xoauth2");
 dotenv.config();
 
 //============SECURE PASSWORD==============
@@ -55,7 +59,7 @@ const sendVerifyMail = async (name, email, otp) => {
         "</h1></div>" +
         "</div>",
     };
-
+    console.log("otp send to email :",otp);
     transporter.sendMail(mailoptions, (error, info) => {
       if (error) {
         console.error(error);
@@ -75,11 +79,11 @@ const verifyOTP = async (req, res) => {
   try {
     let otp = "";
     console.log(req.body.otp.length);
-    for (let i = 0; i < (req.body.otp).length; i++) {
+    for (let i = 0; i < req.body.otp.length; i++) {
       otp += req.body.otp[i];
     }
-
-  const {name,email,mobile,password} = req.session.user
+    
+    const { name, email, mobile, password } = req.session.user;
     if (parseInt(otp) === parseInt(req.session.otp)) {
       const userData = new User({
         name: name,
@@ -178,7 +182,7 @@ const resendOtp = (req, res) => {
           req.session.otp.code
         );
         res.render("user/otp-verification", {
-          message: `New OTP send to ${req.session.email}`,
+        message: `New OTP send to ${req.session.email}`,
         });
       } else {
         res.render("user/otp-verification", {
@@ -205,14 +209,11 @@ const loadSignup = async (req, res) => {
 //==================INSERT USER================
 const insertUser = async (req, res) => {
   try {
-    // Check if the user already exists
     const userCheck = await User.findOne({ email: req.body.email });
 
     if (userCheck) {
       return res.render("user/signup", { message: "User already exists" });
     }
-
-    // Check if the mobile number already exists
     const userMob = await User.findOne({ mobile: req.body.mobile });
 
     if (userMob) {
@@ -238,16 +239,6 @@ const insertUser = async (req, res) => {
     });
     const otp = generateOTP();
     req.session.otp = otp;
-    // await newUser.save();
-
-    // Set session variables
-    // req.session.name = req.body.name;
-    // req.session.email = req.body.email;
-    // req.session.mobile = req.body.mobile;
-    // req.session.otp = {
-    //   code: otpDigit,
-    //   expire: expirationTime,
-    // };
     req.session.user = newUser;
     console.log(req.session.otp);
 
@@ -257,11 +248,10 @@ const insertUser = async (req, res) => {
       req.session.otp
     );
 
-    // Redirect to the OTP verification page
     res.redirect("/otp-verification");
   } catch (error) {
     console.error(error);
-    res.render("user/500"); // You might want to create a specific error page
+    res.render("user/500");
   }
 };
 
@@ -278,20 +268,21 @@ const loadLogin = async (req, res) => {
 };
 
 //=============LOAD LOGOUT===============
-const loadLogout =async (req,res)=>{
-     try {
-        
-    } catch (error) {
-    
-    }
-}
+const loadLogout = async (req, res) => {
+  try {
+    req.session.user = false;
+    res.redirect("/");
+  } catch (error) {
+    console.log("error on load logout :", error);
+  }
+};
 //=================LOGIN VERIFY=============
 
 const verifyLogin = async (req, res) => {
   try {
     const email = req.body.email;
     const password = req.body.password;
-    const userData = await User.findOne({ email: email  });
+    const userData = await User.findOne({ email: email });
     if (userData) {
       if (userData.is_listed === false) {
         const passwordMatch = await bcrypt.compare(password, userData.password);
@@ -303,9 +294,9 @@ const verifyLogin = async (req, res) => {
           } else {
             req.session.user = userData;
             req.session.mail = userData.email;
-            req.session.blocked = userData.blocked
+            req.session.blocked = userData.blocked;
 
-            res.redirect("/");
+            res.redirect(`/home`);
           }
         } else {
           res.render("user/login", {
@@ -326,25 +317,111 @@ const verifyLogin = async (req, res) => {
 //==========LOAD HOME==================
 
 const loadHome = async (req, res) => {
-  
-    res.render("user/home",{user:req.session.user});
+  try {
+    const user = req.session.user;
+    const products = await Product.find({ category: 1 }).exec();
+    const category = await Category.find({ isBlocked: 1 })
+      .populate("associatedProducts")
+      .exec();
+    console.log("producs category from load home :", products);
+    res.render("user/home", { user, products, category });
+  } catch (error) {
+    console.log("error on load home ", error);
+  }
 };
 
-
 //=================
-const showUserBlock = async(req,res)=>{
+const showUserBlock = async (req, res) => {
   try {
-    res.render('user/userBlockPage')
+    res.render("user/userBlockPage");
   } catch (error) {
     console.log(error.message);
-    return error
+    return error;
   }
-}
+};
+
+//===================user profile page==========
+const showProfile = async (req, res) => {
+  try {
+    const user = req.session.user;
+    console.log(user._id);
+    const userData = await User.findOne({ _id: user._id });
+    console.log("req.body :", req.body);
+    let page = 1;
+    console.log("req query :", req.query.page);
+    if (req.query.page) {
+      page = req.query.page;
+    }
+    const limit = 4;
+    const orders = await Order.find({ user: user._id })
+      .sort({orderDate:-1})
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
+      .exec();
+    const count = await Order.find({ user: user._id }).countDocuments();
+    console.log("counttt of orders :", count);
+    if (userData) {
+      res.render("user/profile", {
+        userData,
+        user,
+        orders,
+        currentPage: page,
+        totalPages: Math.ceil(count / limit),
+      });
+    }
+  } catch (error) {
+    console.log("error at showProfile:", error);
+  }
+};
+
+const showEditProfile = async (req, res) => {
+  try {
+    const user = req.session.user;
+    console.log("show edit :", user);
+    if (user) {
+      res.render("user/editProfile", { user });
+    }
+  } catch (error) {
+    console.log("error on show edit profile :", error);
+  }
+};
+
+const editProfile = async (req, res) => {
+  try {
+    const user = req.session.user;
+    if (user) {
+      console.log(
+        user._id,
+        `name:${req.body.name},email:${req.body.email},${req.body.mobile}`
+      );
+      const userData = await User.findByIdAndUpdate(
+        { _id: user._id },
+        {
+          $set: {
+            name: req.body.name,
+            email: req.body.email,
+            mobile: req.body.mobile,
+            password: req.body.password,
+          },
+        }
+      );
+      if (userData) {
+        console.log("userData :", userData);
+        res.redirect("/profile");
+      } else {
+        res.redirect("/");
+      }
+    }
+  } catch (error) {
+    console.log("error:", error);
+  }
+};
 
 module.exports = {
   loadSignup,
   insertUser,
   loadLogin,
+  loadLogout,
   verifyLogin,
   resendOtp,
   loadHome,
@@ -354,5 +431,8 @@ module.exports = {
   sendResetPasswordMail,
   securePassword,
   sendVerifyMail,
-  showUserBlock
+  showUserBlock,
+  showProfile,
+  showEditProfile,
+  editProfile,
 };

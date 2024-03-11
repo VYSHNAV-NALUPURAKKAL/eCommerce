@@ -1,0 +1,277 @@
+<%- include('userLayouts/header') %>
+
+
+    <div class="page-wrapper">
+        <div style="width: 100%; height: 77px; background-color: white;"></div>
+        <main class="main">
+            <nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
+                <div class="container">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">My Account</li>
+                    </ol>
+                </div><!-- End .container -->
+            </nav><!-- End .breadcrumb-nav -->
+
+            <div class="page-content">
+                <div class="dashboard">
+                    <div class="container">
+                        <div class="row">
+                            <!-- side buttons  start -->
+                            <aside class="col-md-4 col-lg-3">
+                                <ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link " id="tab-account-link" data-toggle="tab" href="#tab-account"
+                                            role="tab" aria-controls="tab-account" aria-selected="false">My Profile</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="tab-orders-link" data-toggle="tab" href="#tab-orders"
+                                            role="tab" aria-controls="tab-orders" aria-selected="false">Orders</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="tab-downloads-link" data-toggle="tab"
+                                            href="#tab-downloads" role="tab" aria-controls="tab-downloads"
+                                            aria-selected="false">Wallet</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="tab-address-link" data-toggle="tab" href="#tab-address"
+                                            role="tab" aria-controls="tab-address" aria-selected="false">Adresses</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link " id="tab-dashboard-link" data-toggle="tab"
+                                            href="#tab-dashboard" role="tab" aria-controls="tab-dashboard"
+                                            aria-selected="false">Coupon</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="logout" id="signOutLink">Sign Out</a>
+                                    </li>
+                                </ul>
+                            </aside>
+
+                            <div class="col-md-8 col-lg-9">
+                                <div class="tab-content">
+
+                                    <div class="tab-pane fade show active" id="tab-orders" role="tabpanel"
+                                        aria-labelledby="tab-orders-link">
+                                        <% if (orders.length==0) { %>
+                                            <div style=" max-width: 800px;
+                                                margin: 0 auto;
+                                                padding: 20px;
+                                                text-align: center;">
+                                                <h1 style=" font-size: 24px;
+                                                margin-bottom: 20px;">Your Orders</h1>
+                                                <div style=" border: 1px solid #ddd;
+                                                padding: 20px;
+                                                background-color: #fff;
+                                                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+                                                    <div style=" font-size: 18px;
+                                                margin-bottom: 20px;">
+                                                        <div style="font-size: 48px;
+                                                color: #ccc;">&#128722;</div>
+                                                        <p style="font-size: 16px;">Your orders list is empty.</p>
+                                                        <p><a style=" text-decoration: none;
+                                                color: #007bff;" href="/">Continue shopping</a></p>
+                                                    </div>
+                                                </div>
+                                                <div style="width: 100%;height: 77px;"></div>
+                                            </div>
+                                            <% }else { %>
+                                                <table
+                                                    style="width: 100%; border-collapse: separate; border-spacing: 0 20px;">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>No.</th>
+                                                            <th>Date</th>
+                                                            <th>Amount</th>
+                                                            <th>Payment</th>
+                                                            <th>Status</th>
+                                                            <th>Details</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <% orders.forEach(function(order,index) { %>
+                                                            <tr>
+                                                                <td>
+                                                                    <%= index + 1 %>
+                                                                </td>
+                                                                <td>
+                                                                    <%= order.orderDate.toLocaleDateString('en-US', {
+                                                                        year: 'numeric' , month: 'short' ,
+                                                                        day: '2-digit' }).replace(/\//g, '-' ) %>
+                                                                </td>
+                                                                <td>
+                                                                    <%= order.subTotal %>
+                                                                </td>
+                                                                <td>
+                                                                    <%= order.payment %>
+                                                                </td>
+                                                                <td>
+                                                                    <%= order.orderStatus %>
+                                                                </td>
+                                                                <td><a
+                                                                        href="/orderDetails?_id=<%= order._id %>">Details</a>
+                                                                </td>
+                                                            </tr>
+                                                            <% }); %>
+                                                    </tbody>
+                                                </table>
+                                                <% } %>
+                                                    <% console.log("total pages :",totalPages)%>
+                                                        <div class="row" id="tab-orders">
+                                                            <div class="col-md-12 text-center">
+                                                                <div class="site-block-27">
+                                                                    <ul>
+                                                                        <!-- Previous Button -->
+                                                                        <% if (currentPage> 1) { %>
+                                                                            <li>
+                                                                                <a
+                                                                                    href="<%= '?page=' + (currentPage - 1) %>">Prev</a>
+                                                                            </li>
+                                                                            <% } %>
+
+                                                                                <!-- Current Page -->
+                                                                                <li class="active">
+                                                                                    <span>
+                                                                                        <%= currentPage %>
+                                                                                    </span>
+                                                                                </li>
+
+                                                                                <!-- Next Button -->
+                                                                                <% if (currentPage < totalPages) { %>
+                                                                                    <li>
+                                                                                        <a
+                                                                                            href="?page=<%= parseInt(currentPage) + 1 %>">Next</a>
+                                                                                    </li>
+                                                                                    <% } %>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                    </div>
+
+
+
+                                    <!-- user profiel start -->
+                                    <div class="tab-pane fade  " id="tab-account" role="tabpanel"
+                                        aria-labelledby="tab-account-link">
+                                        <form action="/editProfile">
+                                            <div class="user-details">
+                                                <h2>
+                                                    <%= userData.name %>
+                                                </h2>
+
+                                                <p>Email: <%= userData.email %>
+                                                </p>
+                                                <p>Mobile: <%= userData.mobile %>
+                                                </p>
+                                                <p>Location: New York, USA</p>
+                                                <a id="editProfileButton" class="btn btn-outline-primary-2"
+                                                    href=/editProfile>
+                                                    <span>Edit Profile</span>
+                                                    <i class="icon-long-arrow-right"></i>
+                                                </a>
+                                            </div>
+                                        </form>
+                                    </div>
+
+
+                                    <!-- Show Addresses start -->
+                                    <div class="tab-pane fade" id="tab-address" role="tabpanel"
+                                        aria-labelledby="tab-address-link">
+                                        <div id="addrassArea">
+                                            <% if (userData.address.length <=0 ) { %>
+                                                <p>No addresses have been added yet.</p>
+                                                <a class="btn btn-primary" href="/addAddress">Add Address</a>
+                                                <% } else { %>
+                                                    <p>The following addresses will be used on the checkout page by
+                                                        default.</p>
+                                                    <div class="row">
+                                                        <% userData.address.forEach(function(address, index) { %>
+                                                            <div class="col-lg-6">
+                                                                <div class="card card-dashboard">
+                                                                    <div class="card-body">
+                                                                        <h3 class="card-title">Address <%= index + 1 %>
+                                                                        </h3>
+                                                                        <p>Name: <%= address.fullName %><br>
+                                                                                Email: <%= address.email %><br>
+                                                                                    Mobile: <%= address.mobile %><br>
+                                                                                        State: <%= address.state %><br>
+                                                                                            City: <%= address.city %>
+                                                                                                <br>
+                                                                                                House Name: <%=
+                                                                                                    address.houseName %>
+                                                                                                    <br>
+                                                                                                    Pincode: <%=
+                                                                                                        address.pin %>
+                                                                                                        <br>
+                                                                                                        <%
+                                                                                                            console.log(address._id)%>
+                                                                                                            <a
+                                                                                                                href="/editAddress?ind=<%= index %>">Edit
+                                                                                                                <i
+                                                                                                                    class="icon-edit"></i></a>
+                                                                                                            <button
+                                                                                                                style="margin-left: 15px; cursor: pointer; background: none; border: none;"
+                                                                                                                onclick="deleteAddress('<%= address._id %>')">Delete
+                                                                                                                <i
+                                                                                                                    class="icon-delete"></i></button>
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <% }); %>
+                                                    </div>
+                                                    <a class="btn btn-primary" href="/addAddress">Add Address</a>
+                                                    <% } %>
+                                        </div>
+                                    </div><!-- Show Addresses end -->
+                                </div>
+                            </div>
+
+
+
+
+                            <script>
+                                async function deleteAddress(addressId) {
+                                    try {
+                                        event.preventDefault
+                                        console.log('addresId', addressId)
+                                        const response = await fetch(`/deleteAddress/${addressId}`, {
+                                            method: 'DELETE',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                            },
+
+                                        });
+
+                                        if (response) {
+                                            location.reload();
+
+                                        } else {
+                                            console.error(`Failed to delete address. Status: ${response.status}`);
+                                        }
+                                    } catch (error) {
+                                        console.error('Error during deleteAddress:', error);
+                                    }
+                                }
+
+                                $(document).ready(function () {
+                                    // Get the hash from the URL
+                                    var hash = window.location.hash;
+
+                                    // If hash exists and it starts with '#tab-orders', activate the Orders tab
+                                    if (hash && hash.startsWith('#tab-orders')) {
+                                        $('#tab-orders').addClass('show active');
+                                        $('#tab-account').removeClass('show active');
+                                    }
+                                    // If hash is not defined or it doesn't start with '#tab-orders', activate the Profile tab
+                                    else {
+                                        $('#tab-orders').removeClass('show active');
+                                        $('#tab-account').addClass('show active');
+                                    }
+                                });
+
+                            </script>
+
+
+                            <%- include('userLayouts/footer') %>

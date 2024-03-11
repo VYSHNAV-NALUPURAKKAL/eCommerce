@@ -68,7 +68,7 @@ a {
     font-size: 14px !important;
     padding: 10px 20px !important; }
   .btn.btn-primary {
-    font-size: 17px;
+    font-size: 12px;
     font-weight: 300;
     letter-spacing: .2em; }
   .btn:hover {
@@ -751,3 +751,132 @@ a {
   width: 120px;
   border-radius: 50%;
   margin-bottom: 20px; }
+
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .dashboard-container {
+    display: flex;
+  }
+  
+  .left-sidebar {
+    width: 250px;
+    background-color: #f4f4f4;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .profile-card {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .profile-card h3 {
+    margin-bottom: 10px;
+    font-size: 1.2em;
+    color: #333;
+  }
+  
+  .profile-card ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .profile-card li {
+    margin-bottom: 10px;
+  }
+  
+  .profile-card a {
+    text-decoration: none;
+    color: #555;
+    font-weight: bold;
+  }
+  
+  .right-content {
+    flex: 1;
+    padding: 20px;
+    margin-left: 20px; /* Add a margin to separate the cards from the screen border */
+  }
+  
+  .card {
+    margin-bottom: 20px;
+  }
+  
+  /* Additional styling for form fields */
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .card-description {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .modal-from-bottom {
+    position: fixed;
+    bottom: 0;
+    margin: 0 auto;
+    width: 100%;
+    transform: translateY(100%);
+}
+
+.modal-from-bottom.show {
+    transform: translateY(0%);
+}
+
+/* Modal Header */
+.modal-header {
+  background-color: #007bff;
+  color: #fff;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.modal-title {
+  font-size: 24px;
+}
+
+/* Modal Body */
+.modal-body {
+  padding: 20px;
+}
+
+.modal-body h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.modal-body p {
+  font-size: 16px;
+}
+
+.modal-body strong {
+  color: #007bff;
+}
+
+/* Close Button */
+.close {
+  color: #fff;
+  opacity: 0.75;
+}
+
+.close:hover {
+  opacity: 1;
+}
+
+/* Modal Content */
+.modal-content {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* Modal Overlay */
+.modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+

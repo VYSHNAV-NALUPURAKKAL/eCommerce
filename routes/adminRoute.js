@@ -28,21 +28,22 @@ const { executionAsyncId } = require('async_hooks');
 
 
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, 'public/adminAssets/product-images');
-    },
-    filename: function (req, file, cb) {
-      // Generate a unique filename
-      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-      cb(null, file.fieldname + '-' + uniqueSuffix + '.jpg');
-    },
-  });
+  destination: function (req, file, cb) {
+    cb(null, 'public/adminAssets/product-images');
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, file.fieldname + '-' + uniqueSuffix + '.jpg');
+  },
+});
 
-const upload = multer({storage:storage,});
+let upload = multer({ storage: storage });
+
 const adminController = require('../controller/adminController')
 const adminAuth = require('../middleware/adminAuth');
 const categoryProductController = require('../controller/categoryProductController')
-
+const orderController = require('../controller/orderController')
+const couponController = require('../controller/couponController');
 
 //=======login===========
 
@@ -52,7 +53,7 @@ adminRoute.post('/',adminController.verifyLogin)
 
 
 adminRoute.get('/home',adminAuth.isLogin,adminController.loadDashboard)
-adminRoute.get('/adminLogout',adminAuth.isLogin,adminController.adminLogout)
+adminRoute.get('/adminLogout',adminAuth.isLogin,adminController.loadLogout)
 
 //customersssssss
 
@@ -73,10 +74,19 @@ adminRoute.post('/add-categories',adminAuth.jsonIsLogin,categoryProductControlle
 adminRoute.get('/products',adminAuth.isLogin,categoryProductController.seeProducts);
 adminRoute.get('/addProduct',adminAuth.isLogin,categoryProductController.showAddProduct)
 adminRoute.post('/addProduct',upload.array('product-images',4),categoryProductController.addProduct)
-// adminRoute.get.('/editProduct',adminAuth.isLogin,categoryProductController.editProduct)
+adminRoute.get('/editProduct/:id',adminAuth.isLogin,categoryProductController.showEditProduct)
+adminRoute.post('/editProduct/', upload.array('product-images',4), categoryProductController.editProduct);
+adminRoute.post('/updateProductList',adminAuth.isLogin,categoryProductController.updateProductsList);
 
+// ================Order Management======================
 
+adminRoute.get('/orders',adminAuth.isLogin,orderController.loadOrderManagement)
+adminRoute.post('/updateOrder',orderController.updateOrder)
 
+//====================Coupon Management =========================
 
-
+adminRoute.get("/coupon",adminAuth.isLogin,couponController.viewCoupon)
+adminRoute.post('/addCoupon',adminAuth.isLogin,couponController.addCoupon)
+adminRoute.patch('/updateCouponStatus',adminAuth.isLogin,couponController.updateCouponSatus)
+adminRoute.delete('/deleteCoupon',adminAuth.isLogin,couponController.deleteCoupon)
 module.exports = adminRoute

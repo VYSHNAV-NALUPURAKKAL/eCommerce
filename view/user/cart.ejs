@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>STREAK-X FRAMES |&mdash;</title>
+  <meta charset="utf-8" 
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mukta:300,400,700" />
+  <link rel="stylesheet" href="/public/userAssets/fonts/icomoon/style.css" />
+
+  <link rel="stylesheet" href="/public/userAssets/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="/public/userAssets/css/magnific-popup.css" />
+  <link rel="stylesheet" href="/public/userAssets/css/jquery-ui.css" />
+  <link rel="stylesheet" href="/public/userAssets/css/owl.carousel.min.css" />
+  <link rel="stylesheet" href="/public/userAssets/css/owl.theme.default.min.css" />
+
+  <link rel="stylesheet" href="/public/userAssets/css/aos.css" />
+
+  <link rel="stylesheet" href="/public/userAssets/css/style.css" />
+</head>
+
+<body>
+  <div class="site-wrap">
+    <header class="site-navbar" role="banner">
+      <div class="site-navbar-top">
+        <div class="container">
+          <div class="row align-items-center">
+            <div class="col-6 col-md-4 order-2 order-md-1 site-search-icon text-left">
+              <form action="" class="site-block-top-search">
+                <span class="icon icon-search2"></span>
+                <input type="text" class="form-control border-0" placeholder="Search" />
+              </form>
+            </div>
+
+            <div class="col-12 mb-3 mb-md-0 col-md-4 order-1 order-md-2 text-center">
+              <div class="site-logo">
+                <a href="" class="js-logo-clone">STREAK-X FRAMES</a>
+              </div>
+            </div>
+
+            <div class="col-6 col-md-4 order-3 order-md-3 text-right">
+              <div class="site-top-icons">
+                <ul>
+                  <% if (user) { %>
+                    <!-- Display user profile icon if the user is logged in -->
+                    <li>
+                      <a href="/profile"><span class="icon icon-user"></span></a>
+                    </li>
+                    <% } else { %>
+                      <!-- Display login and signup links if the user is not logged in -->
+                      <li><a href="/login">Login</a></li>
+                      <li>&</li>
+                      <li><a href="/signup">Signup</a></li>
+                      <% } %>
+
+                        <li>
+                          <a href="#"><span class="icon icon-heart-o"></span></a>
+                        </li>
+                        <li>
+                          <a href="/cart" class="site-cart">
+                            <span class="icon icon-shopping_cart"></span>
+                          </a>
+                        </li>
+                        <li class="d-inline-block d-md-none ml-md-0">
+                          <a href="#" class="site-menu-toggle js-menu-toggle"><span class="icon-menu"></span></a>
+                        </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <nav class="site-navigation text-right text-md-center" role="navigation">
+        <div class="container">
+          <ul class="site-menu js-clone-nav d-none d-md-block">
+            <li class="has-children">
+              <a href="/">Home</a>
+              <ul class="dropdown">
+                >
+                <li class="has-children">
+                  <a href="#">Sub Menu</a>
+                  <ul class="dropdown"></ul>
+                </li>
+              </ul>
+            </li>
+            <li class="has-children">
+              <a href="about.html">About</a>
+              <ul class="dropdown"></ul>
+            </li>
+            <li><a href="/shop">Shop</a></li>
+            <li><a href="#">Catalogue</a></li>
+            <li><a href="#">New Arrivals</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+
+    <!-- body of the carrt -->
+
+    <div class="bg-light py-3">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12 mb-0">
+            <a href="/shop">Shop</a> <span class="mx-2 mb-0">/</span>
+            <strong class="text-black">Cart</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="site-section">
+      <div class="container">
+        <div class="row mb-5">
+          <form class="col-md-12" method="post">
+            <div class="site-blocks-table" id="reloadDiv">
+              <table class="table table-bordered">
+                <% if(cartItems == null || cartItems.length ==0|| cart ===null) {%>
+                  <div class="col-md-6">
+                    <a class="btn btn-outline-primary btn-sm btn-block" href="/shop">
+                      Empty Cart Go To Shop
+                    </a>
+                  </div>
+                  <%} else { %>
+                    <thead>
+                      <tr>
+                        <th class="product-thumbnail">Image</th>
+                        <th class="product-name">Product</th>
+                        <th class="product-price">Price</th>
+                        <th class="product-quantity">Quantity</th>
+                        <th class="product-total">Total</th>
+                        <th class="product-remove">Remove</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% let totalCartPrice =0 %>
+                      <% cartItems.forEach((item,i)=>{ %>
+                        <tr id="pro<%=i%>">
+                          <td class="product-thumbnail">
+                            <% if(item.productId && item.productId.images && item.productId.images.length> 0) {%>
+                              <img src="public/adminAssets/product-images/<%= item.productId?.images[0] %>" alt="Image"
+                                class="img-fluid" />
+                              <% } %>
+                          </td>
+                          <td class="product-name">
+                            <h2 class="h5 text-black">
+                              <%= item.productId.name %>
+                            </h2>
+                          </td>
+                          <td>
+                            <%= item.productId.price %>
+                          </td>
+                          <td>
+                            <div class="input-group mb-3" style="max-width: 120px">
+                              <div class="input-group-prepend">
+                                <button class="btn btn-outline-primary js-btn-minus" type="button"
+                                  onclick="quantityChanger(-1, '<%= item.productId._id %>')">
+                                  &minus;
+                                </button>
+                              </div>
+
+                              <input type="text" class="form-control text-center" value="<%= item.quantity %>"
+                                placeholder="<%= item.quantity %>" id="<%= item.productId._id %>-quantity" />
+                              <div class="input-group-append">
+                                <button class="btn btn-outline-primary js-btn-plus" type="button"
+                                  onclick="quantityChanger(1, '<%= item.productId._id %>')">
+                                  &plus;
+                                </button>
+                              </div>
+                            </div>
+                          </td>
+
+                          <td id="productTotal">
+                            <% totalCartPrice = totalCartPrice + item.totalPrice; %>
+                            <%= item.totalPrice %>
+                          </td>
+                          <td>
+                            <%= console.log(' pro')%>
+                              <a onclick="deleteFromCart('<%= item.productId._id%>','<%= item.quantity %>','pro<%=i%>')"
+                                class="btn btn-primary btn-sm">X</a>
+                          </td>
+                        </tr>
+                        <% }) %>
+                    </tbody>
+              </table>
+            </div>
+          </form>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12 text-right border-bottom mb-5">
+            <h3 class="text-black h4 text-uppercase">Cart Totals</h3>
+            <div class="col-md-12 text-right mb-1">
+              <span class="text-black">Total</span>
+            </div>
+            <div class="col-md-12 text-right mb-1">
+              <strong class="text-black" id="cartTotal">₹<%= totalCartPrice %></strong>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="row mb-5"></div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <a class="btn btn-primary btn-lg py-3 btn-block" href="/checkout" >
+                Proceed To Checkout
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="row"></div>
+        <div class="col-md-6 pl-5">
+          <div class="row justify-content-end">
+            <div class="col-md-7">
+              <div class="row mb-5">
+                <div class="row">
+                  <div class="row mb-3"></div>
+                </div>
+                <div class="row mb-5"></div>
+                <div class="col-md-6 pl-5">
+                  <div class="row justify-content-end">
+                    <div class="col-md-7">
+                      <div class="row"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% } %>
+
+      <!-- footer of the cart -->
+
+      <footer class="site-footer border-top">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-6 mb-5 mb-lg-0">
+              <div class="row">
+                <div class="col-md-12"></div>
+                <div class="col-md-6 col-lg-4"></div>
+                <div class="col-md-6 col-lg-4"></div>
+                <div class="col-md-6 col-lg-4"></div>
+              </div>
+            </div>
+            <div class="col-md-6 col-lg-3 mb-4 mb-lg-0"></div>
+            <div class="col-md-6 col-lg-3">
+              <div class="block-5 mb-5"></div>
+
+              <div class="block-7"></div>
+            </div>
+          </div>
+          <div class="row pt-5 mt-5 text-center">
+            <div class="col-md-12">
+              <p>
+                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                Copyright &copy;
+                <script data-cfasync="false"
+                  src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+                <script>
+                  document.write(new Date().getFullYear());
+                </script>
+                All rights reserved | This template is made with
+                <i class="icon-heart" aria-hidden="true"></i> by
+                <a href="https://colorlib.com" target="_blank" class="text-primary">Vyshnav Nalupurakkal</a>
+                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+              </p>
+            </div>
+          </div>
+        </div>
+      </footer>
+  </div>
+  <script src="/public/userAssets/js/jquery-3.3.1.min.js"></script>
+  <script src="/public/userAssets/js/jquery-ui.js"></script>
+  <script src="/public/userAssets/js/popper.min.js"></script>
+  <script src="/public/userAssets/js/bootstrap.min.js"></script>
+  <script src="/public/userAssets/js/owl.carousel.min.js"></script>
+  <script src="/public/userAssets/js/jquery.magnific-popup.min.js"></script>
+  <script src="/public/userAssets/js/aos.js"></script>
+  <script src="/public/userAssets/js/main.js"></script>
+
+  <script>
+    function deleteFromCart(productId, quantity, pro) {
+      console.log(productId, quantity, pro);
+      fetch("/deleteCart", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ productId, quantity }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          $("#cartTotal").load("/cart #cartTotal");
+          document.getElementById(pro).style.display = "none";
+        })
+        .catch((error) => {
+          console.log("Error:", error);
+        });
+    }
+
+    function quantityChanger(count, productId) {
+      const data = { productId: productId, count: count };
+      console.log("data from quanty changer:", data);
+      fetch("/updateCartQuantity", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ data }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Data:", data);
+          if (data.stock) {
+            const cartTotalElement = document.getElementById('cartTotal');
+            cartTotalElement.textContent = '₹' + data.cartTotal.toFixed(2)
+            $("#reloadDiv").load("/cart #reloadDiv");
+          }
+        })
+        .catch((error) => {
+          console.log("Error on quantity changer :", error);
+        });
+    }
+
+
+
+
+</script>
+</body>
+
+</html>

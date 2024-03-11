@@ -51,95 +51,8 @@
 </head>
 <body>
 
-<div id="app">
 
-<nav id="navbar-main" class="navbar is-fixed-top">
-  <div class="navbar-brand">
-    <a class="navbar-item mobile-aside-button">
-      <span class="icon"><i class="mdi mdi-forwardburger mdi-24px"></i></span>
-    </a>
-    <div class="navbar-item">
-      <div class="control"><input placeholder="Search everywhere..." class="input"></div>
-    </div>
-  </div>
-  <div class="navbar-brand is-right">
-    <a class="navbar-item --jb-navbar-menu-toggle" data-target="navbar-menu">
-      <span class="icon"><i class="mdi mdi-dots-vertical mdi-24px"></i></span>
-    </a>
-  </div>
-  <div class="navbar-menu" id="navbar-menu">
-    <div class="navbar-end">
-      <div class="navbar-item dropdown has-divider">
-        <a class="navbar-link">
-          <span class="icon"><i class="mdi mdi-menu"></i></span>
-          <span>Sample Menu</span>
-          <span class="icon">
-            <i class="mdi mdi-chevron-down"></i>
-          </span>
-        </a>
-        <div class="navbar-dropdown">
-          <a href="profile.ejs" class="navbar-item">
-            <span class="icon"><i class="mdi mdi-account"></i></span>
-            <span>My Profile</span>
-          </a>
-          <a class="navbar-item">
-            <span class="icon"><i class="mdi mdi-settings"></i></span>
-            <span>Settings</span>
-          </a>
-          <a class="navbar-item">
-            <span class="icon"><i class="mdi mdi-email"></i></span>
-            <span>Messages</span>
-          </a>
-          <hr class="navbar-divider">
-          <a class="navbar-item">
-            <span class="icon"><i class="mdi mdi-logout"></i></span>
-            <span>Log Out</span>
-          </a>
-        </div>
-      </div>
-      <div class="navbar-item dropdown has-divider has-user-avatar">
-        <a class="navbar-link">
-          <div class="user-avatar">
-            <img src="https://avatars.dicebear.com/v2/initials/john-doe.svg" alt="John Doe" class="rounded-full">
-          </div>
-          <div class="is-user-name"><span>John Doe</span></div>
-          <span class="icon"><i class="mdi mdi-chevron-down"></i></span>
-        </a>
-        <div class="navbar-dropdown">
-          <a href="profile.ejs" class="navbar-item">
-            <span class="icon"><i class="mdi mdi-account"></i></span>
-            <span>My Profile</span>
-          </a>
-          <a class="navbar-item">
-            <span class="icon"><i class="mdi mdi-settings"></i></span>
-            <span>Settings</span>
-          </a>
-          <a class="navbar-item">
-            <span class="icon"><i class="mdi mdi-email"></i></span>
-            <span>Messages</span>
-          </a>
-          <hr class="navbar-divider">
-          <a class="navbar-item">
-            <span class="icon"><i class="mdi mdi-logout"></i></span>
-            <span>Log Out</span>
-          </a>
-        </div>
-      </div>
-      <a href="https://justboil.me/tailwind-admin-templates" class="navbar-item has-divider desktop-icon-only">
-        <span class="icon"><i class="mdi mdi-help-circle-outline"></i></span>
-        <span>About</span>
-      </a>
-      <a href="https://github.com/justboil/admin-one-tailwind" class="navbar-item has-divider desktop-icon-only">
-        <span class="icon"><i class="mdi mdi-github-circle"></i></span>
-        <span>GitHub</span>
-      </a>
-      <a title="Log out" class="navbar-item desktop-icon-only">
-        <span class="icon"><i class="mdi mdi-logout"></i></span>
-        <span>Log out</span>
-      </a>
-    </div>
-  </div>
-</nav>
+
 
 <aside class="aside is-placed-left is-expanded">
   <div class="aside-tools">
@@ -221,14 +134,7 @@
   </div>
 </section>
 
-<section class="is-hero-bar">
-  <div class="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
-    <h1 class="title">
-      ADD PRODUCTS
-    </h1>
-    <button class="button light">Button</button>
-  </div>
-</section>
+
 
 <section class="section main-section">
   <div class="card mb-6">
@@ -239,25 +145,26 @@
           </p>
       </header>
       <div class="card-content">
-          <form method="post" enctype="multipart/form-data">
+          <form  id="addForm" method="post" onsubmit="return validateForm()" enctype="multipart/form-data">
               <div class="field">
                   <label class="label">Product Name</label>
                   <div class="control icons-left">
-                      <input class="input" type="text" name="name" placeholder="Product Name" required>
+                      <input class="input" type="text" id="name" name="name" placeholder="Product Name" required>
                       <span class="icon left"><i class="mdi mdi-account"></i></span>
+                      <span id="nameError" class="text-danger"></span>
                   </div>
               </div>
               <div class="field">
                   <label class="label">Description</label>
                   <div class="control">
-                      <textarea class="textarea" name="description" placeholder="Product Description" required></textarea>
+                      <textarea class="textarea" id="description" name="description" placeholder="Product Description" required></textarea>
                   </div>
+                  <span id="descriptionError" class="text-danger"></span>
               </div>
               <div class="field">
                   <label class="label">Category</label>
                   <div class="control">
                       <div class="select">
-                          <!-- Dynamically load categories from the server/database -->
                           <select name="category" required>
                             <% if(categories.length>0){ %>
                               <option value="" disabled selected hidden>
@@ -279,10 +186,20 @@
               <div class="field">
                   <label class="label">Price</label>
                   <div class="control icons-left">
-                      <input class="input" type="number" name="price" placeholder="Price" required>
+                      <input class="input" type="number" id="price" name="price" placeholder="Price" required>
                       <span class="icon left"><i class="mdi mdi-currency-usd"></i></span>
+                      <span id="priceError" class="text-danger"></span>
                   </div>
               </div>
+              <div class="field">
+                <label class="label">Quantity</label>
+                <div class="control icons-left">
+                    <input class="input" type="number" id="quantity" name="quantity" placeholder="Quantity" required>
+                    <span class="icon left"><i class="mdi mdi-numeric"></i></span>
+                    <span id="quantityError"></span>
+                </div>
+            </div>
+            
               <div class="field">
                   <label class="label">Product Images</label>
                   <div class="control">
@@ -297,7 +214,7 @@
               <hr>
               <div class="field grouped">
                   <div class="control">
-                      <button type="submit" class="button green">
+                      <button type="submit" id="submitAddProduct"  class="button green">
                           Add Product
                       </button>
                   </div>
@@ -313,96 +230,117 @@
 </section>
 
 
-<footer class="footer">
-  <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0">
-    <div class="flex items-center justify-start space-x-3">
-      <div>
-        © 2021, JustBoil.me
-      </div>
-      <a href="https://github.com/justboil/admin-one-tailwind" style="height: 20px">
-        <img src="https://img.shields.io/github/v/release/justboil/admin-one-tailwind?color=%23999">
-      </a>
-    </div>
-  </div>
-</footer>
 
-<div id="sample-modal" class="modal">
-  <div class="modal-background --jb-modal-close"></div>
-  <div class="modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title">Sample modal</p>
-    </header>
-    <section class="modal-card-body">
-      <p>Lorem ipsum dolor sit amet <b>adipiscing elit</b></p>
-      <p>This is sample modal</p>
-    </section>
-    <footer class="modal-card-foot">
-      <button class="button --jb-modal-close">Cancel</button>
-      <button class="button red --jb-modal-close">Confirm</button>
-    </footer>
-  </div>
-</div>
 
-<div id="sample-modal-2" class="modal">
-  <div class="modal-background --jb-modal-close"></div>
-  <div class="modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title">Sample modal</p>
-    </header>
-    <section class="modal-card-body">
-      <p>Lorem ipsum dolor sit amet <b>adipiscing elit</b></p>
-      <p>This is sample modal</p>
-    </section>
-    <footer class="modal-card-foot">
-      <button class="button --jb-modal-close">Cancel</button>
-      <button class="button blue --jb-modal-close">Confirm</button>
-    </footer>
-  </div>
-</div>
 
-</div>
 
-<!-- Scripts below are for demo only -->
+
 <script type="text/javascript" src="/public/adminAssets/js/main.min.js?v=1628755089081"></script>
-
-
-<script>
-  !function(f,b,e,v,n,t,s)
-  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window, document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-  fbq('init', '658339141622648');
-  fbq('track', 'PageView');
-</script>
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=658339141622648&ev=PageView&noscript=1"/></noscript>
-
-<!-- Icons below are for demo only. Feel free to use any icon pack. Docs: https://bulma.io/documentation/elements/icon/ -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.9.95/css/materialdesignicons.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 <script>
-  // JavaScript to handle displaying selected images
-  document.querySelector('input[name="images"]').addEventListener('change', function (event) {
-      const selectedImagesContainer = document.querySelector('.selected-images .row');
-      selectedImagesContainer.innerHTML = ''; // Clear existing images
+  
+function validateForm() {
 
-      const flexContainer = document.createElement('div');
-      flexContainer.classList.add('flex-container');
+const name = document.getElementById("name").value.trim()
+const description = document.getElementById("description").value.trim()
+const price = document.getElementById("price").value.trim()
+const quantity = document.getElementById('quantity').value.trim()
 
-      for (const file of event.target.files) {
-          const imageElement = document.createElement('img');
-          imageElement.src = URL.createObjectURL(file);
-          imageElement.alt = 'Selected Image';
-          imageElement.style.width = '100px'; // Set a fixed width
-          imageElement.style.height = '100px'; // Set a fixed height
-          imageElement.style.marginRight = '10px'; // Add some spacing between images
-          flexContainer.appendChild(imageElement);
-      }
 
-      selectedImagesContainer.appendChild(flexContainer);
-  });
+console.log("name :", name, "description :", description, "quantity :", quantity, "price :", price);
+let isValid = true;
+//===============NAME ERROR====================================
+if (name === "" || name.match(/^\s+$/)) {
+  const nameError = document.getElementById("nameError");
+  nameError.textContent = "Please enter a valid name!";
+  isValid = false;
+} else if (/\d/.test(name)) {
+  const nameError = document.getElementById("nameError");
+  nameError.textContent = "Name should not contain numbers.";
+  isValid = false;
+} else {
+  document.getElementById("nameError").textContent = "";
+}
+//==============================description ERROR======================= 
+if (description ==="") {
+  const descriptionError = document.getElementById("descriptionError");
+  descriptionError.textContent = "please add description";
+  isValid = false;
+}else {
+  document.getElementById("descriptionError").textContent = "";
+}
+//===================quantity ERRORR=========================
+
+if(quantity ===""){
+  const quantityError = document.getElementById("quantityError")
+  quantityError.textContent ="Please enter a quantity value";
+  isValid=false;
+}else if(Number(quantity)<=0){
+  const quantityError = document.getElementById("quantityError");
+  quantityError.textContent = "quantity cannot be negative value or zero!";
+  isValid = false;
+}else if(quantity.toString().startsWith("0")){
+  const quantityError = document.getElementById("quantityError");
+  quantityError.textContent = "quantity donot start with zero";
+  isValid = false;
+}else{
+  document.getElementById("quantityError").textContent = "";
+}
+//================price ERROR============================
+if(price ===""){
+  const priceError = document.getElementById("priceError")
+  priceError.textContent ="Please enter a criteria value";
+  isValid=false;
+}else if(Number(price)<0){
+  const priceError = document.getElementById("priceError");
+  priceError.textContent = "price cannot be negative value!";
+  isValid = false;
+}else if(price.toString().startsWith("0")){
+  const priceError = document.getElementById("priceError");
+  priceError.textContent = "price value should not start with 0 ";
+  isValid = false;
+}else{
+  document.getElementById("priceError").textContent = "";
+}
+
+if (!isValid) {
+  return false
+}
+return isValid;
+}
+
+// $(document).ready(function (){
+//      document.getElementById("submitAddProduct").onclick = async function (event){
+//           event.preventDefault();
+//           const isValid = validateForm();
+//           if(isValid){
+             
+//               console.log("Form is valid");
+//           }
+//       });
+//   });
+
+
+document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("addForm");
+        console.log("current url :",window.location.href);
+        form.addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          const isValid = validateForm();
+          if (isValid) {
+            form.submit();
+          }
+        });
+      });
+
+
+  
+
 </script>
 </body>
 </html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Success page</title>
+
+    <!-- Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mukta:300,400,700">
+
+    <!-- Font Awesome icons -->
+    <link rel="stylesheet" href="/public/userAssets/fonts/icomoon/style.css">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/public/userAssets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/public/userAssets/css/magnific-popup.css">
+    <link rel="stylesheet" href="/public/userAssets/css/jquery-ui.css">
+    <link rel="stylesheet" href="/public/userAssets/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="/public/userAssets/css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="/public/userAssets/css/aos.css">
+    <link rel="stylesheet" href="/public/userAssets/css/style.css">
+</head>
+<body>
+    <!-- Success message section -->
+    <div class="site-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <!-- Animated checkmark icon -->
+                    <span class="icon-check_circle display-3 text-success"></span>
+                    <!-- Heading -->
+                    <h2 class="display-3 text-black">Congratulations!</h2>
+                    <!-- Success message -->
+                    <p class="lead mb-5">Your order has been successfully completed.</p>
+                    <!-- Call to action button -->
+                    <p><a href="/shop" class="btn btn-sm btn-primary">Continue Shopping</a></p>
+                </div>
+            </div>
+        </div>
+    </div>   
+
+    <!-- JavaScript scripts -->
+    <script src="/public/userAssets/js/jquery-3.3.1.min.js"></script>
+    <script src="/public/userAssets/js/jquery-ui.js"></script>
+    <script src="/public/userAssets/js/popper.min.js"></script>
+    <script src="/public/userAssets/js/bootstrap.min.js"></script>
+    <script src="/public/userAssets/js/owl.carousel.min.js"></script>
+    <script src="/public/userAssets/js/jquery.magnific-popup.min.js"></script>
+    <script src="/public/userAssets/js/aos.js"></script>
+    <script src="/public/userAssets/js/main.js"></script>
+    <!-- SweetAlert for additional user feedback -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <!-- Custom JavaScript for animations -->
+    <script>
+        // Animate the checkmark icon when the page loads
+        $(document).ready(function() {
+            $('.icon-check_circle').addClass('animated bounceIn');
+        });
+
+        // Show a success message using SweetAlert
+        swal({
+            title: "Congratulations!",
+            text: "Your order has been successfully completed.",
+            icon: "success",
+            button: "Continue Shopping",
+        });
+    </script>
+</body>
+</html>
