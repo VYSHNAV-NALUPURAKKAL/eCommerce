@@ -11,7 +11,7 @@ const { urlencoded } = require('body-parser');
 
 adminRoute.use(
     session({
-        session:config.sessionSecret,
+        secret:config.sessionSecret,
         resave:false,
         saveUninitialized:true
     })
@@ -105,6 +105,6 @@ adminRoute.post("/salesFilter",adminAuth.isLogin,adminController.Sales)
 adminRoute.post("/salesReport",adminAuth.isLogin,adminController.salesReport)
 
 //======================Dashboard Managment ========================================
-adminRoute.get('/home',adminAuth.isLogin,adminController.loadDashboard)
+adminRoute.get('/home',adminAuth.isLogin,adminController.loadHome)
 
 module.exports = adminRoute
