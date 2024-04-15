@@ -35,24 +35,30 @@ userRoute.get("/",userController.loadHome);
 userRoute.get("/home",userAuth.isLogin, userController.loadHome);
 
 
-//==================Login================
+//========================================Login===================================
+
+
 userRoute.get("/login", userAuth.isLogout, userController.loadLogin);
 userRoute.post("/login",userAuth.isLogout, userController.verifyLogin);
 
-//===============Logout=====================
+
+//==========================================Logout==================================
+
 userRoute.get('/logout',userController.loadLogout)
 
 
-//============================Signup====================================
+//==========================================Signup====================================
+
+
 userRoute.get("/signup", userAuth.isLogout, userController.loadSignup);
 userRoute.post("/signup", userAuth.isLogout, userController.insertUser);
 
 
-//=====================Blocked user=========================
+//=======================================Blocked user====================================
 userRoute.get("/user-blocked", userController.showUserBlock);
 
 
-//========================Profile===================================
+//========================================Profile========================================
 userRoute.get("/profile", userAuth.isLogin, userController.showProfile);
 userRoute.get("/editProfile", userAuth.isLogin, userController.showEditProfile);
 userRoute.post("/editProfile", userController.editProfile);
@@ -65,16 +71,19 @@ userRoute.get(
   addressController.loadAddAddress
 );
 userRoute.post("/addAddress", addressController.addAddress);
+
 userRoute.delete(
   "/deleteAddress/:id",
   userAuth.isLogin,
   addressController.deleteAddress
 );
+
 userRoute.get(
   "/editAddress",
   userAuth.isLogin,
   addressController.showEditAddress
 );
+
 userRoute.post("/editAddress", addressController.editAddress);
 //==========================User Product Page =======================
 
@@ -99,6 +108,8 @@ userRoute.get('/orderSuccess',userAuth.isLogin,orderController.successPage)
 userRoute.get('/orderDetails',userAuth.isLogin,orderController.detailOrder)
 userRoute.post('/cancelProductStatus',userAuth.isLogin,orderController.cancelProduct)
 userRoute.post('/verify-payment',orderController.verifyPayment)
+userRoute.patch("/continuePayment",orderController.continuePayment)
+userRoute.patch("/continueVerifyPayment",orderController.continueVerifyPayment)
 
 //========================Coupon Related==================
 
@@ -111,11 +122,6 @@ userRoute.get('/wishlist',userAuth.isLogin,cartController.getWishlist)
 userRoute.post("/addToWishlist",userAuth.isLogin,cartController.addToWishlist)
 
 
-// userRoute.get('/forgot-password')
-// userRoute.post('/forgot-password')
-// userRoute.get('/reset-password')
-// userRoute.post('/reset-password')
-
 //==============OTP MANAGEMENT==============
 
 userRoute.get("/otp-verification", userController.showVerifyOTPPage);
@@ -123,5 +129,7 @@ userRoute.get("/otp-verification", userController.showVerifyOTPPage);
 userRoute.post("/otp-verification", userController.verifyOTP);
 
 userRoute.get("/resend-otp", userAuth.isLogout, userController.resendOtp);
+
+userRoute.get("/invoice",userController.invoice);
 
 module.exports = userRoute;

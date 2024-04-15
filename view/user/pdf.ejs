@@ -1,0 +1,234 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Invoice</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            background-color: #f8f9fa;
+            color: #495057;
+        }
+
+        section.content-main {
+            margin: 20px;
+        }
+
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-between;
+        }
+
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            width: 31%;
+            /* Adjust the width based on your preference */
+            box-sizing: border-box;
+            height: 180px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        h2.content-title {
+            margin-bottom: 10px;
+            color: #000000;
+        }
+
+        .order-info-wrap {
+            margin-top: 20px;
+        }
+
+        article.icontext {
+            display: flex;
+            align-items: start;
+        }
+
+        article.icontext .icon {
+            margin-right: 15px;
+        }
+
+        table.table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        table.table th,
+        table.table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        table.table th {
+            background-color: #f2f2f2;
+        }
+
+        footer.main-footer {
+            margin-top: 20px;
+            font-size: 12px;
+            background-color: #343a40;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+
+        footer.main-footer a {
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <hr>
+    <section class="content-main">
+        <div class="content-header">
+            <h2 class="content-title">Order Detail</h2>
+            <p>Order ID:  <%=totalOrders._id%>
+            </p>
+        </div>
+
+        <div class="card-container">
+            <div class="card">
+                <article class="icontext">
+                    <div class="text p-3">
+                        <p class="mb-1">
+                            <b>Customer</b>
+                          <p>  <%= userAddress.address[0].fullName %> </p>
+                           <p> <%= userAddress.address[0].mobile%></p>
+                        </p>
+                    </div>
+                </article>
+            </div>
+
+            <div class="card">
+                <article class="icontext">
+                    <div class="text">
+                        <p class="mb-1">
+                            <b>Order Info</b><br>
+                            Total Amount: ₹<%= totalOrders.subTotal%><br>
+                                Payment:<%=totalOrders.payment%><br>
+                                    Payment Date:<%=totalOrders.orderDate.toLocaleDateString('en-US', {
+                                        weekday: 'short' , year: 'numeric' , month: 'short' , day: 'numeric' })%><br>
+                        </p>
+                    </div>
+                </article>
+            </div>
+
+            <div class="card">
+                <article class="icontext">
+                    <div class="text">
+                        <p class="mb-1">
+                            <b>Deliver to</b><br>
+                            Address: <%= userAddress.address[0]. houseName%><br>
+                                City: <%= userAddress.address[0].city%> <br>
+                                    Pincode:<%= userAddress.address[0].pin%> <br>
+                                        State: <%= userAddress.address[0].state%> <br>
+                                    
+                        </p>
+                    </div>
+                </article>
+            </div>
+        </div>
+
+        <p>ORDERED PRODUCTS</p>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th width="5%">#</th>
+                        <th width="25%">Name</th>
+                        <th width="15%">Unit Price</th>
+                        <th width="15%">Quantity</th>
+                        <th width="20%">Total</th>
+                        <th width="20%">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% orders.forEach((product, index)=> { %>
+                        <tr>
+                            <td>
+                                <%console.log(product)%>
+                                
+                                <%=index + 1%>
+                            </td>
+                            <td>
+                                <%= product.productId.name %>
+                            </td>
+                            <% if (!product.productId.offer) { %>
+
+
+                                <td>₹<%=product.productId.price%> </td>
+
+                                    <% } else { %>
+
+                                    <td class="price">₹<%=product.productId. discountedPrice%></td>
+                                                <% } %>
+                            <td>
+                                <%= product.quantity %>
+                            </td>
+                           
+
+                            <% if (!product.productId.offer) { %>
+
+
+                                <td>₹<%= product.productId.price %> </td>
+
+                                    <% } else { %>
+
+                                    <td class="price">₹<%=product.productId. discountedPrice%></td>
+                                                     <% } %>
+
+
+
+
+
+                            <td>
+                               
+                                <p><%= product. productStatus%></p>
+                            </td>
+                        </tr>
+                        <% }); %>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <footer class="main-footer">
+        <div class="row">
+            <script>
+                document.write(new Date().getFullYear());
+            </script>
+            &copy;STREAK-X FRAMES Template pvt ltd version 24.01
+            <div class="col-sm-6 text-sm-end">
+                All rights reserved
+            </div>
+        </div>
+    </footer><br><br>
+    <hr>
+</body>
+
+</html>

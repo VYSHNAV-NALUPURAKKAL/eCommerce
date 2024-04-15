@@ -1,722 +1,593 @@
 <!DOCTYPE html>
 <html lang="en" class="">
+
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Dashboard - STREAK-X FRAMES</title>
+   <meta charset="utf-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <title>Tables - Admin One Tailwind CSS Admin Dashboard</title>
 
-  <!-- Tailwind is included -->
-  <link type="text/css" rel="stylesheet" href="/public/adminAssets/css/main.css?v=1628755089081">
 
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png"/>
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png"/>
-  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png"/>
-  <link rel="mask-icon" href="safari-pinned-tab.svg" color="#00b4b6"/>
-  <link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.9.95/css/materialdesignicons.min.css">
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
-  <meta name="description" content="Admin One - free Tailwind dashboard">
+   <!-- Tailwind is included -->
+   <link rel="stylesheet" href="/public/adminAssets/css/main.css?v=1628755089081">
 
-  <meta property="og:url" content="https://justboil.github.io/admin-one-tailwind/">
-  <meta property="og:site_name" content="JustBoil.me">
-  <meta property="og:title" content="Admin One HTML">
-  <meta property="og:description" content="Admin One - free Tailwind dashboard">
-  <meta property="og:image" content="https://justboil.me/images/one-tailwind/repository-preview-hi-res.png">
-  <meta property="og:image:type" content="image/png">
-  <meta property="og:image:width" content="1920">
-  <meta property="og:image:height" content="960">
 
-  <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:title" content="Admin One HTML">
-  <meta property="twitter:description" content="Admin One - free Tailwind dashboard">
-  <meta property="twitter:image:src" content="https://justboil.me/images/one-tailwind/repository-preview-hi-res.png">
-  <meta property="twitter:image:width" content="1920">
-  <meta property="twitter:image:height" content="960">
+   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
+   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
+   <link rel="mask-icon" href="safari-pinned-tab.svg" color="#00b4b6" />
 
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-130795909-1"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'UA-130795909-1');
-  </script>
+   <meta name="description" content="Admin One - free Tailwind dashboard">
+
+   <meta property="og:url" content="https://justboil.github.io/admin-one-tailwind/">
+   <meta property="og:site_name" content="JustBoil.me">
+   <meta property="og:title" content="Admin One HTML">
+   <meta property="og:description" content="Admin One - free Tailwind dashboard">
+   <meta property="og:image" content="https://justboil.me/images/one-tailwind/repository-preview-hi-res.png">
+   <meta property="og:image:type" content="image/png">
+   <meta property="og:image:width" content="1920">
+   <meta property="og:image:height" content="960">
+
+   <meta property="twitter:card" content="summary_large_image">
+   <meta property="twitter:title" content="Admin One HTML">
+   <meta property="twitter:description" content="Admin One - free Tailwind dashboard">
+   <meta property="twitter:image:src" content="https://justboil.me/images/one-tailwind/repository-preview-hi-res.png">
+   <meta property="twitter:image:width" content="1920">
+   <meta property="twitter:image:height" content="960">
+   <!-- Global site tag (gtag.js) - Google Analytics -->
+   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-130795909-1"></script>
+   <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date());
+      gtag('config', 'UA-130795909-1');
+   </script>
 
 </head>
+
 <body>
 
-<div id="app">
+   <div id="app">
 
-<nav id="navbar-main" class="navbar is-fixed-top">
-  <div class="navbar-brand">
-    <a class="navbar-item mobile-aside-button">
-      <span class="icon"><i class="mdi mdi-forwardburger mdi-24px"></i></span>
-    </a>
-    <div class="navbar-item">
-      <div class="control"><input placeholder="Search everywhere..." class="input"></div>
-    </div>
-  </div>
-  <div class="navbar-brand is-right">
-    <a class="navbar-item --jb-navbar-menu-toggle" data-target="navbar-menu">
-      <span class="icon"><i class="mdi mdi-dots-vertical mdi-24px"></i></span>
-    </a>
-  </div>
-  <div class="navbar-menu" id="navbar-menu">
-    <div class="navbar-end">
-      <div class="navbar-item dropdown has-divider">
-        <a class="navbar-link">
-          <span class="icon"><i class="mdi mdi-menu"></i></span>
-          <span>Sample Menu</span>
-          <span class="icon">
-            <i class="mdi mdi-chevron-down"></i>
-          </span>
-        </a>
-        <div class="navbar-dropdown">
-          <a href="/home" class="navbar-item">
-            <span class="icon"><i class="mdi mdi-account"></i></span>
-            <span>My Profile</span>
-          </a>
-          <a class="navbar-item">
-            <span class="icon"><i class="mdi mdi-settings"></i></span>
-            <span>Settings</span>
-          </a>
-          <a class="navbar-item">
-            <span class="icon"><i class="mdi mdi-email"></i></span>
-            <span>Messages</span>
-          </a>
-          <hr class="navbar-divider">
-          <a href="admin/adminLogout" class="navbar-item">
-            <span class="icon"><i class="mdi mdi-logout"></i></span>
-            <span>Log Out</span>
-          </a>
-        </div>
-      </div>
-      <div class="navbar-item dropdown has-divider has-user-avatar">
-        <a class="navbar-link">
-          <div class="user-avatar">
-            <img src="https://avatars.dicebear.com/v2/initials/john-doe.svg" alt="John Doe" class="rounded-full">
-          </div>
-          <div class="is-user-name"><span>John Doe</span></div>
-          <span class="icon"><i class="mdi mdi-chevron-down"></i></span>
-        </a>
-        <div class="navbar-dropdown">
-          <a href="#" class="navbar-item">
-            <span class="icon"><i class="mdi mdi-account"></i></span>
-            <span>My Profile</span>
-          </a>
-          <a class="navbar-item">
-            <span class="icon"><i class="mdi mdi-settings"></i></span>
-            <span>Settings</span>
-          </a>
-          <a class="navbar-item">
-            <span class="icon"><i class="mdi mdi-email"></i></span>
-            <span>Messages</span>
-          </a>
-          <hr class="navbar-divider">
-          <a class="navbar-item">
-            <span class="icon"><i class="mdi mdi-logout"></i></span>
-            <span>Log Out</span>
-          </a>
-        </div>
-      </div>
-      <a href="https://justboil.me/tailwind-admin-templates" class="navbar-item has-divider desktop-icon-only">
-        <span class="icon"><i class="mdi mdi-help-circle-outline"></i></span>
-        <span>About</span>
-      </a>
-      <a href="https://github.com/justboil/admin-one-tailwind" class="navbar-item has-divider desktop-icon-only">
-        <span class="icon"><i class="mdi mdi-github-circle"></i></span>
-        <span>GitHub</span>
-      </a>
-      <a title="Log out" class="navbar-item desktop-icon-only">
-        <span class="icon"><i class="mdi mdi-logout"></i></span>
-        <span>Log out</span>
-      </a>
-    </div>
-  </div>
-</nav>
+      <aside class="aside is-placed-left is-expanded">
+         <div class="aside-tools">
+            <div>
+               STREAK-X <b class="font-black">FRAMES</b>
+            </div>
+         </div>
+         <div class="menu is-menu-main">
+            <p class="menu-label">General</p>
+            <ul class="menu-list">
+               <li class="active">
+                  <a href="/admin">
+                     <span class="icon"><i class="mdi mdi-desktop-mac"></i></span>
+                     <span class="menu-item-label">Dashboard</span>
+                  </a>
+               </li>
+            </ul>
+            <p class="menu-label">Examples</p>
+            <ul class="menu-list">
+               <li class="--set-active-tables-html">
+                  <a href="/admin/customers">
+                     <span class="icon"><i class="mdi mdi-account-group"></i></span>
+                     <span class="menu-item-label">Customers</span>
+                  </a>
+               </li>
+               <li class="--set-active-tables-html">
+                  <a href="/admin/categories">
+                     <span class="icon"><i class="mdi mdi-folder-outline"></i></span>
+                     <span class="menu-item-label">Categories</span>
+                  </a>
+               </li>
+               <li class="--set-active-tables-html">
+                  <a href="/admin/offer">
+                     <span class="icon"><i class="mdi mdi-tag"></i></span>
+                     <span class="menu-item-label">Offer</span>
+                  </a>
+               </li>
+               <li class="--set-active-tables-html">
+                  <a href="/admin/coupon">
+                     <span class="icon"><i class="mdi mdi-ticket-percent"></i></span>
+                     <span class="menu-item-label">Coupons</span>
+                  </a>
+               </li>
+               <li class="--set-active-tables-html">
+                  <a href="/admin/products">
+                     <span class="icon"><i class="mdi mdi-package-variant-closed"></i></span>
+                     <span class="menu-item-label">Products</span>
+                  </a>
+               </li>
+               <li class="--set-active-tables-html">
+                  <a href="/admin/orders">
+                     <span class="icon"><i class="mdi mdi-cart-outline"></i></span>
+                     <span class="menu-item-label">Orders</span>
+                  </a>
+               </li>
+               <li class="--set-active-tables-html">
+                  <a href="/admin/sales">
+                     <span class="icon"><i class="mdi mdi-chart-line"></i>
+                     </span>
+                     <span class="menu-item-label">Sales</span>
+                  </a>
+               </li>
+               <li>
+                  <a href="/admin/adminLogout">
+                     <span class="icon"><i class="mdi mdi-lock"></i></span>
+                     <span class="menu-item-label">Logout</span>
+                  </a>
+               </li>
+         </div>
+      </aside>
 
-<aside class="aside is-placed-left is-expanded">
-  <div class="aside-tools">
-    <div>
-      STREAK-X <b class="font-black">FRAMES</b>
-    </div>
-  </div>
-  <div class="menu is-menu-main">
-    <p class="menu-label">General</p>
-    <ul class="menu-list">
-      <li class="active">
-        <a href="/admin">
-          <span class="icon"><i class="mdi mdi-desktop-mac"></i></span>
-          <span class="menu-item-label">Dashboard</span>
-        </a>
-      </li>
-    </ul>
-    <p class="menu-label">Examples</p>
-    <ul class="menu-list">
-      <li class="--set-active-tables-html">
-        <a href="/admin/customers">
-          <span class="icon"><i class="mdi mdi-table"></i></span>
-          <span class="menu-item-label">Customers</span>
-        </a>
-      </li>
-      <li class="--set-active-tables-html">
-        <a href="/admin/categories">
-          <span class="icon"><i class="mdi mdi-table"></i></span>
-          <span class="menu-item-label">Categories</span>
-        </a>
-      </li>
-      <li class="--set-active-tables-html">
-        <a href="/admin/coupon">
-          <span class="icon"><i class="mdi mdi-table"></i></span>
-          <span class="menu-item-label">Coupons</span>
-        </a>
-      </li>
-      <li class="--set-active-tables-html">
-        <a href="/admin/products">
-          <span class="icon"><i class="mdi mdi-table"></i></span>
-          <span class="menu-item-label">Products</span>
-        </a>
-      </li>
-      <li class="--set-active-tables-html">
-        <a href="/admin/orders">
-          <span class="icon"><i class="mdi mdi-table"></i></span>
-          <span class="menu-item-label">Orders</span>
-        </a>
-      </li>
-      <li class="--set-active-forms-html">
-        <a href="#">
-          <span class="icon"><i class="mdi mdi-square-edit-outline"></i></span>
-          <span class="menu-item-label">Forms</span>
-        </a>
-      </li>
-      <li class="--set-active-profile-html">
-        <a href="#">
-          <span class="icon"><i class="mdi mdi-account-circle"></i></span>
-          <span class="menu-item-label">Profile</span>
-        </a>
-      </li>
-      <li>
-        <a href="/admin/adminLogout">
-          <span class="icon"><i class="mdi mdi-lock"></i></span>
-          <span class="menu-item-label">Logout</span>
-        </a>
-      </li>
-      <li>
-        <a class="dropdown">
-          <span class="icon"><i class="mdi mdi-view-list"></i></span>
-          <span class="menu-item-label">Submenus</span>
-          <span class="icon"><i class="mdi mdi-plus"></i></span>
-        </a>
-        <ul>
-          <li>
-            <a href="#void">
-              <span>Sub-item One</span>
-            </a>
-          </li>
-          <li>
-            <a href="#void">
-              <span>Sub-item Two</span>
-            </a>
-          </li>
-        </ul>
-      </li>
-    </ul>
-    <p class="menu-label">About</p>
-    <ul class="menu-list">
-      <li>
-        <a href="https://justboil.me/tailwind-admin-templates" class="has-icon">
-          <span class="icon"><i class="mdi mdi-help-circle"></i></span>
-          <span class="menu-item-label">About</span>
-        </a>
-      </li>
-      <li>
-        <a href="https://github.com/justboil/admin-one-tailwind" class="has-icon">
-          <span class="icon"><i class="mdi mdi-github-circle"></i></span>
-          <span class="menu-item-label">GitHub</span>
-        </a>
-      </li>
-    </ul>
-  </div>
-</aside>
+      <section class="is-title-bar">
+         <div class="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
+            <ul>
+               <li>Admin</li>
+               <li>Dashboard</li>
+            </ul>
+         </div>
+      </section>
 
-<section class="is-title-bar">
-  <div class="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
-    <ul>
-      <li>Admin</li>
-      <li>Dashboard</li>
-    </ul>
-    <a href="https://justboil.me/" onclick="alert('Coming soon'); return false" target="_blank" class="button blue">
-      <span class="icon"><i class="mdi mdi-credit-card-outline"></i></span>
-      <span>Premium Demo</span>
-    </a>
-  </div>
-</section>
+      <section class="is-hero-bar">
+         <div class="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
+            <h1 class="title">
+               Dashboard
+            </h1>
+         </div>
+      </section>
 
-<section class="is-hero-bar">
-  <div class="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
-    <h1 class="title">
-      Dashboard
-    </h1>
-    <button class="button light">Button</button>
-  </div>
-</section>
-<section class="section main-section">
-  <div class="grid gap-6 grid-cols-1 md:grid-cols-3 mb-6">
-      <a href="/admin/customer" class="card">
-          <div class="card-content">
-              <div class="flex items-center justify-between">
-                  <div class="widget-label">
-                      <h3>
-                          Clients
-                      </h3>
-                      <h1>
-                          512
-                      </h1>
+
+
+      <div class="main-panel">
+         <div class="content-wrapper">
+            <div>
+               <!-- Statistics section -->
+               <div class="row">
+                  <!-- User Count Card -->
+                  <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                     <div class="card">
+                        <div class="card-body">
+                           <div class="row">
+                              <div class="col-9">
+                                 <div class="d-flex align-items-center align-self-start">
+                                    <h3 class="mb-0">
+                                       <%= userCount %>
+                                    </h3>
+                                    <p class="text-success ms-2 mb-0 font-weight-medium">
+                                       <%= averageUsers.toFixed(2) %>%
+                                    </p>
+                                 </div>
+                              </div>
+                              <div class="col-3">
+                                 <div class="icon icon-box-success">
+                                    <span class="<%= iconClass %> icon-item"></span>
+                                 </div>
+                              </div>
+                           </div>
+                           <h6 class="text-muted font-weight-normal">Number of Users</h6>
+                        </div>
+                     </div>
                   </div>
-                  <span class="icon widget-icon text-green-500"><i class="mdi mdi-account-multiple mdi-48px"></i></span>
+
+                  <!-- Daily Income Card -->
+                  <% const targetIncome=2000; const incomeDifference=((dailyIncome - targetIncome) / targetIncome) *
+                     100; const incomePercentage=incomeDifference.toFixed(2); const isIncomeAboveTarget=dailyIncome>=
+                     targetIncome;
+                     %>
+                     <% if (dailyIncome> 0) { %>
+                        <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                           <div class="card">
+                              <div class="card-body">
+                                 <div class="row">
+                                    <div class="col-9">
+                                       <div class="d-flex align-items-center align-self-start">
+                                          <h3 class="mb-0">
+                                             <%= dailyIncome.toFixed(2) %>
+                                          </h3>
+                                          <% if (isIncomeAboveTarget) { %>
+                                             <p class="text-success ms-2 mb-0 font-weight-medium">+<%= incomePercentage
+                                                   %>%</p>
+                                             <% } else { %>
+                                                <p class="text-danger ms-2 mb-0 font-weight-medium">
+                                                   <%= incomePercentage %>%
+                                                </p>
+                                                <% } %>
+                                       </div>
+                                       <h6 class="text-muted font-weight-normal">Daily Income</h6>
+                                    </div>
+                                    <div class="col-3">
+                                       <% if (isIncomeAboveTarget) { %>
+                                          <div class="icon icon-box-success">
+                                             <span class="mdi mdi-arrow-top-right icon-item"></span>
+                                          </div>
+                                          <% } else { %>
+                                             <div class="icon icon-box-danger">
+                                                <span class="mdi mdi-arrow-bottom-left icon-item"></span>
+                                             </div>
+                                             <% } %>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <% } else { %>
+                           <!-- No Income Card -->
+                           <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                              <div class="card">
+                                 <div class="card-body">
+                                    <div class="row">
+                                       <div class="col-9">
+                                          <div class="d-flex align-items-center align-self-start">
+                                             <h3 class="mb-0">0</h3>
+                                             <p class="text-danger ms-2 mb-0 font-weight-medium">Not available</p>
+                                          </div>
+                                       </div>
+                                       <div class="col-3">
+                                          <div class="icon icon-box-danger">
+                                             <span class="mdi mdi-arrow-bottom-left icon-item"></span>
+                                          </div>
+                                       </div>
+                                       <h6 class="text-muted font-weight-normal">No income yet</h6>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                           <% } %>
+
+                              <!-- Total Revenue Card -->
+                              <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                                 <div class="card">
+                                    <div class="card-body">
+                                       <div class="row">
+                                          <div class="col-9">
+                                             <div class="d-flex align-items-center align-self-start">
+                                                <h3 class="mb-0">
+                                                   <%= totalRevenue.toFixed(2) %>
+                                                </h3>
+                                                <p class="text-warning ms-2 mb-0 font-weight-medium">INR</p>
+                                             </div>
+                                          </div>
+                                          <div class="col-3">
+                                             <div class="icon icon-box-warning">
+                                                <span class="mdi mdi-currency-inr icon-item"></span>
+                                             </div>
+                                          </div>
+                                       </div>
+                                       <h6 class="text-muted font-weight-normal">Total Revenue </h6>
+                                    </div>
+                                 </div>
+                              </div>
+
+                              <!-- Pending Orders Card -->
+                              <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                                 <div class="card">
+                                    <div class="card-body">
+                                       <div class="row">
+                                          <div class="col-9">
+                                             <div class="d-flex align-items-center align-self-start">
+                                                <h3 class="mb-0">
+                                                   <%= pendingOrdersCount %>
+                                                </h3>
+                                             </div>
+                                             <h6 class="text-muted font-weight-normal">Pending Orders</h6>
+                                          </div>
+                                          <div class="col-3">
+                                             <div class="icon icon-box-danger">
+                                                <span class="mdi mdi-alert-box icon-item"></span>
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+               </div>
+
+               <div class="row">
+                  <!-- First Bar Chart -->
+                  <div class="col-lg-6 grid-margin stretch-card">
+                      <div class="card">
+                          <div class="card-body">
+                              <h4 class="card-title"><b>Monthly Sales</b></h4>
+                              <canvas id="chartContainer"></canvas>
+                          </div>
+                      </div>
+                  </div>
+              
+                  <!-- Second Bar Chart -->
+                  <div class="col-lg-6 grid-margin stretch-card">
+                      <div class="card">
+                          <div class="card-body">
+                              <h4 class="card-title"><b>Today Sales</b></h4>
+                              <canvas id="chartContainer2"></canvas>
+                          </div>
+                      </div>
+                  </div>
               </div>
-          </div>
-      </a>
-  </div>
-      <div class="card col-3">
-        <div class="card-content">
-          <div class="flex items-center justify-between">
-            <div class="widget-label">
-              <h3>
-                Sales
-              </h3>
-              <h1>
-                $7,770
-              </h1>
+              
+              <!-- Pie Chart 1 -->
+              <div class="row">
+                  <div class="col-lg-4 grid-margin stretch-card">
+                      <div class="card">
+                          <div class="card-body">
+                              <h4 class="card-title"><b>Top Selling Products</b></h4>
+                              <canvas id="pieChart"></canvas>
+                          </div>
+                      </div>
+                  </div>
+              
+                  <!-- Doughnut Chart -->
+                  <div class="col-lg-4 grid-margin stretch-card">
+                      <div class="card">
+                          <div class="card-body">
+                              <h4 class="card-title"><b>Payment Method</b></h4>
+                              <canvas id="doughnutChart"></canvas>
+                          </div>
+                      </div>
+                  </div>
+              
+                  <!-- Pie Chart 2 -->
+                  <div class="col-lg-4 grid-margin stretch-card">
+                      <div class="card">
+                          <div class="card-body">
+                              <h4 class="card-title"><b>Top Selling Categories</b></h4>
+                              <canvas id="pieChart2"></canvas>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              
+
+               <div class="row" style="margin-top: 20px;">
+                  <div class="col-12">
+                     <div class="card">
+                        <div class="card-body">
+                           <div class="row">
+                              <div class="col-md-12">
+                                 <div id="audience-map" class="vector-map"></div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
             </div>
-            <span class="icon widget-icon text-blue-500"><i class="mdi mdi-cart-outline mdi-48px"></i></span>
-          </div>
-        </div>
+         </div>
       </div>
 
-      <div class="card">
-        <div class="card-content">
-          <div class="flex items-center justify-between">
-            <div class="widget-label">
-              <h3>
-                Performance
-              </h3>
-              <h1>
-                256%
-              </h1>
-            </div>
-            <span class="icon widget-icon text-red-500"><i class="mdi mdi-finance mdi-48px"></i></span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card mb-6">
-      <header class="card-header">
-        <p class="card-header-title">
-          <span class="icon"><i class="mdi mdi-finance"></i></span>
-          Performance
-        </p>
-        <a href="#" class="card-header-icon">
-          <span class="icon"><i class="mdi mdi-reload"></i></span>
-        </a>
-      </header>
-      <div class="card-content">
-        <div class="chart-area">
-          <div class="h-full">
-            <div class="chartjs-size-monitor">
-              <div class="chartjs-size-monitor-expand">
-                <div></div>
-              </div>
-              <div class="chartjs-size-monitor-shrink">
-                <div></div>
-              </div>
-            </div>
-            <canvas id="big-line-chart" width="2992" height="1000" class="chartjs-render-monitor block" style="height: 400px; width: 1197px;"></canvas>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-    <div class="notification blue">
-      <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0">
-        <div>
-          <span class="icon"><i class="mdi mdi-buffer"></i></span>
-          <b>Responsive table</b>
-        </div>
-        <button type="button" class="button small textual --jb-notification-dismiss">Dismiss</button>
-      </div>
-    </div>
-
-    <div class="card has-table">
-      <header class="card-header">
-        <p class="card-header-title">
-          <span class="icon"><i class="mdi mdi-account-multiple"></i></span>
-          Clients
-        </p>
-        <a href="/admin/customer" class="card-header-icon">
-          <span class="icon"><i class="mdi mdi-reload"></i></span>
-        </a>
-      </header>
-      <div class="card-content">
-        <table>
-          <thead>
-          <tr>
-            <th></th>
-            <th>Name</th>
-            <th>Company</th>
-            <th>City</th>
-            <th>Progress</th>
-            <th>Created</th>
-            <th></th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr>
-            <td class="image-cell">
-              <div class="image">
-                <img src="https://avatars.dicebear.com/v2/initials/rebecca-bauch.svg" class="rounded-full">
-              </div>
-            </td>
-            <td data-label="Name">Rebecca Bauch</td>
-            <td data-label="Company">Daugherty-Daniel</td>
-            <td data-label="City">South Cory</td>
-            <td data-label="Progress" class="progress-cell">
-              <progress max="100" value="79">79</progress>
-            </td>
-            <td data-label="Created">
-              <small class="text-gray-500" title="Oct 25, 2021">Oct 25, 2021</small>
-            </td>
-            <td class="actions-cell">
-              <div class="buttons right nowrap">
-                <button class="button small green --jb-modal"  data-target="sample-modal-2" type="button">
-                  <span class="icon"><i class="mdi mdi-eye"></i></span>
-                </button>
-                <button class="button small red --jb-modal" data-target="sample-modal" type="button">
-                  <span class="icon"><i class="mdi mdi-trash-can"></i></span>
-                </button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td class="image-cell">
-              <div class="image">
-                <img src="https://avatars.dicebear.com/v2/initials/felicita-yundt.svg" class="rounded-full">
-              </div>
-            </td>
-            <td data-label="Name">Felicita Yundt</td>
-            <td data-label="Company">Johns-Weissnat</td>
-            <td data-label="City">East Ariel</td>
-            <td data-label="Progress" class="progress-cell">
-              <progress max="100" value="67">67</progress>
-            </td>
-            <td data-label="Created">
-              <small class="text-gray-500" title="Jan 8, 2021">Jan 8, 2021</small>
-            </td>
-            <td class="actions-cell">
-              <div class="buttons right nowrap">
-                <button class="button small green --jb-modal"  data-target="sample-modal-2" type="button">
-                  <span class="icon"><i class="mdi mdi-eye"></i></span>
-                </button>
-                <button class="button small red --jb-modal" data-target="sample-modal" type="button">
-                  <span class="icon"><i class="mdi mdi-trash-can"></i></span>
-                </button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td class="image-cell">
-              <div class="image">
-                <img src="https://avatars.dicebear.com/v2/initials/mr-larry-satterfield-v.svg" class="rounded-full">
-              </div>
-            </td>
-            <td data-label="Name">Mr. Larry Satterfield V</td>
-            <td data-label="Company">Hyatt Ltd</td>
-            <td data-label="City">Windlerburgh</td>
-            <td data-label="Progress" class="progress-cell">
-              <progress max="100" value="16">16</progress>
-            </td>
-            <td data-label="Created">
-              <small class="text-gray-500" title="Dec 18, 2021">Dec 18, 2021</small>
-            </td>
-            <td class="actions-cell">
-              <div class="buttons right nowrap">
-                <button class="button small green --jb-modal"  data-target="sample-modal-2" type="button">
-                  <span class="icon"><i class="mdi mdi-eye"></i></span>
-                </button>
-                <button class="button small red --jb-modal" data-target="sample-modal" type="button">
-                  <span class="icon"><i class="mdi mdi-trash-can"></i></span>
-                </button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td class="image-cell">
-              <div class="image">
-                <img src="https://avatars.dicebear.com/v2/initials/mr-broderick-kub.svg" class="rounded-full">
-              </div>
-            </td>
-            <td data-label="Name">Mr. Broderick Kub</td>
-            <td data-label="Company">Kshlerin, Bauch and Ernser</td>
-            <td data-label="City">New Kirstenport</td>
-            <td data-label="Progress" class="progress-cell">
-              <progress max="100" value="71">71</progress>
-            </td>
-            <td data-label="Created">
-              <small class="text-gray-500" title="Sep 13, 2021">Sep 13, 2021</small>
-            </td>
-            <td class="actions-cell">
-              <div class="buttons right nowrap">
-                <button class="button small green --jb-modal"  data-target="sample-modal-2" type="button">
-                  <span class="icon"><i class="mdi mdi-eye"></i></span>
-                </button>
-                <button class="button small red --jb-modal" data-target="sample-modal" type="button">
-                  <span class="icon"><i class="mdi mdi-trash-can"></i></span>
-                </button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td class="image-cell">
-              <div class="image">
-                <img src="https://avatars.dicebear.com/v2/initials/barry-weber.svg" class="rounded-full">
-              </div>
-            </td>
-            <td data-label="Name">Barry Weber</td>
-            <td data-label="Company">Schulist, Mosciski and Heidenreich</td>
-            <td data-label="City">East Violettestad</td>
-            <td data-label="Progress" class="progress-cell">
-              <progress max="100" value="80">80</progress>
-            </td>
-            <td data-label="Created">
-              <small class="text-gray-500" title="Jul 24, 2021">Jul 24, 2021</small>
-            </td>
-            <td class="actions-cell">
-              <div class="buttons right nowrap">
-                <button class="button small green --jb-modal"  data-target="sample-modal-2" type="button">
-                  <span class="icon"><i class="mdi mdi-eye"></i></span>
-                </button>
-                <button class="button small red --jb-modal" data-target="sample-modal" type="button">
-                  <span class="icon"><i class="mdi mdi-trash-can"></i></span>
-                </button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td class="image-cell">
-              <div class="image">
-                <img src="https://avatars.dicebear.com/v2/initials/bert-kautzer-md.svg" class="rounded-full">
-              </div>
-            </td>
-            <td data-label="Name">Bert Kautzer MD</td>
-            <td data-label="Company">Gerhold and Sons</td>
-            <td data-label="City">Mayeport</td>
-            <td data-label="Progress" class="progress-cell">
-              <progress max="100" value="62">62</progress>
-            </td>
-            <td data-label="Created">
-              <small class="text-gray-500" title="Mar 30, 2021">Mar 30, 2021</small>
-            </td>
-            <td class="actions-cell">
-              <div class="buttons right nowrap">
-                <button class="button small green --jb-modal"  data-target="sample-modal-2" type="button">
-                  <span class="icon"><i class="mdi mdi-eye"></i></span>
-                </button>
-                <button class="button small red --jb-modal" data-target="sample-modal" type="button">
-                  <span class="icon"><i class="mdi mdi-trash-can"></i></span>
-                </button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td class="image-cell">
-              <div class="image">
-                <img src="https://avatars.dicebear.com/v2/initials/lonzo-steuber.svg" class="rounded-full">
-              </div>
-            </td>
-            <td data-label="Name">Lonzo Steuber</td>
-            <td data-label="Company">Skiles Ltd</td>
-            <td data-label="City">Marilouville</td>
-            <td data-label="Progress" class="progress-cell">
-              <progress max="100" value="17">17</progress>
-            </td>
-            <td data-label="Created">
-              <small class="text-gray-500" title="Feb 12, 2021">Feb 12, 2021</small>
-            </td>
-            <td class="actions-cell">
-              <div class="buttons right nowrap">
-                <button class="button small green --jb-modal"  data-target="sample-modal-2" type="button">
-                  <span class="icon"><i class="mdi mdi-eye"></i></span>
-                </button>
-                <button class="button small red --jb-modal" data-target="sample-modal" type="button">
-                  <span class="icon"><i class="mdi mdi-trash-can"></i></span>
-                </button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td class="image-cell">
-              <div class="image">
-                <img src="https://avatars.dicebear.com/v2/initials/jonathon-hahn.svg" class="rounded-full">
-              </div>
-            </td>
-            <td data-label="Name">Jonathon Hahn</td>
-            <td data-label="Company">Flatley Ltd</td>
-            <td data-label="City">Billiemouth</td>
-            <td data-label="Progress" class="progress-cell">
-              <progress max="100" value="74">74</progress>
-            </td>
-            <td data-label="Created">
-              <small class="text-gray-500" title="Dec 30, 2021">Dec 30, 2021</small>
-            </td>
-            <td class="actions-cell">
-              <div class="buttons right nowrap">
-                <button class="button small green --jb-modal"  data-target="sample-modal-2" type="button">
-                  <span class="icon"><i class="mdi mdi-eye"></i></span>
-                </button>
-                <button class="button small red --jb-modal" data-target="sample-modal" type="button">
-                  <span class="icon"><i class="mdi mdi-trash-can"></i></span>
-                </button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td class="image-cell">
-              <div class="image">
-                <img src="https://avatars.dicebear.com/v2/initials/ryley-wuckert.svg" class="rounded-full">
-              </div>
-            </td>
-            <td data-label="Name">Ryley Wuckert</td>
-            <td data-label="Company">Heller-Little</td>
-            <td data-label="City">Emeraldtown</td>
-            <td data-label="Progress" class="progress-cell">
-              <progress max="100" value="54">54</progress>
-            </td>
-            <td data-label="Created">
-              <small class="text-gray-500" title="Jun 28, 2021">Jun 28, 2021</small>
-            </td>
-            <td class="actions-cell">
-              <div class="buttons right nowrap">
-                <button class="button small green --jb-modal"  data-target="sample-modal-2" type="button">
-                  <span class="icon"><i class="mdi mdi-eye"></i></span>
-                </button>
-                <button class="button small red --jb-modal" data-target="sample-modal" type="button">
-                  <span class="icon"><i class="mdi mdi-trash-can"></i></span>
-                </button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td class="image-cell">
-              <div class="image">
-                <img src="https://avatars.dicebear.com/v2/initials/sienna-hayes.svg" class="rounded-full">
-              </div>
-            </td>
-            <td data-label="Name">Sienna Hayes</td>
-            <td data-label="Company">Conn, Jerde and Douglas</td>
-            <td data-label="City">Jonathanfort</td>
-            <td data-label="Progress" class="progress-cell">
-              <progress max="100" value="55">55</progress>
-            </td>
-            <td data-label="Created">
-              <small class="text-gray-500" title="Mar 7, 2021">Mar 7, 2021</small>
-            </td>
-            <td class="actions-cell">
-              <div class="buttons right nowrap">
-                <button class="button small green --jb-modal"  data-target="sample-modal-2" type="button">
-                  <span class="icon"><i class="mdi mdi-eye"></i></span>
-                </button>
-                <button class="button small red --jb-modal" data-target="sample-modal" type="button">
-                  <span class="icon"><i class="mdi mdi-trash-can"></i></span>
-                </button>
-              </div>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-        <div class="table-pagination">
-          <div class="flex items-center justify-between">
-            <div class="buttons">
-              <button type="button" class="button active">1</button>
-              <button type="button" class="button">2</button>
-              <button type="button" class="button">3</button>
-            </div>
-            <small>Page 1 of 3</small>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-<footer class="footer">
-  <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0">
-    <div class="flex items-center justify-start space-x-3">
-      <div>
-      </div>
-
-      <div>
-  </div>
-</footer>
-
-<div id="sample-modal" class="modal">
-  <div class="modal-background --jb-modal-close"></div>
-  <div class="modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title">Sample modal</p>
-    </header>
-    <section class="modal-card-body">
-      <p>Lorem ipsum dolor sit amet <b>adipiscing elit</b></p>
-      <p>This is sample modal</p>
-    </section>
-    <footer class="modal-card-foot">
-      <button class="button --jb-modal-close">Cancel</button>
-      <button class="button red --jb-modal-close">Confirm</button>
-    </footer>
-  </div>
-</div>
-
-<div id="sample-modal-2" class="modal">
-  <div class="modal-background --jb-modal-close"></div>
-  <div class="modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title">Sample modal</p>
-    </header>
-    <section class="modal-card-body">
-      <p>Lorem ipsum dolor sit amet <b>adipiscing elit</b></p>
-      <p>This is sample modal</p>
-    </section>
-    <footer class="modal-card-foot">
-      <button class="button --jb-modal-close">Cancel</button>
-      <button class="button blue --jb-modal-close">Confirm</button>
-    </footer>
-  </div>
-</div>
-
-</div>
-
-<!-- Scripts below are for demo only -->
-<script type="text/javascript" src="public/adminAssets/js/main.min.js?v=1628755089081"></script>
-
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
-<script type="text/javascript" src="public/adminAssets/js/chart.sample.min.js"></script>
 
 
-<script>
-  !function(f,b,e,v,n,t,s)
-  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window, document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-  fbq('init', '658339141622648');
-  fbq('track', 'PageView');
-</script>
-<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=658339141622648&ev=PageView&noscript=1"/></noscript>
+      <script type="text/javascript" src="/public/adminAssets/js/main.min.js?v=1628755089081"></script>
 
-<!-- Icons below are for demo only. Feel free to use any icon pack. Docs: https://bulma.io/documentation/elements/icon/ -->
-<link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.9.95/css/materialdesignicons.min.css">
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+      <script>
+
+         document.addEventListener("DOMContentLoaded", function () {
+
+            const monthlySalesData = <%- monthlySales %>
+            console.log(
+               "monthly sasles :",monthlySalesData
+            );
+            const months = monthlySalesData.map(entry => entry.month);
+            const productsSold = monthlySalesData.map(entry => entry.productsSold);
+
+            const ctx = document.getElementById('chartContainer');
+
+            new Chart(ctx, {
+               type: 'bar',
+               data: {
+                  labels: months,
+                  datasets: [{
+                     label: 'Monthly Sales Report',
+                     data: productsSold,
+                     backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                     borderColor: 'rgba(54, 162, 235, 1)',
+                     borderWidth: 1
+                  }]
+               },
+               options: {
+                  scales: {
+                     y: {
+                        beginAtZero: true,
+                        stepSize: 1
+                     }
+                  },
+                  layout: {
+                     padding: {
+                        left: 40
+                     }
+                  }
+               }
+            });
+
+            const chartContainer2 = document.getElementById("chartContainer2")
+            const labels = <%- labels %>
+            const amounts = <%- amounts %>
+            new Chart(chartContainer2,{
+               type:"bar",
+               data: {
+                  labels: labels,
+                  datasets: [{
+                     label: 'Today Sales',
+                     data: amounts,
+                     backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                     borderColor: 'rgba(54, 162, 235, 1)',
+                     borderWidth: 1
+                  }]
+               },
+               options: {
+                  scales: {
+                     y: {
+                        beginAtZero: true,
+                        stepSize: 1
+                     }
+                  },
+                  layout: {
+                     padding: {
+                        left: 40
+                     }
+                  }
+               }
+
+            })
+
+
+
+            const doughnutChart = document.getElementById('doughnutChart')
+            const doughnut = new Chart(doughnutChart, {
+               type: 'doughnut',
+               data: {
+                  labels: [
+                     'Cash On Delivery',
+                     "Online Payment",
+                     'Wallet'
+                  ],
+                  datasets: [{
+                     label: 'Payment Method Stats',
+                     data: [<%= paymentMethods.CashOnDelivery %>,<%= paymentMethods.OnlinePayment %>, <%= paymentMethods.Wallet %>],
+                     backgroundColor: [
+                        'rgba(75, 192, 192, 0.5)',
+                        'rgba(255, 99, 132, 0.5)',
+                        'rgba(54, 162, 235, 0.5)'
+                     ],
+                     borderColor: [
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                     ],
+                     borderWidth: 1
+                  }]
+               },
+               options: {
+                  responsive: true,
+                  maintainAspectRatio: true,
+                  legend: {
+                     position: 'right',
+                  },
+                  layout: {
+                     left: 20,
+                     right: 20,
+                     top: 20,
+                     bottom: 20
+                  }
+               }
+            })
+
+
+            //here doing the things for pie chart
+            const topProductNames = <%- JSON.stringify(topProductNames) %>;
+            const soldQuantities = <%- JSON.stringify(soldQuantities) %>;
+
+            const topProductNamesArray = topProductNames.map(product => product.name);
+            const pieChart = document.getElementById("pieChart");
+
+            const backgroundColors = [];
+            for (let i = 0; i < topProductNamesArray.length; i++) {
+               const randomColor = `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)})`;
+               backgroundColors.push(randomColor);
+            }
+
+            const pie = new Chart(pieChart, {
+               type: "pie",
+               data: {
+                  labels: topProductNamesArray,
+                  datasets: [{
+                     label: 'Top Sold Products',
+                     data: soldQuantities,
+                     backgroundColor: backgroundColors,
+                     hoverOffset: 4
+                  }]
+               },
+               options: {
+                  plugins: {
+                     title: {
+                        display: true,
+                        text: 'Top Sold Products'
+                     },
+                     legend: {
+                        display: true,
+                        position: 'bottom'
+                     },
+                     tooltip: {
+                        enabled: true,
+                        backgroundColor: 'rgba(0,0,0,0.7)',
+                        titleColor: 'white',
+                        bodyColor: 'white'
+                     }
+                  },
+                  animation: {
+                     animateScale: true,
+                     animateRotate: true
+                  }
+               }
+            });
+
+
+
+            const topCategory = <%- JSON.stringify(topCategoryNames) %>
+            const soldCategoryCount = <%- JSON.stringify(categorySoldCount) %>
+
+            const topCategoryNamesArray = topCategory.map((category) => category.categoryName)
+
+            const pieChart2 = document.getElementById("pieChart2")
+
+            const backgroundColors2 = [];
+            for (let i = 0; i < topCategoryNamesArray.length; i++) {
+               const randomColor = `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 256)})`;
+               backgroundColors2.push(randomColor);
+            }
+            new Chart(pieChart2, {
+               type: "pie",
+               data: {
+                  labels: topCategoryNamesArray,
+                  datasets: [{
+                     label: 'Top Sold Category',
+                     data: soldCategoryCount,
+                     backgroundColor: backgroundColors2,
+                     hoverOffset: 4
+                  }]
+               },
+               options: {
+                  plugins: {
+                     title: {
+                        display: true,
+                        text: 'Top Sold Category'
+                     },
+                     legend: {
+                        display: true,
+                        position: 'bottom'
+                     },
+                     tooltip: {
+                        enabled: true,
+                        backgroundColor: 'rgba(0,0,0,0.7)',
+                        titleColor: 'white',
+                        bodyColor: 'white'
+                     }
+                  },
+                  animation: {
+                     animateScale: true,
+                     animateRotate: true
+                  }
+               }
+            });
+
+
+         });
+
+
+      </script>
+
+      <script src="https://cdn.jsdelivr.net/npm/chartist"></script>
+      <script src="https://d3js.org/d3.v6.min.js"></script>
+      <noscript><img height="1" width="1" style="display:none"
+            src="https://www.facebook.com/tr?id=658339141622648&ev=PageView&noscript=1" /></noscript>
+
+      <!-- Icons below are for demo only. Feel free to use any icon pack. Docs: https://bulma.io/documentation/elements/icon/ -->
+      <link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.9.95/css/materialdesignicons.min.css">
 
 </body>
+
 </html>

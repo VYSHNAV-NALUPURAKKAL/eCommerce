@@ -1,6 +1,7 @@
 const Coupon = require("../model/couponModel");
 const Cart = require("../model/cartModel");
 const { Long } = require("mongodb");
+const moment = require('moment');
 
 //=================USER SIDE COUPON RELATED CONTROLLERS==================
 
@@ -8,7 +9,8 @@ const applyCoupon = async (req, res) => {
   try {
     console.log("reached at apply coupon");
     const couponCode = req.body.couponCode;
-    console.log("coupon code :",couponCode);
+    const mainTotal = req.body.mainTotal;
+    console.log("coupon code :",couponCode,"main totallll :",mainTotal );
 
     const user = req.session.user;
     const user_id = user._id;
@@ -27,7 +29,7 @@ const applyCoupon = async (req, res) => {
     if (!exist) {
       console.log("entered inside the !exist");
       const exstingCart = await Cart.findOne({ userId: user_id });
-      if (exstingCart && exstingCart.couponDiscount == null) {
+      if (exstingCart && exstingCart.couponDiscount == null && couponData.discount <= mainTotal) {
         await Coupon.findOneAndUpdate(
           { couponCode: couponCode },
           { $push: { usedUsers: user_id } }
@@ -39,7 +41,9 @@ const applyCoupon = async (req, res) => {
 
         console.log("finally it is true now ");
         res.json({ coupon: true });
-      } else [res.json({ coupon: "already applied" })];
+      } else if(couponData.discount > mainTotal){
+        res.json({coupon:"You cant use this coupon ,please buy more"})
+      }else [res.json({ coupon: "already applied" })];
     } else {
       res.json({ coupon: "already used" });
     }
@@ -78,8 +82,15 @@ const removeCoupon = async (req, res) => {
 const viewCoupon = async (req, res) => {
   console.log("outside of the coupon ");
   try {
-    const coupon = await Coupon.find({});
-    res.render("admin/coupon", { coupon });
+    let page = req.query.page || 1;
+    const limit = 3; 
+    const coupon = await Coupon.find({})
+    .limit(limit*1)
+    .skip((page-1)*limit)
+    .exec();
+    const count = await Coupon.find().countDocuments()
+    res.render("admin/coupon", { coupon ,moment,totalPages:Math.ceil(count/limit),currentPage:page});
+
   } catch (error) {
     console.log("error on coupon :", error);
   }
@@ -119,6 +130,18 @@ const updateCouponSatus = async (req, res) => {
     console.log("req body ;", req.body);
     const couponAction = req.body.couponAction;
     const couponId = req.body.couponId;
+    const currentDate = new Date();
+
+    // Find coupons with expiration dates in the past
+    const expiredCoupons = await Coupon.find({ expiryDate: { $lt: currentDate }, is_blocked: false });
+    console.log("expired Coupon :",expiredCoupons);
+    // Block expired coupons
+    await Promise.all(expiredCoupons.map(async coupon => {
+      coupon.is_blocked = true;
+      await coupon.save();
+    }));
+
+
     if (couponAction == "Block") {
       await Coupon.findOneAndUpdate(
         { _id: couponId },

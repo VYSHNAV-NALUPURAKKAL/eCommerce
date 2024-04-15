@@ -44,7 +44,7 @@ const adminAuth = require('../middleware/adminAuth');
 const categoryProductController = require('../controller/categoryProductController')
 const orderController = require('../controller/orderController')
 const couponController = require('../controller/couponController');
-
+const offerController = require("../controller/offerController");
 //=======login===========
 
 
@@ -52,7 +52,6 @@ adminRoute.get('/',adminAuth.isLogout,adminController.loadLogin)
 adminRoute.post('/',adminController.verifyLogin)
 
 
-adminRoute.get('/home',adminAuth.isLogin,adminController.loadDashboard)
 adminRoute.get('/adminLogout',adminAuth.isLogin,adminController.loadLogout)
 
 //customersssssss
@@ -75,18 +74,37 @@ adminRoute.get('/products',adminAuth.isLogin,categoryProductController.seeProduc
 adminRoute.get('/addProduct',adminAuth.isLogin,categoryProductController.showAddProduct)
 adminRoute.post('/addProduct',upload.array('product-images',4),categoryProductController.addProduct)
 adminRoute.get('/editProduct/:id',adminAuth.isLogin,categoryProductController.showEditProduct)
-adminRoute.post('/editProduct/', upload.array('product-images',4), categoryProductController.editProduct);
+adminRoute.post('/editProduct/:id', upload.array('product-images',4), categoryProductController.editProduct);
 adminRoute.post('/updateProductList',adminAuth.isLogin,categoryProductController.updateProductsList);
 
 // ================Order Management======================
 
 adminRoute.get('/orders',adminAuth.isLogin,orderController.loadOrderManagement)
 adminRoute.post('/updateOrder',orderController.updateOrder)
-
+adminRoute.get("/orderSummary/:id",orderController.showOrderSummary)
 //====================Coupon Management =========================
 
 adminRoute.get("/coupon",adminAuth.isLogin,couponController.viewCoupon)
 adminRoute.post('/addCoupon',adminAuth.isLogin,couponController.addCoupon)
 adminRoute.patch('/updateCouponStatus',adminAuth.isLogin,couponController.updateCouponSatus)
 adminRoute.delete('/deleteCoupon',adminAuth.isLogin,couponController.deleteCoupon)
+
+//====================Offer Managment================================
+
+adminRoute.get("/offer",adminAuth.isLogin,offerController.getOffer)
+adminRoute.post("/addOffer",adminAuth.isLogin,offerController.addOffer)
+adminRoute.delete("/deleteOffer",adminAuth.isLogin,offerController.deleteOffer)
+adminRoute.post("/applyOffer",adminAuth.isLogin,offerController.applyOffer)
+adminRoute.patch("/removeOffer",adminAuth.isLogin,offerController.removeOffer)
+adminRoute.post("/applyCategoryOffer",adminAuth.isLogin,offerController.categoryOfferApply)
+adminRoute.patch("/removeCategoryOffer",adminAuth.isLogin,offerController.categoryOfferRemove)
+
+// =======================Sales Managment==================
+adminRoute.get("/sales",adminAuth.isLogin,adminController.Sales)
+adminRoute.post("/salesFilter",adminAuth.isLogin,adminController.Sales)
+adminRoute.post("/salesReport",adminAuth.isLogin,adminController.salesReport)
+
+//======================Dashboard Managment ========================================
+adminRoute.get('/home',adminAuth.isLogin,adminController.loadDashboard)
+
 module.exports = adminRoute

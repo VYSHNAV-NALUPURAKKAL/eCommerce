@@ -1,7 +1,8 @@
 
 const Category = require('../model/categoryModel')
 const mongoose = require('mongoose');
-
+const Offer = require('../model/offerModel');
+const Schema = mongoose.Schema
 const productSchema = new mongoose.Schema({
     name:{
         type:String,
@@ -16,11 +17,10 @@ const productSchema = new mongoose.Schema({
         required:true
     },
     category:{
-        type:String,
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'categories',
         required:true,
-        // type:mongoose.Types.ObjectId,
-        // // required:true,
-        ref:'categories'
+
     },
     images:[{
         type:String,
@@ -36,8 +36,10 @@ const productSchema = new mongoose.Schema({
         required:true
     },
     offer:{
-        type:Number
-    }
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"offer"
+    },
+    discountedPrice:Number
 })
 
 

@@ -1,150 +1,245 @@
 <%- include('userLayouts/header') %>
-<div style="width: 100%; height: 77px; background-color: white;"></div>
-<nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
-    <div class="container">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/">Home</a></li>
-            <li class="breadcrumb-item"><a href="/profile">My Account</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Order</li>
-        </ol>
-    </div><!-- End .container -->
-</nav><!-- End .breadcrumb-nav -->
+    <div style="width: 100%; height: 77px; background-color: white;"></div>
+    <nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a href="/profile">My Account</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Order</li>
+            </ol>
+        </div><!-- End .container -->
+    </nav><!-- End .breadcrumb-nav -->
 
 
-<main class="main">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="card card-dashboard">
-                    <div class="card-body">
-                        <h3 class="card-title">Delivery Address</h3>
-                        <p>Name: <%= orderDetails.deliveryAddress[0].fullName %><br>
-                        Email: <%= orderDetails.deliveryAddress[0].email %><br>
-                        Mobile: <%= orderDetails.deliveryAddress[0].mobile %><br>
-                        State: <%= orderDetails.deliveryAddress[0].state %><br>
-                        City: <%= orderDetails.deliveryAddress[0].city %><br>
-                        House Name: <%= orderDetails.deliveryAddress[0].houseName %><br>
-                        Pincode: <%= orderDetails.deliveryAddress[0].pin %><br>
-                        <!-- <a href="/editAddress" >Edit <i class="icon-edit"></i></a> -->
+    <main class="main">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card card-dashboard">
+                        <div class="card-body">
+                            <h3 class="card-title">Delivery Address</h3>
+                            <p>Name: <%= orderDetails.deliveryAddress[0].fullName %><br>
+                                    Email: <%= orderDetails.deliveryAddress[0].email %><br>
+                                        Mobile: <%= orderDetails.deliveryAddress[0].mobile %><br>
+                                            State: <%= orderDetails.deliveryAddress[0].state %><br>
+                                                City: <%= orderDetails.deliveryAddress[0].city %><br>
+                                                    House Name: <%= orderDetails.deliveryAddress[0].houseName %><br>
+                                                        Pincode: <%= orderDetails.deliveryAddress[0].pin %><br>
+                                                            <!-- <a href="/editAddress" >Edit <i class="icon-edit"></i></a> -->
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="card card-dashboard">
-                    <div class="card-body" id="xs">
-                        <h3 class="card-title">Order Summary</h3>
-                        <p>OrderId: <%= orderDetails._id %><br>
-                        Date: <%= orderDetails.orderDate.toLocaleDateString('en-US', { year:'numeric', month: 'short', day: '2-digit'}).replace(/\//g, '-') %><br>
-                        Items: <%= orderDetails.products.length %><br>
-                        Shipping:<%= orderDetails.deliveryAddress[0].pin %><br>
-                        Total Amount: <%= orderDetails.subTotal %><br>
-                        Payment Method: <%= orderDetails.payment %><br>
-                        Status:<span id="orderStatus"> <%= orderDetails.orderStatus %></span><br>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="p-b-45">
-            <h4 class="ltext-106 cl5 txt-center">
-                 Products
-            </h4>
-        </div>
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="card card-dashboard">
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <% console.log("product image :",orderDetails.products)%>
-                            <table class="table table-hover">
-                                <tbody>
-                                    <%
+                <div class="col-lg-6">
+                    <div class="card card-dashboard">
+                        <div class="card-body" id="xs">
+                            <h3 class="card-title">Order Summary</h3>
+                            <p>OrderId: <%= orderDetails._id %><br>
+                                    Date: <%= orderDetails.orderDate.toLocaleDateString('en-US', { year:'numeric',
+                                        month: 'short' , day: '2-digit' }).replace(/\//g, '-' ) %><br>
+                                        Items: <%= orderDetails.products.length %><br>
+                                            Shipping:<%= orderDetails.deliveryAddress[0].pin %><br>
+                                                Total Amount: <%= orderDetails.subTotal %><br>
+                                                    Payment Method: <%= orderDetails.payment %><br>
+                                                        Status:<span id="orderStatus">
+                                                            <%= orderDetails.orderStatus %>
+                                                                <%if(orderDetails.orderStatus==="pending"){%>
 
-    const uniqueProductsMap = new Map();
-    
-   
-    orderDetails.products.forEach(function(product) {
-        const productId = product.productId._id;
-        if (uniqueProductsMap.has(productId)) {
-
-            const existingProduct = uniqueProductsMap.get(productId);
-            existingProduct.quantity += product.quantity;
-            existingProduct.totalPrice += product.totalPrice;
-        } else {
-            
-            uniqueProductsMap.set(productId, {
-                product: product,
-                quantity: product.quantity,
-                totalPrice: product.totalPrice
-            });
-        }
-    });
-%>
-
-<% 
-   
-    uniqueProductsMap.forEach(function(productInfo) {
-        const product = productInfo.product;
-%>
-    <tr>
-        <td>
-            <img src="/public/adminAssets/product-images/<%= product.productId.images[0] %>" alt="" class="img-thumbnail" style="max-width: 80px;">
-        </td>
-        <td>
-            <a href="/product?_id=<%= product.productId %>"><%= product.productId.name %></a>
-        </td>                                          
-        <td><%= product.productId.category %></td>
-        <td> ₹<%= product.price %></td>
-        <td><%= productInfo.quantity %></td>
-        <td> ₹<%= productInfo.totalPrice %></td>
-        <td>
-            <% if (product.productStatus === 'placed' ) { %>
-                <button id="cancelButton" onclick="cancelProduct('<%= product.productId._id %>','<%= orderDetails._id %>')">Cancel</button>
-            <% } else { %>
-                <span>No Actions Available</span>
-            <% } %>
-        </td>
-    </tr>
-<% }); %>
-
-                                </tbody>
-                            </table>
+                                                                    <button
+                                                                        onclick="continuePayment('<%= orderDetails._id %>')">Continue
+                                                                    </button>
+                                                                    <%}%>
+                                                        </span><br>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+            <div class="p-b-45">
+                <h4 class="ltext-106 cl5 txt-center">
+                    Products
+                </h4>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card card-dashboard">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <% console.log("product image :",orderDetails.products)%>
+                                    <table class="table table-hover">
+                                        <tbody>
+                                            <% const uniqueProductsMap=new Map();
+                                                orderDetails.products.forEach(function(product) { const
+                                                productId=product.productId._id; if (uniqueProductsMap.has(productId)) {
+                                                const existingProduct=uniqueProductsMap.get(productId);
+                                                existingProduct.quantity +=product.quantity; existingProduct.totalPrice
+                                                +=product.totalPrice; } else { uniqueProductsMap.set(productId, {
+                                                product: product, quantity: product.quantity, totalPrice:
+                                                product.totalPrice }); } }); %>
 
-        <script>
-            function cancelProduct(x,y){
-                const productId = x;
-                const orderId = y;
-                console.log("order id from fronted :",orderId);
-                fetch("/cancelProductStatus",{
-                    method:"POST",
-                    headers:{
-                        "Content-Type":"application/json"
-                    },
-                    body:JSON.stringify({productId,orderId})
-                })
-                .then((response)=>response.json())
-                .then((data)=>{
-                    if (data.update === true) {
-                            console.log("helloooo inside e");
-                            const cancelButton = document.getElementById('cancelButton');
-                            cancelButton.textContent = 'No Actions Available';
+                                                <% uniqueProductsMap.forEach(function(productInfo) { const
+                                                    product=productInfo.product; %>
+                                                    <tr>
+                                                        <td>
+                                                            <img src="/public/adminAssets/product-images/<%= product.productId.images[0] %>"
+                                                                alt="" class="img-thumbnail" style="max-width: 80px;">
+                                                        </td>
+                                                        <td>
+                                                            <a href="/product?_id=<%= product.productId %>">
+                                                                <%= product.productId.name %>
+                                                            </a>
+                                                        </td>
+                                                        <td>
+                                                            <%= product.productId.category %>
+                                                        </td>
+                                                        <td> ₹<%= product.price %>
+                                                        </td>
+                                                        <td>
+                                                            <%= productInfo.quantity %>
+                                                        </td>
+                                                        <td> ₹<%= productInfo.totalPrice %>
+                                                        </td>
+                                                        <td>
+                                                            <%console.log("product status :",product.productStatus)%>
+                                                                <% if (product.productStatus==='placed' ) { %>
+                                                                    <button
+                                                                        onclick="cancelProduct('<%= product.productId._id %>','<%= orderDetails._id %>')"
+                                                                        data-product-id="<%= product.productId._id %>">Cancel</button>
+                                                                    <% } else { %>
+                                                                        <span>No Actions Available</span>
+                                                                        <% } %>
+                                                        </td>
+                                                    </tr>
 
-                        }
-                        console.log("order id :",orderId);
-                        $('#xs').load(`/orderDetails?_id=${orderId} #xs`);    
 
+                                                    <% }); %>
+
+                                        </tbody>
+                                    </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+            <script>
+                function cancelProduct(productId, orderId) {
+                    console.log("order id from frontend:", orderId);
+                    fetch("/cancelProductStatus", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            productId,
+                            orderId
+                        })
                     })
-                .catch((error)=>{
-                    console.log(
-                    "error on cancelProduct :",error
-                    );
-                })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            if (data.update === true) {
+                                console.log("Product canceled successfully");
+
+                                // Update the corresponding cancel button
+                                const cancelButton = document.querySelector(`button[data-product-id="${productId}"]`);
+                                cancelButton.textContent = 'No Actions Available';
+                                cancelButton.disabled = true;
+                            }
+
+                            // Reload the order details section
+                            $('#xs').load(`/orderDetails?_id=${orderId} #xs`);
+                        })
+                        .catch((error) => {
+                            console.log("Error on cancelProduct:", error);
+                        })
+                }
+
+                function continuePayment(orderId) {
+                    try {
+                        console.log("order id :",orderId);
+                        var id = orderId
+                        fetch("/continuePayment",{
+                            method:"PATCH",
+                            headers:{
+                                "Content-Type":"application/json"
+                            },
+                            body:JSON.stringify({id})
+                        })
+                        .then((response)=>response.json())
+                        .then((data)=>{
+                            console.log("data :",data);
+                            if(data.success===true){
+                                razorpayPayment(data.orderData,id)
+                            }
+                        })
+                    } catch (error) {
+                        console.error("Error on continue payment :", error);
+                        // Handle JSON parsing error
+                    }
+                }
+
+
+
+function razorpayPayment(order,orderId) {
+      console.log("function called", order);
+      let options = {
+        "key": "rzp_test_rT3W9QdZWlR1hK",
+        "amount": order.amount,
+        "currency": "INR",
+        "name": "STREAK-X FRAMES",
+        "description": "Test Transaction",
+        "image": "/userAssets/images/hero_1.png",
+        "order_id": order.id,
+        "handler": function (response) {
+            console.log("response :",response);
+          verifyPayment(response, order,orderId)
+        },
+        "prefill": {
+          "name": "Vyshnav Nalupurakkal",
+          "email": "vyshnavvysh@gmail.com",
+          "contact": "9000090000"
+        },
+        "notes": {
+          "address": "Razorpay Corporate Office"
+        },
+        "theme": {
+          "color": "#3399cc"
+        }
+      };
+      let raz = new Razorpay(options);
+      raz.open();
+
+    
+    
+    
+      function verifyPayment(payment, order,orderId) {
+        fetch("/continueVerifyPayment", {
+          method: 'PATCH',
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ payment, order,orderId })
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("response :", data);
+  
+            if (data.success === true) {
+              console.log("entered into this");
+              let orderId = data.orderId
+              window.location.href = `/orderSuccess`;
             }
-        </script>
+            else if (response.onlineSuccess) {
+              Swal.fire({
+                icon: 'error',
+                title: 'Payment has done',
+                showConfirmButton: false,
+                timer: 1500
+              })
+            }
+          })
+      }
+    }
+
+            </script>
 
 
-<%- include('userLayouts/footer') %>
+            <%- include('userLayouts/footer') %>

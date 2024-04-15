@@ -2,6 +2,7 @@ const User = require("../model/userModel");
 const otp = require("../model/otpModel");
 const Product = require("../model/productModel");
 const Category = require("../model/categoryModel");
+const Coupon = require("../model/couponModel");
 const Order = require("../model/orderModel");
 const otpGenerator = require("otp-generator");
 const bcrypt = require("bcrypt");
@@ -10,7 +11,14 @@ const randomstring = require("randomstring");
 const config = require("../config/config");
 const { ObjectId } = require("mongodb");
 const dotenv = require("dotenv");
+const path = require("path");
+
+const puppeteer = require("puppeteer");
+const ejs = require("ejs")
+const puppeteerpdf = require("pdf-puppeteer")
+
 const { EventEmitterAsyncResource } = require("nodemailer/lib/xoauth2");
+const { default: mongoose } = require("mongoose");
 dotenv.config();
 
 //============SECURE PASSWORD==============
@@ -59,7 +67,7 @@ const sendVerifyMail = async (name, email, otp) => {
         "</h1></div>" +
         "</div>",
     };
-    console.log("otp send to email :",otp);
+    console.log("otp send to email :", otp);
     transporter.sendMail(mailoptions, (error, info) => {
       if (error) {
         console.error(error);
@@ -82,15 +90,17 @@ const verifyOTP = async (req, res) => {
     for (let i = 0; i < req.body.otp.length; i++) {
       otp += req.body.otp[i];
     }
-    
-    const { name, email, mobile, password } = req.session.user;
+
     if (parseInt(otp) === parseInt(req.session.otp)) {
+      console.log("req.session use :", req.session.user);
+      const { name, email, mobile, password, referalCode } = req.session.user;
       const userData = new User({
         name: name,
         email: email,
         mobile: mobile,
         password: password,
         is_verified: 1,
+        referalCode: referalCode,
       });
 
       const saved = await userData.save();
@@ -150,7 +160,7 @@ const sendResetPasswordMail = async (name, email, token) => {
 
 const showVerifyOTPPage = async (req, res) => {
   try {
-    res.render("user/otp-verification");
+    res.render("user/otp-verification", { message: "" });
   } catch (error) {
     console.log(error);
     res.render("500");
@@ -182,7 +192,7 @@ const resendOtp = (req, res) => {
           req.session.otp.code
         );
         res.render("user/otp-verification", {
-        message: `New OTP send to ${req.session.email}`,
+          message: `New OTP send to ${req.session.email}`,
         });
       } else {
         res.render("user/otp-verification", {
@@ -209,6 +219,26 @@ const loadSignup = async (req, res) => {
 //==================INSERT USER================
 const insertUser = async (req, res) => {
   try {
+    const code = req.body.referal;
+    console.log("req.body code ;", req.body, req.body.referal);
+    let data;
+    let data2;
+    if (code) {
+      const referalCheck = await User.findOne({ referalCode: code });
+      if (!referalCheck) {
+        console.log("no referal ");
+        return res.render("user/signup", { message: "invalid referal code" });
+      } else {
+        (data = {
+          amount: 200,
+          date: new Date(),
+        }),
+          (data2 = {
+            amount: 500,
+            date: new Date(),
+          });
+      }
+    }
     const userCheck = await User.findOne({ email: req.body.email });
 
     if (userCheck) {
@@ -224,9 +254,9 @@ const insertUser = async (req, res) => {
 
     // Create a new User instance and save to the database
     console.log("1", req.body.password);
-    const spassword = await securePassword(req.body.password);
+    const securepassword = await securePassword(req.body.password);
 
-    if (!spassword) {
+    if (!securepassword) {
       // Handle the case where password hashing failed
       return res.render("user/signup", { message: "Error creating user" });
     }
@@ -235,12 +265,22 @@ const insertUser = async (req, res) => {
       name: req.body.name,
       email: req.body.email,
       mobile: req.body.mobile,
-      password: spassword,
+      password: securepassword,
+      referalCode: await generateCode(),
     });
     const otp = generateOTP();
     req.session.otp = otp;
     req.session.user = newUser;
     console.log(req.session.otp);
+    console.log("dataaaaaa :", data, "new user :", newUser);
+    if (data && newUser) {
+      console.log("entering to the wallet history adding stage :");
+      await User.findOneAndUpdate(
+        { referalCode: code },
+        { $push: { walletHistory: data2 }, $inc: { wallet: 500 } },
+        { new: true }
+      );
+    }
 
     sendVerifyMail(
       req.session.user.name,
@@ -295,7 +335,11 @@ const verifyLogin = async (req, res) => {
             req.session.user = userData;
             req.session.mail = userData.email;
             req.session.blocked = userData.blocked;
-
+            console.log("blockeed status :",req.session.blocked);
+            if(req.session.blocked===1){
+              req.session.destroy();
+              res.redirect('/user-blocked')
+            }
             res.redirect(`/home`);
           }
         } else {
@@ -319,7 +363,7 @@ const verifyLogin = async (req, res) => {
 const loadHome = async (req, res) => {
   try {
     const user = req.session.user;
-    const products = await Product.find({ category: 1 }).exec();
+    const products = await Product.find({}).exec();
     const category = await Category.find({ isBlocked: 1 })
       .populate("associatedProducts")
       .exec();
@@ -346,20 +390,37 @@ const showProfile = async (req, res) => {
     const user = req.session.user;
     console.log(user._id);
     const userData = await User.findOne({ _id: user._id });
-    console.log("req.body :", req.body);
-    let page = 1;
-    console.log("req query :", req.query.page);
-    if (req.query.page) {
-      page = req.query.page;
-    }
+    let page = req.query.page || 1;
+    let walletPage = req.query.walletPage || 1;
+    console.log(
+      "req query :",
+      req.query.page,
+      "req.query.walletPage :",
+      req.query.walletPage
+    );
+
+    const coupons = await Coupon.find({ usedUsers: { $in: [user._id] } });
+    // if (req.query.page) {
+    //   page = req.query.page;
+    // }
     const limit = 4;
+    const walletHistoryCount = userData.walletHistory.length;
+    const walletLimit = 4;
+    console.log("length of the wallet history array :", walletHistoryCount);
+
     const orders = await Order.find({ user: user._id })
-      .sort({orderDate:-1})
+      .sort({ orderDate: -1 })
       .limit(limit * 1)
       .skip((page - 1) * limit)
       .exec();
     const count = await Order.find({ user: user._id }).countDocuments();
-    console.log("counttt of orders :", count);
+    console.log(
+      "counttt of orders :",
+      count,
+      "count of wallet :",
+      walletHistoryCount
+    );
+
     if (userData) {
       res.render("user/profile", {
         userData,
@@ -367,6 +428,11 @@ const showProfile = async (req, res) => {
         orders,
         currentPage: page,
         totalPages: Math.ceil(count / limit),
+        coupons,
+        currentWalletPage: walletPage,
+        walletLimit: walletLimit,
+        walletCount: walletHistoryCount,
+        totalWalletPage: Math.ceil(walletHistoryCount / walletLimit),
       });
     }
   } catch (error) {
@@ -417,6 +483,85 @@ const editProfile = async (req, res) => {
   }
 };
 
+//Genarating Referal Code
+
+function generateCode() {
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+  let code = "";
+
+  for (let i = 0; i < 6; i++) {
+    let randomPos = Math.floor(Math.random() * characters.length);
+    code += characters.charAt(randomPos);
+  }
+  console.log("code :", code);
+  return code;
+}
+
+const invoice = async (req, res) => {
+  try {
+    console.log("available order id :", req.query);
+    console.log("reached at invoice :");
+    const orderId = req.query.id;
+    const totalOrders = await Order.findOne({ _id: orderId }).populate({
+      path: "products.productId",
+      populate: {
+        path: "category",
+        populate: {
+          path: "offer",
+        },
+      },
+      populate: {
+        path: "offer",
+      },
+    });
+
+    console.log("total orders after the populate :", totalOrders);
+
+    const orders = totalOrders.products.filter(
+      (val) =>
+        val.productStatus === "delivered" ||
+        val.productStatus === "returned or cancelled"
+    );
+
+    const deliveryAddressId = totalOrders.deliveryAddress[0]._id;
+
+    console.log("delviery address id :", deliveryAddressId);
+    console.log("ordersssssssssssssssssss :", orders);
+    const userAddress = await User.findOne(
+      { "address._id": deliveryAddressId },
+      { "address.$": 1 }
+    );
+
+    const ejsPagePath = path.join(__dirname, "../view/user/pdf.ejs");
+    console.log("ejs page path   :", ejsPagePath);
+
+    const ejsPage = await ejs.renderFile(ejsPagePath, {
+      orders,
+      userAddress,
+      totalOrders,
+    });
+
+    const browser = await puppeteer.launch({headless:"new"});
+    const page = await browser.newPage();
+    await page.setContent(ejsPage)
+    const pdfBuffer = await page.pdf();
+    await browser.close();
+    
+    console.log("user addresss :", userAddress);
+
+    res.setHeader("Content-Type","application/pdf");
+    res.setHeader("Content-Disposition","attachment; filename=Order-Invoice.pdf")
+    res.send(pdfBuffer);
+
+    console.log(
+      "pdf bufferrrrrrrrrrrrrrrr :",pdfBuffer
+    );
+    console.log("ejs page page page page :",ejsPage)
+  } catch (error) {
+    console.log("error on invoice :", error);
+  }
+};
+
 module.exports = {
   loadSignup,
   insertUser,
@@ -435,4 +580,6 @@ module.exports = {
   showProfile,
   showEditProfile,
   editProfile,
+  generateCode,
+  invoice,
 };

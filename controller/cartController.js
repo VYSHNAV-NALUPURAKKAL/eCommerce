@@ -9,21 +9,39 @@ const viewCart = async (req, res) => {
     const user = req.session.user;
     const userId = user._id;
     console.log("user id :", userId);
+    const userData = await User.findById({ _id: userId });
+    console.log("user Data from view cart :", userData);
     const cart = await Cart.findOne({ userId })
       .populate({
         path: "items.productId",
-        select: "name price  images quantity",
+        populate: {
+          path: "category",
+          populate: {
+            path: "offer",
+          },
+        },
+        populate: {
+          path: "offer",
+        },
       })
       .exec();
 
     console.log(cart, "tihs is it ");
-    if (cart) {
-      const cartItems = cart.items;
-      res.render("user/cart", { cartItems, user, cart });
+    console.log("the blocked status :", userData.blocked);
+    if (userData.blocked === 1) {
+      console.log("entered to this ");
+      req.session.destroy();
+      res.redirect("/user-blocked");
     } else {
-      console.log("asuuuuuuuuuuui");
-      const cartItems = null;
-      res.render("user/cart", { user, cart, cartItems });
+      console.log("entered to this else case ");
+      if (cart) {
+        const cartItems = cart.items;
+        res.render("user/cart", { cartItems, user, cart });
+      } else {
+        console.log("asuuuuuuuuuuui");
+        const cartItems = null;
+        res.render("user/cart", { user, cart, cartItems });
+      }
     }
   } catch (error) {
     console.log("error on view cart :", error.message);
@@ -37,7 +55,9 @@ const postToCart = async (req, res) => {
     const productData = await Product.findOne({ _id: productID });
     const userCart = await Cart.findOne({ userId: user._id });
 
-    let productPrice = productData.price;
+    let productPrice = productData.discountedPrice
+      ? productData.discountedPrice
+      : productData.price;
 
     if (!productData) {
       return res.status(404).json({
@@ -60,7 +80,7 @@ const postToCart = async (req, res) => {
           {
             productId: productID,
             quantity: 1,
-            price: productData.price,
+            price: productPrice,
             totalPrice: productPrice,
           },
         ],
@@ -91,7 +111,7 @@ const postToCart = async (req, res) => {
             items: {
               productId: productID,
               quantity: 1,
-              price: productData.price,
+              price: productPrice,
               totalPrice: productPrice,
             },
           },
@@ -152,6 +172,7 @@ const deleteFromCart = async (req, res) => {
 
 const updateCartQuantity = async (req, res) => {
   try {
+    console.log("clicked clicked");
     const product_id = req.body.data.productId;
     const user = req.session.user;
     const user_id = user._id;
@@ -160,7 +181,6 @@ const updateCartQuantity = async (req, res) => {
     const cartData = await Cart.findOne({ userId: user_id });
     const product = cartData.items.filter((obj) => obj.productId == product_id);
     const productData = await Product.findById(product_id);
-
     console.log("step 1");
     console.log("product . quantity :", product[0].quantity);
     if (
@@ -212,6 +232,7 @@ const loadCheckOut = async (req, res) => {
     const user = req.session.user;
 
     const user_id = user._id;
+    const walletBalance = await User.findOne({ _id: user_id });
     const cartData = await Cart.findOne({ userId: user_id })
       .populate("items.productId")
       .populate("couponDiscount");
@@ -252,6 +273,7 @@ const loadCheckOut = async (req, res) => {
         total: discountTotal,
         coupon: eligibleCoupons,
         stock: stock,
+        wallet: walletBalance,
       });
     } else {
       res.redirect("/");
@@ -269,28 +291,31 @@ const getWishlist = async (req, res) => {
     console.log("entered to show wishlist ");
     const user = req.session.user;
     const userId = user._id;
+    const userData = await User.findById({ _id: userId });
+    const wishlist = await Wishlist.findOne({ user: userId })
+      .populate({
+        path: "product.productId",
+        select: "name price images quantity",
+      })
+      .exec();
 
-    const wishlist = await Wishlist.findOne({ user: userId }).populate({
-      path: "product.productId",
-      select: "name price images quantity",
-    }).exec();
-    
     console.log("wishlist:", wishlist);
-
-    if (wishlist && wishlist.product.length > 0) {
-      const wishlistData = wishlist.product;
-      console.log("wishlist data:", wishlistData);
-      res.render("user/wishlist", { user, wishlist, wishlistData });
+    if (userData.blocked === 1) {
+      req.session.destroy();
+      res.redirect("/user-blocked");
     } else {
-      res.render("user/wishlist", { user, wishlist, wishlistData: [] });
+      if (wishlist && wishlist.product.length > 0) {
+        const wishlistData = wishlist.product;
+        res.render("user/wishlist", { user, wishlist, wishlistData });
+      } else {
+        res.render("user/wishlist", { user, wishlist, wishlistData: [] });
+      }
     }
   } catch (error) {
-    console.log("error on show wishlist:", error);
     // Handle error appropriately
     res.status(500).send("Internal Server Error");
   }
 };
-
 
 const addToWishlist = async (req, res) => {
   try {
@@ -306,10 +331,10 @@ const addToWishlist = async (req, res) => {
 
     if (wishlistData) {
       console.log("Product already exists in wishlist");
-        await Wishlist.findOneAndUpdate(
-          {user:userId},
-          {$pull:{product:{productId:productId}}}
-          )
+      await Wishlist.findOneAndUpdate(
+        { user: userId },
+        { $pull: { product: { productId: productId } } }
+      );
       res.json({ add: false, productId: productId });
     } else {
       const productData = {
@@ -317,8 +342,8 @@ const addToWishlist = async (req, res) => {
       };
       await Wishlist.findOneAndUpdate(
         { user: userId },
-        { $addToSet: { product: productData } }, 
-        { upsert: true, new: true } 
+        { $addToSet: { product: productData } },
+        { upsert: true, new: true }
       );
 
       console.log("Product added to wishlist");
@@ -330,15 +355,18 @@ const addToWishlist = async (req, res) => {
   }
 };
 
-const deleteWishlist = async(req,res)=>{
+const deleteWishlist = async (req, res) => {
   console.log("entered to delete wishlist ");
   let productId = req.body.productId;
-  console.log("product id ",productId);
-  const user = req.session.user
-  const userId = user._id
-  const wishlistData = await Wishlist.findOne({user:userId,"product.productId":productId})
-  console.log("wishlist data :",wishlistData);
-}
+  console.log("product id ", productId);
+  const user = req.session.user;
+  const userId = user._id;
+  const wishlistData = await Wishlist.findOne({
+    user: userId,
+    "product.productId": productId,
+  });
+  console.log("wishlist data :", wishlistData);
+};
 
 module.exports = {
   viewCart,

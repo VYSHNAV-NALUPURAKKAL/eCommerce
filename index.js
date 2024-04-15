@@ -6,6 +6,11 @@ const express = require('express');
 
 const app = express();
 
+const session = require("express-session")
+
+const { sessionSecret } = require('./config/config');
+
+
 const mongoose = require('mongoose');
 
 mongoose.connect(process.env.MONGO_URL);
@@ -23,8 +28,14 @@ app.set('views','view')
 const userRoute = require('./routes/userRoute');
 app.use('/',userRoute);
 
+app.use(express.urlencoded({extended:true}))
 
-// //for admin route
+app.use(session({
+    secret:sessionSecret,
+    resave:false,
+    saveUninitialized:true
+}));
+
 const adminRoute = require('./routes/adminRoute');
 app.use('/admin',adminRoute);
 
@@ -33,13 +44,6 @@ app.use('/public',express.static(path.join(__dirname,'public')));
 
 
 
-app.use('*',(req,res)=>{
-    try{
-        res.render(path.join('user/404'))
-    }catch(error){
-        console.log(error);
-    }
-})
 
 
 

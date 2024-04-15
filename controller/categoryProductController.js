@@ -1,5 +1,6 @@
 const Categories = require("../model/categoryModel");
 const Product = require("../model/productModel");
+const Offer = require("../model/offerModel");
 
 const { name } = require("ejs");
 const mongoose = require("mongoose");
@@ -12,7 +13,8 @@ const seeCategories = async (req, res) => {
   try {
     console.log("categoryl ind ttooo");
     const categories = await Categories.find();
-    res.render("admin/categories", { categories });
+    const offer = await Offer.find()
+    res.render("admin/categories", { categories,offer });
   } catch (error) {
     console.log(error.message);
   }
@@ -126,9 +128,45 @@ const editCategories = async (req, res) => {
 
 const seeProducts = async (req, res) => {
   try {
-    const products = await Product.find();
+    let page = 1 ;
+    if(req.query.page){
+      page=req.query.page;
+    }
+    const limit = 3;
+    const count = await Product.find().countDocuments();
+
+    const products = await Product.find()
+      .populate({
+        path: "category",
+        populate: { path: "offer" } 
+      })
+      .populate("offer")
+      .limit(limit)
+      .skip((page-1) * limit)
+      .exec()
+
     const categories = await Categories.find();
-    res.render("admin/products", { products, categories });
+    const offer = await Offer.find();
+    console.log("products :",products);
+    
+    products.forEach(async (product)=>{
+    if(product.category.offer){
+      console.log("isnide of category offer ");
+      console.log("product.category.offer.discountAmount :",product.category.offer.discountAmount);
+      const discountedPrice = product.price * (1-product.category.offer.discountAmount /100);
+      console.log("discounted price : ",discountedPrice);
+      product.discountedPrice = parseInt(discountedPrice);
+      product.offer = product.category.offer
+
+      await product.save()
+    }else if(product.offer){
+      const discountedPrice = product.price * (1-product.offer.discountAmount /100);
+      product.discountedPrice = parseInt(discountedPrice)
+      await product.save()
+    }
+    
+    })
+    res.render("admin/products", { products, categories,offer,totalPages:Math.ceil(count/limit),currentPage:page });
   } catch (error) {
     console.log(error);
   }
@@ -149,24 +187,27 @@ const addProduct = async (req, res) => {
     console.log("category :", category);
     name = name[0].toUpperCase() + name.slice(1).trim().toLowerCase();
     const images = req.files;
-    const x = await Categories.find();
+    const categoryData = await Categories.find();
     const category1 = await Categories.findById(category);
-    const check = await Product.findOne({ name: name });
+    const checkExistingProduct = await Product.findOne({ name: name });
     if (!category1) {
       console.log("error on add product");
       return res.status(404).json({ message: "Category not found" });
     }
-    if (!check) {
+    //check the price and stock and count of image greater than two 
+    if (!checkExistingProduct) {
       const newProduct = new Product({
         name,
         description,
         price,
         quantity,
-        category: category1.categoryName,
+        category: category1._id,
         images: images.map((image) => image.filename),
       });
-
-      await newProduct.save();
+      
+      if(price>0 && quantity >0 && images.length>=2){
+        await newProduct.save();
+      }
 
       let populatedProduct;
       try {
@@ -177,7 +218,7 @@ const addProduct = async (req, res) => {
         console.log("Error during population:", error);
       }
       console.log(populatedProduct);
-      res.redirect("/admin/products")
+      res.redirect("/admin/products");
     }
   } catch (error) {
     console.log("error on addProduct", error);
@@ -198,6 +239,7 @@ const showEditProduct = async (req, res) => {
       // return res.render('user/404', { message: "Product not found" });
     }
     res.render("admin/editProduct", { product, categories });
+
   } catch (error) {
     console.log("Error:", error);
     res.status(500).send("Internal Server Error");
@@ -207,48 +249,72 @@ const showEditProduct = async (req, res) => {
 const editProduct = async (req, res) => {
   console.log("edit product start");
   try {
-    let { id, name, description, category, price, quantity,imageIndex } = req.body;
+    let { id, name, description, category, price, quantity, imageIndex } =
+      req.body;
     console.log("req.body :", req.body);
     console.log("req.files", req.files);
     const images = req.files;
-    console.log("index :",imageIndex);
+    console.log("index :", imageIndex);
+    const objectId = mongoose.Types.ObjectId.createFromHexString(id);
+    const categoryData = await Categories.findOneAndUpdate({categoryName:category},{$push:{associatedProducts:objectId}},{new:true})
+    console.log("object id :",objectId,"category data :",categoryData);
 
     if (!images) {
       return res.status(400).json({ message: "No image provided" });
     }
+    
 
-    name = name[0].toUpperCase() + name.slice(1).trim().toLowerCase();
+    name = name.trim()[0].toUpperCase() + name.slice(1).trim().toLowerCase();
 
     const checkExist = await Product.findOne({ name: name, _id: { $ne: id } });
+    console.log("check exist :", checkExist);
 
     if (checkExist) {
       return res.json({
         message: "Product with the same name already exists",
         ok: false,
       });
-    } 
+    }
     const latestImageIndex = parseInt(imageIndex[imageIndex.length - 1]);
     console.log("Latest image index:", latestImageIndex);
-    
     const existingProduct = await Product.findById(id);
-    existingProduct.images[latestImageIndex] = images[0].filename;
+    console.log("exisistng product :", existingProduct);
+    if (images.length > 0) {
+      existingProduct.images[latestImageIndex] = images[0].filename;
+    }
     const updateData = {
       name: name,
       description: description,
       price: price,
       quantity: quantity,
-      category: category,
+      category: categoryData._id,
       images: existingProduct.images,
     };
 
     await Product.findByIdAndUpdate({ _id: id }, updateData);
-    res.json({ success: true });
+
+    res.json({ success: true, message: "product edited successfully" });
   } catch (error) {
     console.log("Error on edit product", error);
     res.status(500).json({ success: false, error: error.message });
   }
 };
 
+const deletImage = async(req,res)=>{
+  try {
+    console.log("entered inside delete image :  req.boyd :",req.body)
+    const index = req.body.index
+    const productData = await Product.findById({_id:req.body.productId})
+    productData.images.splice(index,1)
+    await productData.save()
+    console.log("saved product data :",productData);
+
+    res.json({success:true,message:"image removed successfully"})
+    
+  } catch (error) {
+    console.log("error occured on delete image :",error);
+  }
+}
 
 
 //=====================User side=============================
@@ -258,7 +324,7 @@ const editProduct = async (req, res) => {
 const showShop = async (req, res) => {
   try {
     const user = req.session.user;
-    const product = await Product.find();
+    const product = await Product.find().populate("offer");
     const category = await Categories.find({ isBlocked: 1 });
     res.render("user/shop", { product, user, category });
   } catch (error) {
@@ -268,19 +334,31 @@ const showShop = async (req, res) => {
 
 const singleProductPage = async (req, res) => {
   try {
-    const id = req.query.id;
-    console.log("querryryryryry", id);
-    const user = req.session.user;
-    const user_id = user._id;
-    const product = await Product.findById(id);
-    console.log("product from single :", typeof product);
-    res.render("user/singleProductPage", {
-      product: product,
-      user: user,
-      user_id,
-    });
+    if(!req.session.user){
+      const user = req.session.user
+      const id = req.query.id;
+      console.log("query", id);
+      const product = await Product.findById(id);
+      res.render("user/singleProductPage", {
+        product: product,
+        user:user
+      });
+    }else if(req.session.user){
+      const user = req.session.user;
+      const user_id = user._id;
+      const id = req.query.id;
+      const product = await Product.findById(id);
+      res.render("user/singleProductPage", {
+        product: product,
+        user: user,
+        user_id,
+      });
+    }
+    
   } catch (error) {
     console.log("error on single product page:", error);
+    // Render an error page or send an error response to the client
+    res.status(500).render("error", { message: "Internal server error" });
   }
 };
 
@@ -294,6 +372,7 @@ module.exports = {
   addProduct,
   showEditProduct,
   editProduct,
+  deletImage,
   updateProductsList,
   showShop,
   singleProductPage,

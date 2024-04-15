@@ -149,22 +149,28 @@
                             </h2>
                           </td>
                           <td>
+                            <%if(!item.productId.offer){%>
                             <%= item.productId.price %>
+                            <%}else{%>
+                              <%= item.productId.discountedPrice%>
+                            <%}%>
                           </td>
                           <td>
                             <div class="input-group mb-3" style="max-width: 120px">
+                              
                               <div class="input-group-prepend">
                                 <button class="btn btn-outline-primary js-btn-minus" type="button"
-                                  onclick="quantityChanger(-1, '<%= item.productId._id %>')">
+                                  onclick="quantityChanger(-1, '<%= item.productId._id %>')" <%= item.quantity <= 1 ?'disabled':'' %> >
                                   &minus;
                                 </button>
                               </div>
 
                               <input type="text" class="form-control text-center" value="<%= item.quantity %>"
                                 placeholder="<%= item.quantity %>" id="<%= item.productId._id %>-quantity" />
-                              <div class="input-group-append">
+                              
+                                <div class="input-group-append">
                                 <button class="btn btn-outline-primary js-btn-plus" type="button"
-                                  onclick="quantityChanger(1, '<%= item.productId._id %>')">
+                                  onclick="quantityChanger(1, '<%= item.productId._id %>')" <%= item.quantity >= item.productId.quantity ?'disabled':'' %>>
                                   &plus;
                                 </button>
                               </div>

@@ -48,11 +48,15 @@ const orderSchema = new mongoose.Schema({
     orderStatus:{
         type:String,
         default:'pending',
-        enum:['pending','placed','returned or cancelled']
+        enum:['pending','placed','returned or cancelled','delivered']
     },
     orderDate:{
         type:Date,
         required:true
+    },
+    invoice:{
+        type:Boolean,
+        default:false
     }
 })
 

@@ -164,6 +164,16 @@
               <div class="row mb-5">
                 <% product.forEach(products=> { %>
                   <div class="col-sm-6 col-lg-4 mb-4" data-aos="fade-up">
+                    <% if (products.offer) { %>
+                      <% console.log("produccts :",products)%>
+                      <div class="ribbons-wrapper ">
+                        <div class="ribbon">
+                          <span class="ribbon2 text-white p-2 "><strong>
+                              <%= products.offer.discountAmount %>% Off
+                            </strong></span>
+                        </div>
+                      </div>
+                      <% } %>
                     <div class="block-4 text-center border position-relative">
                       <figure class="block-4-image">
                         <a href="/product?id=<%= products._id %>">
@@ -180,17 +190,27 @@
                         <p class="mb-0">
                           <%= products.description %>
                         </p>
-                        <p class="text-primary font-weight-bold">$<%= products.price %>
-                        </p>
-
+                        <p class="text-primary font-weight-bold">
+                          <% if(!products.offer) {%>
+                            ₹<%= products.price %>
+                            <%}else if(products.category.offer){%>
+                              <del>₹<%= products.price %></del><br>
+                              ₹<%=products.discountedPrice%>
+                            <%}else{%>
+                              <del class="text-danger">₹<%=products.price%></del><br>
+                              ₹<%=products.discountedPrice%>
+                              <%}%>
+                          </p>
                         <div class="product-actions d-flex justify-content-between align-items-center">
-                          <% if(user) { %>
+                          <% if(user && products.quantity>=1) { %>
                             <button class="btn btn-primary" onclick="postToCart('<%= products._id %>')">Add to
                               Cart</button>
                               <button class="wishlist-button btn btn-sm btn-outline-secondary p-0" onclick="addToWishlist('<%= products._id %>')">
                                 <i id="wishlist-icon-<%= products._id %>" class="far fa-heart align-middle"></i>
                               </button>
-                            <% } %>
+                            <% }else if(products.quantity<=0 ) {%>
+                              <p class="text-danger font-weight-bold">Currently Out Of Stock!</p>
+                              <%}%>
                         </div>
                       </div>
                     </div>
@@ -224,15 +244,15 @@
               </h3>
               <ul class="list-unstyled mb-0">
                 <li class="mb-1">
-                  <a href="#" class="d-flex"><span>Men</span>
+                  <a href="#" class="d-flex"><span>SunGlasses</span>
                     <span class="text-black ml-auto">(2,220)</span></a>
                 </li>
                 <li class="mb-1">
-                  <a href="#" class="d-flex"><span>Women</span>
+                  <a href="#" class="d-flex"><span>EyeGlasses</span>
                     <span class="text-black ml-auto">(2,550)</span></a>
                 </li>
                 <li class="mb-1">
-                  <a href="#" class="d-flex"><span>Children</span>
+                  <a href="#" class="d-flex"><span>ComputerGlasses</span>
                     <span class="text-black ml-auto">(2,124)</span></a>
                 </li>
               </ul>
@@ -253,15 +273,15 @@
                 </h3>
                 <label for="s_sm" class="d-flex">
                   <input type="checkbox" id="s_sm" class="mr-2 mt-1" />
-                  <span class="text-black">Small (2,319)</span>
+                  <span class="text-black">EyeGlass</span>
                 </label>
                 <label for="s_md" class="d-flex">
                   <input type="checkbox" id="s_md" class="mr-2 mt-1" />
-                  <span class="text-black">Medium (1,282)</span>
+                  <span class="text-black">SunGlass</span>
                 </label>
                 <label for="s_lg" class="d-flex">
                   <input type="checkbox" id="s_lg" class="mr-2 mt-1" />
-                  <span class="text-black">Large (1,392)</span>
+                  <span class="text-black">ComputerGlass</span>
                 </label>
               </div>
 
@@ -414,7 +434,3 @@
     </script>
 
     <%- include("userLayouts/footer")%>
-  </div>
-</body>
-
-</html>

@@ -3,15 +3,13 @@ const Product = require("../model/productModel");
 const User = require("../model/userModel");
 const Order = require("../model/orderModel");
 const Razorpay = require("razorpay");
-const crypto = require("crypto"); 
+const crypto = require("crypto");
 require("dotenv").config();
 
 var instance = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
   key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
-
-
 
 const checkoutPost = async (req, res) => {
   try {
@@ -20,7 +18,9 @@ const checkoutPost = async (req, res) => {
     const selectedAddress = req.body.selectedAddress;
     const paymentMethod = req.body.selectedPaymentMethod;
     const totalCheckoutAmount = req.body.totalValue;
-    const cartData = await Cart.findOne({ userId: userId }).populate('couponDiscount')
+    const cartData = await Cart.findOne({ userId: userId }).populate(
+      "couponDiscount"
+    );
 
     const userAddress = await User.findOne({
       _id: userId,
@@ -29,15 +29,13 @@ const checkoutPost = async (req, res) => {
     console.log("payment method :", paymentMethod);
     console.log("selected address  :", selectedAddress);
     console.log("cart data from checkout post  :", cartData);
-    console.log("cart data . coupondiscount :",cartData.couponDiscount);
     const address = userAddress.address.filter(
       (addr) => addr._id.toString() === selectedAddress
     );
 
-      let status = paymentMethod == "Cash On Delivery" ? "placed" : "pending";
-      const orderItems = [];
+    let status = paymentMethod == "Cash On Delivery" ? "placed" : "pending";
+    const orderItems = [];
 
-      
     for (const product of cartData.items) {
       const { productId, quantity, price, totalPrice } = product;
       const productData = await Product.findOne({ _id: productId });
@@ -46,89 +44,135 @@ const checkoutPost = async (req, res) => {
         await productData.save();
       }
 
-      for(let i = 0 ; i <quantity ; i++){
+      for (let i = 0; i < quantity; i++) {
         const item = {
           productId,
-          quantity:1,
-          price:price,
-          totalPrice:price,
-          productStatus:status,
+          quantity: 1,
+          price: price,
+          totalPrice: price,
+          productStatus: status,
+        };
+
+        if (cartData.couponDiscount) {
+          const totalQuantity = cartData.items.reduce(
+            (total, product) => total + product.quantity,
+            0
+          );
+          const discountPerItem =
+            cartData.couponDiscount.discount / totalQuantity;
+          item.totalPrice = price - discountPerItem;
+        } else {
+          item.totalPrice = price;
         }
-      
-
-      if(cartData.couponDiscount){
-
-        const totalQuantity = cartData.items.reduce((total,product)=> total + product.quantity,0);
-        const discountPerItem = cartData.couponDiscount.discount / totalQuantity;
-        item.totalPrice = price - discountPerItem;
-
-      }else{
-        item.totalPrice = price;
+        orderItems.push(item);
       }
-      orderItems.push(item);
     }
-  }
-      const total = orderItems.reduce((acc,item)=>acc + item.totalPrice,0);
-      const totalAmount = total;  
+    const total = orderItems.reduce((acc, item) => acc + item.totalPrice, 0);
+    const totalAmount = total;
 
-      if (status) {
-        const newOrder = new Order({
-          user: userId,
-          deliveryAddress: address,
-          payment: paymentMethod,
-          products:orderItems,
-          subTotal: totalAmount,
-          orderStatus: status,
-          orderDate: new Date(),
+    if (status) {
+      const newOrder = new Order({
+        user: userId,
+        deliveryAddress: address,
+        payment: paymentMethod,
+        products: orderItems,
+        subTotal: totalAmount,
+        orderStatus: status,
+        orderDate: new Date(),
+      });
+
+      const orderSave = await newOrder.save();
+      await cartData.deleteOne({ userId: userId });
+      console.log("saved order save in checkout post :", orderSave);
+
+      if (orderSave && paymentMethod === "Cash On Delivery") {
+        const orderId = orderSave._id;
+        const totalAmount = orderSave.subTotal;
+        return res.status(201).json({
+          status: "success",
+          orderId,
+          totalAmount,
+          value: 0,
+          message: "order placed succefully",
         });
+      } else if (orderSave && paymentMethod === "Wallet") {
+        const orderId = orderSave._id;
+        const totalAmount = orderSave.subTotal;
+        const walletData = await User.findOne({ _id: userId }, { wallet: 1 });
+        const walletBalance = walletData.wallet;
+        console.log("wallet balance :", walletBalance);
+        if (walletBalance > 0 && walletBalance >= totalAmount) {
+          const data = {
+            amount: -totalAmount,
+            date: new Date(),
+          };
 
-        const orderSave = await newOrder.save();
-        await cartData.deleteOne({ userId: userId });
-        console.log("saved order save in checkout post :", orderSave);
+          const newOrder = await Order.findOneAndUpdate(
+            { _id: orderId },
+            { $set: { orderStatus: "placed" } }
+          );
+          newOrder.products.forEach((product) => {
+            product.productStatus = "placed";
+          });
 
-        if (orderSave && paymentMethod === "Cash On Delivery") {
-          const orderId = orderSave._id;
-          const totalAmount = orderSave.subTotal;
-          return res.status(201).json({
-            status: "success",
+          await Order.findByIdAndUpdate(
+            { _id: newOrder._id },
+            { $set: { products: newOrder.products } },
+            { new: true }
+          );
+          await User.findOneAndUpdate(
+            { _id: userId },
+            { $inc: { wallet: -totalAmount }, $push: { walletHistory: data } }
+          );
+          await Cart.deleteOne({ userId: userId });
+
+          res.json({
             orderId,
+            message: "order placed succesfully(wallet)",
+            status: "success",
             totalAmount,
             value: 0,
-            message: "order placed succefully",
           });
-        } else{
-          const orderId = orderSave._id;
-          const totalAmount = orderSave.subTotal;
-          
-          let options = {
-            amount: totalAmount*100,
-            currency: "INR",
-            receipt: "" + orderId,
-          };
-          
-          console.log("angane options kazhinjj ");
-          instance.orders.create(options, function (err, orderSave) {
-            if (err) {
-              console.log("error on right after options :", err);
-            }
-            console.log("order save :", orderSave);
-            return res.status(201).json({
-              status: "failed",
-              orderId,
-              totalAmount,
-              orderSave,
-              value: 0,
-              message: "going with status as failed to frontend",
-            });
+        } else {
+          res.json({
+            orderId,
+            message:
+              "Sorry,you do not have enough balance in your wallet.Please choose different payment method",
+            status: "walletFailed",
+            value: 0,
           });
         }
+      } else {
+        const orderId = orderSave._id;
+        const totalAmount = orderSave.subTotal;
+
+        let options = {
+          amount: totalAmount * 100,
+          currency: "INR",
+          receipt: "" + orderId,
+        };
+
+        console.log("angane options kazhinjj ");
+        instance.orders.create(options, function (err, orderSave) {
+          if (err) {
+            console.log("error on right after options :", err);
+          }
+          console.log("order save :", orderSave);
+          return res.status(201).json({
+            status: "failed",
+            orderId,
+            totalAmount,
+            orderSave,
+            value: 0,
+            message: "going with status as failed to frontend",
+          });
+        });
+      }
     }
   } catch (error) {
     console.log("error on checkout post :", error);
   }
 };
-
-
 
 const verifyPayment = async (req, res) => {
   try {
@@ -173,8 +217,6 @@ const verifyPayment = async (req, res) => {
   }
 };
 
-
-
 const successPage = async (req, res) => {
   try {
     console.log("req.query :", req.query);
@@ -183,8 +225,6 @@ const successPage = async (req, res) => {
     console.log("error on success:", error);
   }
 };
-
-
 
 const detailOrder = async (req, res) => {
   try {
@@ -196,15 +236,13 @@ const detailOrder = async (req, res) => {
     const orderDetails = await Order.findById(orderId).populate(
       "products.productId"
     );
-    //Sorting is done by this , latest in the top 
+    //Sorting is done by this , latest in the top
     console.log("order details :", orderDetails);
     res.render("user/orderDetails", { orderDetails, user });
   } catch (error) {
     console.log("error on detail order :");
   }
 };
-
-
 
 const cancelProduct = async (req, res) => {
   try {
@@ -213,15 +251,17 @@ const cancelProduct = async (req, res) => {
     const user = req.session.user;
     const userId = user._id;
     const orderData = await Order.findOne({ _id: orderId });
+
     const productLength = orderData.products.length;
     let totalAmount = 0;
 
     if (productLength > 1) {
       orderData.products.forEach((item) => {
-        if (item.productId == productId){
+        if (item.productId == productId) {
           item.productStatus = "returned or cancelled";
+          totalAmount += item.price * item.quantity;
         }
-        });
+      });
 
       const orderStat = orderData.products.every(
         (item) => item.productStatus === "returned or cancelled"
@@ -246,6 +286,10 @@ const cancelProduct = async (req, res) => {
         );
         await Cart.deleteOne({ _id: userId });
       }
+      await Product.updateOne(
+        { _id: productId },
+        { $inc: { quantity: count } }
+      );
     } else {
       orderData.orderStatus = "returned or cancelled";
       const count = orderData.products[0].quantity;
@@ -253,11 +297,24 @@ const cancelProduct = async (req, res) => {
       orderData.products.forEach((item) => {
         if (item.productId == productId) {
           item.productStatus = "returned or cancelled";
+          totalAmount += item.price * item.quantity;
         }
       });
       await Product.updateOne(
         { _id: productId },
         { $inc: { quantity: count } }
+      );
+    }
+
+    if (orderData.payment === "Razorpay" || orderData.payment === "Wallet") {
+      console.log("total amount :", totalAmount);
+      const data = {
+        amount: totalAmount,
+        date: Date.now(),
+      };
+      const updatingWallet = await User.findOneAndUpdate(
+        { _id: userId },
+        { $inc: { wallet: totalAmount }, $push: { walletHistory: data } }
       );
     }
 
@@ -280,7 +337,7 @@ const loadOrderManagement = async (req, res) => {
     const limit = 4;
 
     const orderData = await Order.find()
-      .sort({orderDate:-1})
+      .sort({ orderDate: -1 })
       .limit(limit * 1)
       .skip((page - 1) * limit)
       .exec();
@@ -339,6 +396,18 @@ const updateOrder = async (req, res) => {
             { $set: { "products.$.productStatus": orderStatus } }
           );
         }
+      } else if (orderStatus === "delivered") {
+        console.log("entered into the delivered section of update order ");
+        for (let i = 0; i < orderData.products.length; i++) {
+          const product = orderData.products[i].productId;
+          console.log("product :", product);
+
+          await Order.findOneAndUpdate(
+            { _id: orderId, "products.productId": product },
+            { $set: { "products.$.productStatus": orderStatus },invoice:true }
+          );
+
+        }
       }
     }
     res.json({ update: true });
@@ -347,6 +416,92 @@ const updateOrder = async (req, res) => {
   }
 };
 
+const showOrderSummary = async (req, res) => {
+  try {
+    console.log("entered in to the order summay ");
+    console.log("req.query :", req.params);
+  } catch (error) {
+    console.log("error on show order summary :", error);
+  }
+};
+
+const continuePayment = async (req, res) => {
+  try {
+    console.log("reached at continue payment :", req.body);
+    const orderId = req.body.id;
+    const orderData = await Order.findById(orderId);
+    console.log("order Data tatatat a:", orderData);
+    const totalAmount = orderData.subTotal;
+    console.log(
+      "confirming the total is :",
+      totalAmount,
+      "and the id is :",
+      orderId
+    );
+    let options = {
+      amount: orderData.subTotal * 100,
+      currency: "INR",
+      receipt: "" + orderId,
+    };
+
+    console.log("angane options kazhinjj ");
+    instance.orders.create(options, function (err, orderData) {
+      if (err) {
+        console.log("error on right after options :", err);
+      }
+      console.log("order save :", orderData);
+      return res.status(201).json({
+        status: "failed",
+        orderId,
+        totalAmount,
+        orderData,
+        value: 0,
+        message: "going with status as failed to frontend",
+        success: true,
+      });
+    });
+  } catch (error) {
+    console.log("errror on continuee payment :", error);
+  }
+};
+
+const continueVerifyPayment = async (req, res) => {
+  try {
+    console.log("inside of the continue verify :", req.body);
+    const Data = req.body;
+    const orderID = Data.orderId;
+    console.log("inside of the continnue payment mode");
+    console.log("order id :", Data.payment.razorpay_order_id);
+    const orderData = await Order.findById(orderID);
+    const hmac = crypto.createHmac("sha256", process.env.RAZORPAY_KEY_SECRET);
+    hmac.update(
+      Data.payment.razorpay_order_id + "|" + Data.payment.razorpay_payment_id
+    );
+    const hmacValue = hmac.digest("hex");
+    console.log("hamaaac hmachhhhh hmacccccc");
+    console.log("this is after the editing of continue payment :", hmacValue);
+    if (hmacValue == Data.payment.razorpay_signature) {
+      for (const Data of orderData.products) {
+        const { productId, quantity } = Data;
+        await Product.updateOne(
+          { _id: productId },
+          { $inc: { quantity: -quantity } }
+        );
+      }
+    }
+    //changing the status of order
+    orderData.orderStatus = "placed";
+    orderData.products.forEach((product) => {
+      product.productStatus = "placed";
+    });
+    console.log("this is the success of continue payment ");
+    console.log("orderdata from the backend :", orderData);
+    await orderData.save();
+    res.json({ orderID, success: true });
+  } catch (error) {
+    console.log("error on continue verify payment :", error);
+  }
+};
 module.exports = {
   checkoutPost,
   successPage,
@@ -355,4 +510,7 @@ module.exports = {
   updateOrder,
   cancelProduct,
   verifyPayment,
+  showOrderSummary,
+  continuePayment,
+  continueVerifyPayment,
 };

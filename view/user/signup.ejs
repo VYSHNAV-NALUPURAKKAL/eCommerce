@@ -1,205 +1,222 @@
- 
+<!DOCTYPE html>
+<html lang="en">
 
- <!DOCTYPE html>
- <html lang="en">
- 
- <head>
-     <meta charset="UTF-8">
-     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <title>STREAK-X FRAMES SIGNUP</title>
-     <!-- Bootstrap CSS -->
-     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-     <style>
-         body {
-             background: url('your-background-image.jpg') fixed center;
-             background-size: cover;
-             background-color: rgba(255, 255, 255, 0.8);
-             margin: 0;
-             padding: 0;
-             display: flex;
-             justify-content: center;
-             align-items: center;
-             height: 80vh; /* Adjusted height to 80% of the viewport height */
-         }
- 
-         #form {
-             padding: 20px;
-             margin: auto;
-             max-width: 400px;
-             background-color: rgba(255, 255, 255, 0.9);
-             border-radius: 10px;
-             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-         }
- 
-         h4 {
-             text-align: center;
-             margin-bottom: 20px;
-             color: #333;
-         }
- 
-         label {
-             display: block;
-             margin-bottom: 8px;
-             color: #333;
-         }
- 
-         input {
-             width: 100%;
-             padding: 10px;
-             margin-bottom: 15px;
-             border: 1px solid #ccc;
-             border-radius: 5px;
-             box-sizing: border-box;
-         }
- 
-         .error-message {
-             margin-top: -10px;
-             margin-bottom: 15px;
-             font-size: 12px;
-         }
- 
-         button {
-             width: 100%;
-             padding: 10px;
-             background: #3498db;
-             color: #fff;
-             border: none;
-             border-radius: 5px;
-             cursor: pointer;
-         }
- 
-         p {
-             text-align: center;
-             margin-top: 15px;
-         }
- 
-         a {
-             color: #3498db;
-         }
-     </style>
- </head>
- 
- <body>
- 
-     <!-- Signup Form -->
-     <form action="/signup" method="post" id="form">
-         <h4>Create your STREAK-X Account</h4>
-         <% if (typeof message !== 'undefined'){ %>
-         <p style="color: rgb(255, 0, 0);"><%= message %></p>
-         <% } %>
-         <label for="full name">Full Name:</label>
-         <input type="text" name="name" id="name">
-         <p id="nameError" class="error-message" style="color: rgb(255, 0, 0);"></p>
- 
-         <label for="email">Your Mail-id:</label>
-         <input type="email" name="email" id="email">
-         <p id="emailError" class="error-message" style="color: rgb(255, 0, 0);"></p>
- 
-         <label for="mobile">Your Mobile:</label>
-         <input type="number" name="mobile" id="mobile">
-         <p id="mobileError" class="error-message" style="color: rgb(255, 0, 0);"></p>
- 
-         <label for="password">Password</label>
-         <input type="password" name="password" id="password">
-         <p id="passwordError" class="error-message" style="color: rgb(255, 0, 0);"></p>
- 
-         <label for="password">Confirm Password</label>
-         <input type="password" name="password1" id="Cpassword">
-         <p id="cpasswordError" class="error-message" style="color: rgb(255, 0, 0);"></p>
- 
-         <button type="submit" class="btn btn-primary">Create Account</button>
- 
-         <p>Already have an account? <a href="/login"><u>Login</u></a></p>
-     </form>
- 
-     <!-- Bootstrap JavaScript and Popper.js -->
-     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
- 
-     <!-- Your validation script goes here -->
-     <script>
-          document.getElementById("form").addEventListener("submit",function(event){
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STREAK-X FRAMES SIGNUP</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background: url('your-background-image.jpg') fixed center;
+            background-size: cover;
+            background-color: rgba(255, 255, 255, 0.8);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 80vh;
+            /* Adjusted height to 80% of the viewport height */
+        }
+
+        #form {
+            padding: 20px;
+            margin: auto;
+            max-width: 400px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h4 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .error-message {
+            margin-top: -10px;
+            margin-bottom: 15px;
+            font-size: 12px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        p {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        a {
+            color: #3498db;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Signup Form -->
+    <form action="/signup" method="post" id="form">
+        <h4>Create your STREAK-X Account</h4>
+        <% if (typeof message !=='undefined' ){ %>
+            <p style="color: rgb(255, 0, 0);">
+                <%= message %>
+            </p>
+            <% } %>
+            <div class="form-group">
+                <label for="c_ship_different_address" class="text-black" data-toggle="collapse"
+                  href="#ship_different_address" role="button" aria-expanded="false"
+                  aria-controls="ship_different_address">
+                  Do you have a referral ?</label>
+               
+                  <div class="collapse" id="ship_different_address">
+                    <div class="py-2">
+                      <div class="form-group row">
+                        <div class="col-md-12">
+                          <label for="c_fname" class="text-black">Referal<span class="text-danger">*</span></label>
+                          <input type="text" class="form-control" id="referal" name="referal">
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                <label for="full name">Full Name:</label>
+                <input type="text" name="name" id="name">
+                <p id="nameError" class="error-message" style="color: rgb(255, 0, 0);"></p>
+
+                <label for="email">Your Mail-id:</label>
+                <input type="email" name="email" id="email">
+                <p id="emailError" class="error-message" style="color: rgb(255, 0, 0);"></p>
+
+                <label for="mobile">Your Mobile:</label>
+                <input type="number" name="mobile" id="mobile">
+                <p id="mobileError" class="error-message" style="color: rgb(255, 0, 0);"></p>
+
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password">
+                <p id="passwordError" class="error-message" style="color: rgb(255, 0, 0);"></p>
+
+                <label for="password">Confirm Password</label>
+                <input type="password" name="password1" id="Cpassword">
+                <p id="cpasswordError" class="error-message" style="color: rgb(255, 0, 0);"></p>
+
+                <button type="submit" class="btn btn-primary">Create Account</button>
+
+                <p>Already have an account? <a href="/login"><u>Login</u></a></p>
+
+    </form>
+
+    <!-- Bootstrap JavaScript and Popper.js -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Your validation script goes here -->
+    <script>
+        document.getElementById("form").addEventListener("submit", function (event) {
             //-----------Full Name Validation 
             const name = document.getElementById("name").value;
-            if(name.trim() ===""){
-                document.getElementById("nameError").innerText ="Name is required";
+            if (name.trim() === "") {
+                document.getElementById("nameError").innerText = "Name is required";
                 event.preventDefault();
-            }else{
+            } else {
                 document.getElementById("nameError").innerText = "";
             }
-    
+
             //------Validation for Email  
             const email = document.getElementById("email").value;
-            if(email.trim() === ""){
+            if (email.trim() === "") {
                 document.getElementById("emailError").innerText = "Email is required";
                 event.preventDefault();
-            }else{
+            } else {
                 document.getElementById("emailError").innerText = "";
             }
 
             document.getElementById("form").addEventListener("submit", function (event) {
-    // ... (existing validation logic)
+                // ... (existing validation logic)
 
-    // Validation for Phone Number (10 digits)
-    const mobile = document.getElementById("mobile").value;
-    if (!/^\d{10}$/.test(mobile)) {
-      document.getElementById("mobileError").innerText = "Mobile number should contain 10 digits";
-      event.preventDefault();
-    } else {
-      document.getElementById("mobileError").innerText = "";
-    }
-  });
+                // Validation for Phone Number (10 digits)
+                const mobile = document.getElementById("mobile").value;
+                if (!/^\d{10}$/.test(mobile)) {
+                    document.getElementById("mobileError").innerText = "Mobile number should contain 10 digits";
+                    event.preventDefault();
+                } else {
+                    document.getElementById("mobileError").innerText = "";
+                }
+            });
 
-  // Input event listener to clear error message on input
-  document.getElementById("mobile").addEventListener("input", function () {
-    document.getElementById("mobileError").innerText = "";
-  });
+            // Input event listener to clear error message on input
+            document.getElementById("mobile").addEventListener("input", function () {
+                document.getElementById("mobileError").innerText = "";
+            });
 
-    
+
             //-------validation for password (at least 6 characters,including letters,numbers,and symbols)
             const password = document.getElementById("password").value;
             if (!/^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{6,}$/.test(password)) {
                 document.getElementById("passwordError").innerText = "password should contain at least 6 characters including letters,numbers,and symbols";
                 event.preventDefault();
-            }else{
-                document.getElementById("passwordError").innerText ="";
-    
+            } else {
+                document.getElementById("passwordError").innerText = "";
             }
-    
+
             //validation for confirm password (both must match)
             const cpassword = document.getElementById('Cpassword').value;
-            if(cpassword !== password){
+            if (cpassword !== password) {
                 document.getElementById("cpasswordError").innerText = "Password do not match";
                 event.preventDefault();
-            }else{
-                document.getElementById("cpasswordError").innerText ="";
+            } else {
+                document.getElementById("cpasswordError").innerText = "";
             }
         });
-    
+
         //-------Clear error messages when the user corrects the input
-        document.getElementById("name").addEventListener("input",function(){
-            document.getElementById("nameError").innerText="";
+        document.getElementById("name").addEventListener("input", function () {
+            document.getElementById("nameError").innerText = "";
         });
-    
+
         document.getElementById("email").addEventListener("input", function () {
             document.getElementById("emailError").innerText = "";
         });
-    
+
         document.getElementById("mobile").addEventListener("input", function () {
             document.getElementById("mobileError").innerText = "";
         });
-        
+
         document.getElementById("password").addEventListener("input", function () {
             document.getElementById("passwordError").innerText = "";
         });
-    
+
         document.getElementById("Cpassword").addEventListener("input", function () {
             document.getElementById("cpasswordError").innerText = "";
         });
-     </script>
- 
- </body>
- 
- </html>
- 
+    </script>
+
+</body>
+
+</html>

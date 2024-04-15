@@ -1,5 +1,8 @@
 
 const checkBlock = require('../utilities/checkBlock')
+
+
+
 const isLogin = async(req,res,next)=>{
     try{
         if(req.session.user){
@@ -13,11 +16,14 @@ const isLogin = async(req,res,next)=>{
 }
 
 
+
 const isLogout = async(req,res,next)=>{
     try{
         if(req.session.user){
+            console.log("no worry");
             res.redirect('/');
         }else{
+            console.log("appo ivdee");
             next();
         }
     }catch(error){
@@ -27,26 +33,33 @@ const isLogout = async(req,res,next)=>{
 }
 
 
-const userBlock = async(req,res,next)=>{
+
+const userBlock = async (req, res, next) => {
     try {
-        if(req.session.user){
-            if(req.session.blocked === 0){
-                user = req.session.user;
+        console.log("enteredddddddddd");
+        const user = req.session.user;
+        console.log("user :",user,"req.seesion.user :",req.session.user);
+        if (user) {
+            if (user.blocked === 0) {
+                console.log("poyiiiiiiiiiiiii");
                 next();
+            } else {
+                console.log("appo blocked");
+                const isBlocked = await checkBlock(user.email); 
+                if (isBlocked) {
+                    console.log("destroyeddddddddd");
+                    req.session.destroy();
+                    return res.redirect('/user-blocked');
+                }
             }
-            if(await checkBlock(req.session.user)){
-                req.session.destroy();
-                res.redirect('/user-blocked')
-            }else{
-                next();
-            }
-        }else{
-            next();
         }
+        next();
     } catch (error) {
         console.log(error.message);
+        next("error on user block :",error); 
     }
 }
+
 
 
 module.exports = {

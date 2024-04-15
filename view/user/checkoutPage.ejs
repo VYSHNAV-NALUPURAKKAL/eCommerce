@@ -387,8 +387,9 @@
                     </tr>
                     <tr>
                       <td class="text-black font-weight-bold"><strong>Order Total</strong></td>
-                      <td class="text-black font-weight-bold" id="mainTotal"><strong>
+                      <td class="text-black font-weight-bold" id="mainTotal" ><strong>
                           <%= total %>
+                          <input type="hidden" id="mainTotal2" value="<%=total%>">
                         </strong></td>
                         <td class="text-danger" id="cDiscount"></td>
                     </tr>
@@ -438,9 +439,11 @@
 
 
               <!-- Wallet  -->
-              <div class="border p-3 mb-5">
-                <h3 class="h6 mb-0">
-                  <label class="d-block" data-toggle="collapse" href="#collapsepaypal" aria-expanded="false"
+              <%console.log("wallett :",wallet.wallet)%>
+              <%if(wallet.wallet>0) {%>
+                <div class="border p-3 mb-5">
+                  <h3 class="h6 mb-0">
+                    <label class="d-block" data-toggle="collapse" href="#collapsepaypal" aria-expanded="false"
                     aria-controls="collapsecheque">
                     <input type="radio" name="paymentMethod" value="Wallet">
                     Wallet
@@ -448,12 +451,11 @@
                 </h3>
                 <div class="collapse" id="collapsepaypal">
                   <div class="py-2">
-                    <p class="mb-0">Make your payment through Paypal. Please use your Order ID as the payment reference.
-                      Your
-                      order won’t be shipped until the payment is confirmed.</p>
+                    <p class="mb-0">Your Wallet Balance is = ₹<%=wallet.wallet%></p>
                   </div>
                 </div>
               </div>
+              <%}%>
 
               <!-- Place order button  -->
 
@@ -652,7 +654,7 @@
             icon: "warning",
             title: "Oops",
             text: "you cant proceed an order with total of 0"
-          });
+          })
           return
         }
 
@@ -687,6 +689,13 @@
             window.location.href = `/orderSuccess`;
           } else if (data.status === "failed") {
             razorpayPayment(data.orderSave)
+          }else if(data.status ==="walletFailed"){
+            Swal.fire({
+            icon: 'warning',
+            title: 'Oops...',
+            text: 'Sorry, you do not have enough funds in your wallet to complete this purchase. Please add more funds to your wallet or choose an alternative payment method',
+          });
+          return;
           }
         }
       }
@@ -752,12 +761,14 @@
 
     function applyCoupon() {
       const couponCode = document.getElementById("c_code").value;
+      const mainTotal = document.getElementById("mainTotal2").value;
+      console.log("mainTota :",mainTotal);
       fetch("/applyCoupon", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ couponCode })
+        body: JSON.stringify({ couponCode,mainTotal })
       })
         .then((response) => response.json())
         .then((data) => {
@@ -788,6 +799,13 @@
               confirmButtonText: "OK",
             });
 
+          }else if(data.coupon==="You cant use this coupon ,please buy more"){
+            Swal.fire({
+              title: "Oops",
+              text: "You cant use this copoun",
+              icon: "Buy more items",
+              confirmButtonText: "OK",
+            });
           } else if (data.coupon==true) {
             localStorage.setItem('couponCode', couponCode);
             Swal.fire({

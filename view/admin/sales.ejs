@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tables - Admin One Tailwind CSS Admin Dashboard</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.5.13/dist/jspdf.plugin.autotable.min.js"></script>
+    
+    <!-- css link for pagination -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.min.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+        
+    <!-- Tailwind is included -->
+    <link rel="stylesheet" href="/public/adminAssets/css/main.css?v=1628755089081">
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
+    <link rel="mask-icon" href="safari-pinned-tab.svg" color="#00b4b6" />
+
+    <meta name="description" content="Admin One - free Tailwind dashboard">
+
+    <meta property="og:url" content="https://justboil.github.io/admin-one-tailwind/">
+    <meta property="og:site_name" content="JustBoil.me">
+    <meta property="og:title" content="Admin One HTML">
+    <meta property="og:description" content="Admin One - free Tailwind dashboard">
+    <meta property="og:image" content="https://justboil.me/images/one-tailwind/repository-preview-hi-res.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1920">
+    <meta property="og:image:height" content="960">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="Admin One HTML">
+    <meta property="twitter:description" content="Admin One - free Tailwind dashboard">
+    <meta property="twitter:image:src" content="https://justboil.me/images/one-tailwind/repository-preview-hi-res.png">
+    <meta property="twitter:image:width" content="1920">
+    <meta property="twitter:image:height" content="960">
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-130795909-1"></script>
+
+</head>
+
+<body>
+
+
+    <aside class="aside is-placed-left is-expanded">
+        <div class="aside-tools">
+            <div>
+                STREAK-X <b class="font-black">FRAMES</b>
+            </div>
+        </div>
+        <div class="menu is-menu-main">
+            <p class="menu-label">General</p>
+            <ul class="menu-list">
+                <li class="--set-active-tables-html">
+                    <a href="/admin">
+                        <span class="icon"><i class="mdi mdi-desktop-mac"></i></span>
+                        <span class="menu-item-label">Dashboard</span>
+                    </a>
+                </li>
+            </ul>
+            <p class="menu-label">Examples</p>
+            <ul class="menu-list">
+                <li class="--set-active-tables-html">
+                    <a href="/admin/customers">
+                        <span class="icon"><i class="mdi mdi-account-group"></i></span>
+                        <span class="menu-item-label">Customers</span>
+                    </a>
+                </li>
+                <li class="--set-active-tables-html">
+                    <a href="/admin/categories">
+                        <span class="icon"><i class="mdi mdi-folder-outline"></i></span>
+                        <span class="menu-item-label">Categories</span>
+                    </a>
+                </li>
+                <li class="--set-active-tables-html">
+                    <a href="/admin/offer">
+                        <span class="icon"><i class="mdi mdi-tag"></i></span>
+                        <span class="menu-item-label">Offer</span>
+                    </a>
+                </li>
+                <li class="--set-active-tables-html">
+                    <a href="/admin/coupon">
+                        <span class="icon"><i class="mdi mdi-ticket-percent"></i></span>
+                        <span class="menu-item-label">Coupons</span>
+                    </a>
+                </li>
+                <li class="--set-active-tables-html">
+                    <a href="/admin/products">
+                        <span class="icon"><i class="mdi mdi-package-variant-closed"></i></span>
+                        <span class="menu-item-label">Products</span>
+                    </a>
+                </li>
+                <li class="--set-active-tables-html">
+                    <a href="/admin/orders">
+                        <span class="icon"><i class="mdi mdi-cart-outline"></i></span>
+                        <span class="menu-item-label">Orders</span>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="/admin/sales">
+                        <span class="icon"><i class="mdi mdi-chart-line"></i>
+                        </span>
+                        <span class="menu-item-label">Sales</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/admin/adminLogout">
+                        <span class="icon"><i class="mdi mdi-lock"></i></span>
+                        <span class="menu-item-label">Logout</span>
+                    </a>
+                </li>
+        </div>
+    </aside>
+
+    <section class="is-title-bar">
+        <div class="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
+            <ul>
+                <li>Admin</li>
+                <li>Sales</li>
+            </ul>
+        </div>
+    </section>
+    <main class="main-wrap">
+        <header class="main-header navbar">
+            <div class="col-search">
+                <div class="content-header mt-2 mb-0">
+                    <h2 class="content-title">Sales</h2>
+                </div>
+
+            </div>
+            <div class="col-nav">
+                <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"><i
+                        class="material-icons md-apps"></i></button>
+                <ul class="nav">
+
+
+
+                    <li class="dropdown nav-item">
+                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount"
+                            aria-expanded="false"> <img class="img-xs rounded-circle"
+                                src="/assets/imgs/people/avatar-2.png" alt="User" /></a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item text-danger" href="/admin/logout"><i
+                                    class="material-icons md-exit_to_app"></i>Logout</a>
+                        </div>
+                    </li>
+
+                </ul>
+            </div>
+        </header>
+        <section class="content-main">
+            <% if (orderData&&orderData.length>0){ %>
+                <div class="card">
+                    <header class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col-lg-3 col-md-6 mb-lg-0 mb-15">
+                                <!-- <span> <i class="material-icons md-calendar_today"></i> -->
+                                <select class="form-select d-inline-block mb-lg-0 mr-5 mw-200" id="selectformat"
+                                    onchange="downlode()">
+                                    <option selected disabled>--DOWNLODE SALESRIPORT--</option>
+                                    <option>PDF</option>
+                                    <option>Excel</option>
+                                </select>
+
+                            </div>
+                            <div class="col-lg-9 col-md-6 ms-auto text-md-end">
+                                <select class="form-select d-inline-block mb-lg-0 mr-5 mw-200" id="selectoption"
+                                    onchange="selctfilter()">
+
+                                    <option selected>ALL</option>
+                                    <option onclick="applyfilter()">Daily</option>
+                                    <option>Weekly</option>
+                                    <option>Monthly</option>
+                                    <option>Yearly</option>
+                                    <option>Custom Date</option>
+                                </select>
+
+                                <div id="customDateInputs" style="display: none; margin-top: 15px; padding: 2px;">
+                                    <form action="">
+                                        <label for="startDate">Start Date:</label>
+                                        <input type="date" id="startDate" required>
+
+                                        <label for="endDate">End Date:</label>
+                                        <input type="date" id="endDate" required>
+                                        <a onclick="validateDates()" class=" btn-icon">submit</a>
+                                    </form>
+
+                                    <p id="error1" style=" color: red;margin-top: 5px; "></p>
+                                    <p id="error2" style=" color: red; margin-top: 5px;"></p>
+
+                                </div>
+
+
+
+                                <script>
+
+
+
+
+                                    function selctfilter() {
+
+
+
+
+
+
+
+
+                                        const selectedOption = document.getElementById("selectoption").value;
+
+                                        if (selectedOption === "Custom Date") {
+                                            document.getElementById("customDateInputs").style.display = "block";
+
+                                        } else {
+                                            document.getElementById("customDateInputs").style.display = "none";
+                                            applyfilter();
+
+
+                                        }
+                                    }
+                                    function validateDates() {
+
+
+                                        document.getElementById('error1').innerText = '';
+                                        document.getElementById('error2').innerText = '';
+
+
+
+                                        const startDateInput = document.getElementById("startDate").value;
+                                        const endDateInput = document.getElementById("endDate").value;
+
+
+
+                                        let isValid = true;
+
+                                        if (!startDateInput || !endDateInput) {
+
+                                            document.getElementById('error1').innerText = 'Please enter both start and end dates';
+                                            isValid = false;
+                                        } else if (new Date(startDateInput) >= new Date(endDateInput)) {
+
+
+                                            document.getElementById('error2').innerText = 'End date must be  greater than the start date'
+                                            isValid = false;
+                                        }
+
+                                        if (!isValid) {
+                                            return;
+                                        } else {
+
+                                            applyfilter();
+
+                                        }
+
+                                    }
+
+
+
+
+
+
+
+
+                                </script>
+
+
+                            </div>
+                        </div>
+                    </header>
+
+                    <div class="pagination-area  mb-50 usertable">
+
+                        <table id="" class="table table-hover">
+                            <thead style="background-color: #3BB77E; text-align: center;">
+                                <tr>
+                                    <th scope="col" class="th-header">NO</th>
+                                    <th scope="col" class="th-header">ID</th>
+                                    <th scope="col" class="th-header">Product Name</th>
+                                    <th scope="col" class="th-header">Quantity Sold</th>
+
+                                    <th scope="col" class="th-header">Price</th>
+
+                                    <th scope="col" class="th-header">Total Sales</th>
+                                    <th scope="col" class="th-header">Order Date</th>
+                                    <th scope="col" class="th-header">Customer</th>
+                                    <th scope="col" class="th-header">Payment Methode</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-body" style="text-align: center;">
+                                <% if (orderData) { %>
+                                    <% orderData.forEach((data, index)=> { %>
+                                        <tr>
+                                            <td scope="col">
+                                                <p>
+                                                    <%= index+1%>
+                                                </p>
+                                            </td>
+                                            <td scope="col">
+                                                <p>
+                                                    <%= data._id %>
+
+                                                </p>
+                                            </td>
+                                            <td scope="col">
+                                                <p>
+                                                    <%= data.productData[0].name%>
+                                                </p>
+                                            </td>
+                                            <td scope="col">
+                                                <p>
+                                                    <%= data.products.quantity%>
+                                                </p>
+                                            </td>
+
+
+
+
+
+                                            <td scope="col">
+                                                <p>
+                                                    <%= data.products.price %>
+                                                </p>
+                                            </td>
+                                            <td scope="col">
+                                                <p>
+                                                    <%= data.products.totalPrice%>
+                                                </p>
+                                            </td>
+
+                                            <td scope="col">
+                                                <p> <%=data.orderDate.toLocaleDateString('en-US', { day: 'numeric' ,
+                                                        month: 'short' , year: 'numeric' })%></p>
+                                            </td>
+                                            <td scope="col">
+                                                <p>
+
+                                                    <%= data.userData[0].email%>
+                                                </p>
+                                            </td>
+                                            <td scope="col">
+                                                <p>
+                                                    <%= data.payment %>
+                                                </p>
+                                            </td>
+
+                                        </tr>
+                                        <% }); %>
+                                            <% } %>
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+                <% }else{ %>
+                    <p class="text-center">no orders</p>
+
+                    <%}%>
+        </section>
+<!-- content-main end// -->
+        <footer class="main-footer font-xs">
+            <div class="row pb-30 pt-15">
+                <div class="col-sm-6">
+                    <script>
+                        document.write(new Date().getFullYear());
+                    </script>
+                    &copy; STREAK-X FRAMES Template.
+                </div>
+                <div class="col-sm-6">
+                    <div class="text-sm-end">All rights reserved</div>
+                </div>
+            </div>
+
+
+
+        </footer>
+
+    </main>
+
+    <script>
+
+        let data = [];
+
+
+        function appendOrderToTable(order, index) {
+            if (index === 0) data = [];
+            data.push(order);
+
+
+            const tableBody = document.getElementById('table-body');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+            <td>${order.index + 1}</td>    
+            <td>${order.orderId}</td>
+            <td>${order.productData[0] ? order.productData[0].name : ''}</td>
+            <td>${order.products ? order.products.count : ''}</td>
+            <td>${order.products ? order.products.price : ''} </td>
+            <td>${order.products ? order.products.totalPrice : ''}</td>
+            <td>${order.orderDate.toString().slice(-4) ? order.orderDate.toString().slice(0, 10) : ''}</td>
+            <td>${order.userData[0] ? order.userData[0].email : ''}</td>
+            <td>${order.payment}</td>`;
+            tableBody.appendChild(row);
+        }
+
+        function downlode() {
+            const selectedformat = document.getElementById("selectformat").value;
+
+
+            const datas = data;
+
+
+            try {
+                fetch('/admin/salesReport', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        datas,
+                        selectedformat,
+                    })
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to generate PDF');
+                        }
+                        return response.blob();
+                    })
+                    .then(blob => {
+
+                        if (selectedformat === "PDF") {
+                            const url = window.URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = 'invoice.pdf';
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                            window.URL.revokeObjectURL(url);
+                        } else {
+
+                            const url = window.URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = 'sales_report.xlsx';
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                            window.URL.revokeObjectURL(url);
+                        }
+
+
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        // function for applying filter 
+        function applyfilter() {
+            const selectedvalue = document.getElementById("selectoption").value;
+
+
+            const startDate = document.getElementById("startDate").value
+            const endDate = document.getElementById("endDate").value
+
+            try {
+                fetch('/admin/salesfilter', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        selectedvalue,
+                        startDate,
+                        endDate
+                    })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("dataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa :",data);
+                        if (data && data.orderData) {
+
+                            const tableBody = document.getElementById('table-body');
+                            tableBody.innerHTML = '';
+
+
+
+
+                            data.orderData.forEach((order, index) => {
+                                order.index = index
+
+                                appendOrderToTable(order, index);
+
+
+                            });
+                        }
+                    }).catch(error => {
+                        console.log(error);
+
+                    })
+            } catch (error) {
+                console.log(error)
+
+            }
+
+
+
+
+
+        }
+
+    </script>
+    <script src="https://cdn.datatables.net/2.0.3/js/dataTables.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#tablePagination').DataTable();
+        });
+    </script>
+
+    <script src="/public/adminAssets/js/chart.sample.js"></script>
+    <script src="/public/adminAssets/js/chart.sample.min.js"></script>
+    <script src="/public/adminAssets/js/main.js"></script>
+    <script src="/public/adminAssets/js/main.min.js"></script>
+    <!-- Main Script -->
+
+
+
+</body>
+
+</html>

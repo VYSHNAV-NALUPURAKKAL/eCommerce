@@ -75,8 +75,8 @@
     <div class="menu is-menu-main">
       <p class="menu-label">General</p>
       <ul class="menu-list">
-        <li class="--set-active-index-html">
-          <a href="/admin/home">
+        <li class="--set-active-tables-html">
+          <a href="/admin">
             <span class="icon"><i class="mdi mdi-desktop-mac"></i></span>
             <span class="menu-item-label">Dashboard</span>
           </a>
@@ -84,56 +84,55 @@
       </ul>
       <p class="menu-label">Examples</p>
       <ul class="menu-list">
-        <li class="--set-active-forms-html">
+        <li class="--set-active-tables-html">
           <a href="/admin/customers">
-            <span class="icon"><i class="mdi mdi-table"></i></span>
+            <span class="icon"><i class="mdi mdi-account-group"></i></span>
             <span class="menu-item-label">Customers</span>
           </a>
         </li>
-        <li class="--set-active-forms-html">
+        <li class="--set-active-tables-html">
           <a href="/admin/categories">
-            <span class="icon"><i class="mdi mdi-table"></i></span>
+            <span class="icon"><i class="mdi mdi-folder-outline"></i></span>
             <span class="menu-item-label">Categories</span>
           </a>
         </li>
-        <li class="active">
+        <li class="--set-active-tables-html">
+          <a href="/admin/offer">
+            <span class="icon"><i class="mdi mdi-tag"></i></span>
+            <span class="menu-item-label">Offer</span>
+          </a>
+        </li>
+        <li class="--set-active-tables-html">
+          <a href="/admin/coupon">
+            <span class="icon"><i class="mdi mdi-ticket-percent"></i></span>
+            <span class="menu-item-label">Coupons</span>
+          </a>
+        </li>
+        <li class="--set-active-tables-html">
           <a href="/admin/products">
-            <span class="icon"><i class="mdi mdi-square-edit-outline"></i></span>
+            <span class="icon"><i class="mdi mdi-package-variant-closed"></i></span>
             <span class="menu-item-label">Products</span>
           </a>
         </li>
-        <li class="--set-active-profile-html">
-          <a href="profile.html">
-            <span class="icon"><i class="mdi mdi-account-circle"></i></span>
-            <span class="menu-item-label">Profile</span>
+        <li class="--set-active-tables-html">
+          <a href="/admin/orders">
+            <span class="icon"><i class="mdi mdi-cart-outline"></i></span>
+            <span class="menu-item-label">Orders</span>
+          </a>
+        </li>
+        <li class="--set-active-tables-html">
+          <a href="/admin/sales">
+            <span class="icon"><i class="mdi mdi-chart-line"></i>
+            </span>
+            <span class="menu-item-label">Sales</span>
           </a>
         </li>
         <li>
-          <a href="login.html">
+          <a href="/admin/adminLogout">
             <span class="icon"><i class="mdi mdi-lock"></i></span>
-            <span class="menu-item-label">Login</span>
+            <span class="menu-item-label">Logout</span>
           </a>
         </li>
-        <li>
-          <a class="dropdown">
-            <span class="icon"><i class="mdi mdi-view-list"></i></span>
-            <span class="menu-item-label">Submenus</span>
-            <span class="icon"><i class="mdi mdi-plus"></i></span>
-          </a>
-          <ul>
-            <li>
-              <a href="#void">
-                <span>Sub-item One</span>
-              </a>
-            </li>
-            <li>
-              <a href="#void">
-                <span>Sub-item Two</span>
-              </a>
-            </li>
-          </ul>
-        </li>
-      </ul>
     </div>
   </aside>
 
@@ -148,7 +147,7 @@
 
 
   <div class="card-content">
-    <form id="editForm" method="post" onsubmit="return validateForm()" enctype="multipart/form-data">
+    <form id="editForm" enctype="multipart/form-data" method="post" >
       <div class="field">
         <label class="label">Product Name</label>
         <div class="control icons-left">
@@ -211,21 +210,25 @@
       <div class="field">
         <label class="label">Product Images</label>
         <div class="selected-images">
-          <label class="label">Selected Images:</label>
-          <div class="row" style="display: flex; flex-wrap: nowrap; overflow-x: auto;" id="productImages">
-            <!-- Display selected images here in a row -->
-            <% product?.images?.forEach((image, index)=> { %>
-              <label for="fileInput<%= index %>">
-                <img src="/public/adminAssets/product-images/<%= image %>" alt="Product Image" class="img-thumbnail"
-                  style="max-width: 100%; height: auto; margin-right: 10px; cursor: pointer;" />
-              </label>
-              <input type="file" id="fileInput<%= index %>" name="product-images" style="display: none;"
-              onchange="updateImage(this, '<%= index %>')" />
-              <input type="hidden" id="imageIndex" name="imageIndex" value="<%= index %>" />
-              <% }) %>
-          </div>
+            <label class="label">Selected Images:</label>
+            <div class="row" style="display: flex; flex-wrap: nowrap; overflow-x: auto;" id="productImages">
+                <!-- Display selected images here in a row -->
+                <% product?.images?.forEach((image, index)=> { %>
+                    <div style="position: relative;">
+                        <label for="fileInput<%= index %>">
+                            <img src="/public/adminAssets/product-images/<%= image %>" alt="Product Image" class="img-thumbnail"
+                                style="max-width: 100%; height: auto; margin-right: 10px; cursor: pointer;" />
+                        </label>
+                        <button type="button" class="btn btn-danger delete-btn" data-index="<%= index %>"
+                            style="position: absolute; top: 5px; right: 5px;">Delete</button>
+                        <input type="file" id="fileInput<%= index %>" name="product-images" style="display: none;"
+                            onchange="updateImage(this, '<%= index %>')" />
+                        <input type="hidden" id="imageIndex" name="imageIndex" value="<%= index %>" />
+                    </div>
+                <% }) %>
+            </div>
         </div>
-      </div>
+    </div>
 
       <div class="field grouped">
         <div class="control">
@@ -254,82 +257,10 @@
 
 
 
-
-
-
-    function validateForm() {
-      alert("trigger aavnd")
-      const name = document.getElementById("name").value.trim()
-      const description = document.getElementById("description").value.trim()
-      const price = document.getElementById("price").value.trim()
-      const quantity = document.getElementById('quantity').value.trim()
-
-
-      console.log("name :", name, "description :", description, "quantity :", quantity, "price :", price);
-      let isValid = true;
-      //===============NAME ERROR====================================
-      if (name === "" || name.match(/^\s+$/)) {
-        const nameError = document.getElementById("nameError");
-        nameError.textContent = "Please enter a valid name!";
-        isValid = false;
-      } else if (/\d/.test(name)) {
-        const nameError = document.getElementById("nameError");
-        nameError.textContent = "Name should not contain numbers.";
-        isValid = false;
-      } else {
-        document.getElementById("nameError").textContent = "";
-      }
-      //==============================description ERROR======================= 
-      if (description === "") {
-        const descriptionError = document.getElementById("descriptionError");
-        descriptionError.textContent = "please add description";
-        isValid = false;
-      } else {
-        document.getElementById("descriptionError").textContent = "";
-      }
-      //===================quantity ERRORR=========================
-
-      if (quantity === "") {
-        const quantityError = document.getElementById("quantityError")
-        quantityError.textContent = "Please enter a quantity value";
-        isValid = false;
-      } else if (Number(quantity) <= 0) {
-        const quantityError = document.getElementById("quantityError");
-        quantityError.textContent = "quantity cannot be negative value or zero!";
-        isValid = false;
-      } else if (quantity.toString().startsWith("0")) {
-        const quantityError = document.getElementById("quantityError");
-        quantityError.textContent = "quantity donot start with zero";
-        isValid = false;
-      } else {
-        document.getElementById("quantityError").textContent = "";
-      }
-      //================price ERROR============================
-      if (price === "") {
-        const priceError = document.getElementById("priceError")
-        priceError.textContent = "Please enter a criteria value";
-        isValid = false;
-      } else if (Number(price) < 0) {
-        const priceError = document.getElementById("priceError");
-        priceError.textContent = "price cannot be negative value!";
-        isValid = false;
-      } else if (price.toString().startsWith("0")) {
-        const priceError = document.getElementById("priceError");
-        priceError.textContent = "price value should not start with 0 ";
-        isValid = false;
-      } else {
-        document.getElementById("priceError").textContent = "";
-      }
-
-      if (!isValid) {
-        return false
-      }
-      return isValid;
-    }
     let latestIndex = 0;
     function updateImage(input, index) {
       latestIndex = index;
-      console.log("latest index :",latestIndex);
+      console.log("latest index :", latestIndex);
       const file = input.files[0];
       if (file) {
         const reader = new FileReader();
@@ -344,47 +275,154 @@
 
 
     document.addEventListener("DOMContentLoaded", function () {
-      const form = document.getElementById("editForm");
-
-      form.addEventListener("submit", function (event) {
+    const form = document.getElementById("editForm");
+    const productId = window.location.pathname.split("/").pop();
+    form.addEventListener("submit", function (event) {
         event.preventDefault();
 
         const formData = new FormData(form);
-        formData.append("imageIndex",latestIndex)
+        formData.append("imageIndex", latestIndex)
         console.log("form : ", formData);
-        fetch("/admin/editProduct", {
-          method: "POST",
-          body: formData,
-        })
-          .then(response => {
-            console.log("data :", response);
-            if (response.ok) {
-              Swal.fire({
-                icon: 'success',
-                title: 'Success!',
-                text: "product edited successfully"
 
-              }).then((result) => {
-                if (result.isConfirmed || result.dismiss === Swal.DismissReason.timer) {
-                  window.location.href = '/admin/products';
-                }
-              })
-              console.log("respondese :", response)
-            } else {
-              Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Product with the same name already exists!',
-              });
-              console.error("Failed to edit product");
+        fetch(`/admin/editProduct/${productId}`, {
+            method: "POST",
+            body: formData,
+            headers: {
             }
-          })
-        .catch(error => {
-          console.error("Error editing product:", error);
-
+        })
+        .then((response) => {
+            console.log("response :", response);
+            if (response.ok) {
+                return response.json(); 
+                throw new Error("Error occurred during request");
+            }
+        })
+        .then((data) => {
+            if (data && data.success === true) {
+                swal.fire({
+                    icon: "success",
+                    title: "Success",
+                    text: "Product Edit Successful"
+                }).then(() => {
+                    window.location.href = `/admin/products`;
+                });
+            } else {
+                throw new Error("Product edit failed");
+            }
+        })
+        .catch((error) => {
+            console.log("Error on frontend:", error);
+            swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "An error occurred while editing the product"
+            });
         });
     });
+});
+
+    
+    document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("editForm").addEventListener("submit", function (event) {
+      const name = document.getElementById("name").value.trim();
+      if (name.trim() === "") {
+        document.getElementById("nameError").innerText = "name is required";
+        event.preventDefault();
+      } else {
+        document.getElementById("nameError").innerText = "";
+      }
+      //price validation
+      const price = document.getElementById("price").value.trim();
+      if (price === "" || Number(price) <= 0 || price.toString().startsWith("0")) {
+        const priceError = document.getElementById("priceError");
+        priceError.innerText = "Please enter a valid price greater than 0!";
+        event.preventDefault();
+      } else {
+        document.getElementById("priceError").innerText = "";
+      }
+      //description validation
+      const description = document.getElementById("description").value.trim();
+      if (description === "") {
+        const descriptionError = document.getElementById("descriptionError");
+        descriptionError.innerText = "Please add a description!";
+        event.preventDefault();
+      } else {
+        document.getElementById("descriptionError").innerText = "";
+      }
+
+      //Quanity validation
+      const quantity = document.getElementById("quantity").value.trim();
+      if (quantity === "" || Number(quantity) <= 0 || quantity.toString().startsWith("0")) {
+        const quantityError = document.getElementById("quantityError");
+        quantityError.innerText = "Please enter a valid quantity greater than 0!";
+        event.preventDefault();
+      } else {
+        document.getElementById("quantityError").innerText = ""
+      }
+      //dynamically clearing the error message when user interacts on input
+
+      document.getElementById("name").addEventListener("input", function () {
+        document.getElementById("nameError").innerText = "";
+      })
+
+      document.getElementById("quantity").addEventListener("input", function () {
+        document.getElementById("quantityError").innerText = "";
+      })
+
+      document.getElementById("description").addEventListener("input", function () {
+        document.getElementById("descriptionError").innerText = "";
+      })
+
+      document.getElementById("price").addEventListener("input", function () {
+        document.getElementById("priceError").innerText = "";
+      })
+    })
+  })
+
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const index = this.getAttribute('data-index');
+            const productId = window.location.pathname.split("/").pop();
+            console.log("image to be deleted :", index);
+
+            // Remove the image and associated input fields from the DOM
+            document.querySelectorAll('.img-thumbnail')[index].parentNode.remove();
+            document.querySelectorAll(`input[type="file"][id^="fileInput${index}"]`).forEach(input => {
+                input.remove();
+            });
+
+            // Send request to delete image from backend
+            fetch(`/admin/editProduct/${productId}`, {
+                method: "PATCH",
+                body: JSON.stringify({ index, productId }),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error("Network response was not ok.");
+            })
+            .then(data => {
+                console.log("Response from backend:", data);
+                if(data.success===true){
+                  swal.fire({
+                    icon: "success",
+                    title: "Success",
+                    text: "image deleted successfully"
+                })
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+        });
     });
+});
+
   </script>
 
 

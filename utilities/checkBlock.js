@@ -1,9 +1,9 @@
 const User = require('../model/userModel');
-const checkBlock = async (userId) =>{
+const checkBlock = async (email) =>{
     try {
-        console.log(userId);
-        const userData = await User.findById({mail:userId});
-        console.log(userData)
+        console.log("user id cnecsg :",email);
+        const userData = await User.findOne({email:email});
+        console.log("inside check block js : and user data :",userData)
         return userData.blocked
     } catch (error) {
        console.log(error); 
