@@ -31,7 +31,6 @@
     "pdfkit": "^0.15.0",
     "puppeteer": "^22.6.1",
     "randomstring": "^1.3.0",
-    "razorpay": "^2.9.2",
-    "toast": "^0.5.4"
+    "razorpay": "^2.9.2"
   }
 }
