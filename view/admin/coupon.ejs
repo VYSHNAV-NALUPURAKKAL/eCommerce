@@ -6,6 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dashboard - STREAK-X FRAMES</title>
+  <link href="https://cdn.materialdesignicons.com/6.5.95/css/materialdesignicons.min.css" rel="stylesheet">
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
@@ -78,81 +79,53 @@
         <ul class="menu-list">
           <li class="--set-active-tables-html">
             <a href="/admin/customers">
-              <span class="icon"><i class="mdi mdi-table"></i></span>
+              <span class="icon"><i class="mdi mdi-account-group"></i></span>
               <span class="menu-item-label">Customers</span>
             </a>
           </li>
           <li class="--set-active-tables-html">
             <a href="/admin/categories">
-              <span class="icon"><i class="mdi mdi-table"></i></span>
+              <span class="icon"><i class="mdi mdi-folder-outline"></i></span>
               <span class="menu-item-label">Categories</span>
+            </a>
+          </li>
+          <li class="--set-active-tables-html">
+            <a href="/admin/offer">
+              <span class="icon"><i class="mdi mdi-tag"></i></span>
+              <span class="menu-item-label">Offer</span>
             </a>
           </li>
           <li class="active">
             <a href="/admin/coupon">
-              <span class="icon"><i class="mdi mdi-table"></i></span>
+              <span class="icon"><i class="mdi mdi-ticket-percent"></i></span>
               <span class="menu-item-label">Coupons</span>
             </a>
           </li>
           <li class="--set-active-tables-html">
             <a href="/admin/products">
-              <span class="icon"><i class="mdi mdi-table"></i></span>
+              <span class="icon"><i class="mdi mdi-package-variant-closed"></i></span>
               <span class="menu-item-label">Products</span>
             </a>
           </li>
-          <li class="--set-active-profile-html">
+          <li class="--set-active-tables-html">
             <a href="/admin/orders">
-              <span class="icon"><i class="mdi mdi-square-edit-outline"></i></span>
+              <span class="icon"><i class="mdi mdi-cart-outline"></i></span>
               <span class="menu-item-label">Orders</span>
             </a>
           </li>
-          <li class="--set-active-profile-html">
-            <a href="#">
-              <span class="icon"><i class="mdi mdi-account-circle"></i></span>
-              <span class="menu-item-label">Profile</span>
+          <li class="--set-active-tables-html">
+            <a href="/admin/sales">
+              <span class="icon"><i class="mdi mdi-chart-line"></i>
+              </span>
+              <span class="menu-item-label">Sales</span>
             </a>
           </li>
           <li>
-            <a href="#">
+            <a href="/admin/adminLogout">
               <span class="icon"><i class="mdi mdi-lock"></i></span>
-              <span class="menu-item-label">Login</span>
+              <span class="menu-item-label">Logout</span>
             </a>
           </li>
-          <li>
-            <a class="dropdown">
-              <span class="icon"><i class="mdi mdi-view-list"></i></span>
-              <span class="menu-item-label">Submenus</span>
-              <span class="icon"><i class="mdi mdi-plus"></i></span>
-            </a>
-            <ul>
-              <li>
-                <a href="#void">
-                  <span>Sub-item One</span>
-                </a>
-              </li>
-              <li>
-                <a href="#void">
-                  <span>Sub-item Two</span>
-                </a>
-              </li>
-            </ul>
-          </li>
-        </ul>
-        <p class="menu-label">About</p>
-        <ul class="menu-list">
-          <li>
-            <a href="https://justboil.me/tailwind-admin-templates" class="has-icon">
-              <span class="icon"><i class="mdi mdi-help-circle"></i></span>
-              <span class="menu-item-label">About</span>
-            </a>
-          </li>
-          <li>
-            <a href="https://github.com/justboil/admin-one-tailwind" class="has-icon">
-              <span class="icon"><i class="mdi mdi-github-circle"></i></span>
-              <span class="menu-item-label">GitHub</span>
-            </a>
-          </li>
-        </ul>
       </div>
     </aside>
 
@@ -203,16 +176,16 @@
                 ₹<%= item.criteriaAmount %>
               </td>
               <td>
-                <%= item.activationDate %>
+                <%= moment(item.activationDate).format('DD-MM-YYYY') %>
               </td>
               <td>
-                <%= item.expiryDate %>
+                <%= moment(item.expiryDate).format('DD-MM-YYYY') %>
               </td>
               <td>
-                <%= item.usedUsers %>
+                <%= item.usedUsers.length %>
               </td>
               <td>
-                <% if (item.is_blocked) { %>
+                <% if (item.is_blocked ) { %>
                   <button class="btn btn-sm btn-success unblock-btn" id="action"
                     onclick="updateStatus('<%= item._id %>',this)">Unblock</button>
                   <% } else { %>
@@ -227,6 +200,32 @@
         </tbody>
         <% }) %>
       </table>
+      <div class="site-block-27">
+        <ul>
+            <!-- Previous Button -->
+            <% if (currentPage> 1) { %>
+                <li>
+                    <a
+                        href="<%= '?page=' + (currentPage - 1) %>">Prev</a>
+                </li>
+                <% } %>
+
+                    <!-- Current Page -->
+                    <li class="active">
+                        <span>
+                            <%= currentPage %>
+                        </span>
+                    </li>
+
+                    <!-- Next Button -->
+                    <% if (currentPage < totalPages) { %>
+                        <li>
+                            <a
+                                href="?page=<%= parseInt(currentPage) + 1 %>">Next</a>
+                        </li>
+                        <% } %>
+        </ul>
+    </div>
     </div>
 
 
@@ -266,11 +265,11 @@
               <div class="row">
                 <div class="col-md-6 mb-3">
                   <label class="form-label">Activation Date</label>
-                  <input type="date" class="form-control" id="activationDate">
+                  <input type="date" class="form-control" id="activationDate" min="<%= new Date().toISOString().split('T')[0] %>">
                 </div>
                 <div class="col-md-6 mb-3">
                   <label class="form-label">Expiry Date</label>
-                  <input type="date" class="form-control" id="expiryDate">
+                  <input type="date" class="form-control" id="expiryDate" min="<%= new Date().toISOString().split('T')[0] %>">
                 </div>
                 <span id="dateError" class="text-danger"></span>
               </div>
@@ -486,7 +485,7 @@
         return isValid;
       }
 
-      //=============SUBMIT BUTTON================
+      //================SUBMIT BUTTON======================
       document.addEventListener("DOMContentLoaded", function () {
         const form = document.getElementById("couponForm");
 
