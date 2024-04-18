@@ -7,9 +7,8 @@ const Category = require("../model/categoryModel")
 const moment = require("moment");
 const PDFDocument = require("pdfkit");
 const ExcelJS = require("exceljs");
-const puppeteer = require("puppeteer");
-const puppeteerpdf = require("pdf-puppeteer");
-const path = require("path");
+const pdf = require('html-pdf');
+const path = require('path');
 const ejs = require("ejs");
 require("dotenv").config();
 
@@ -682,27 +681,36 @@ const salesReport = async (req, res) => {
   const endDate = req.body.endDate;
 
   if (selectedformat === "PDF") {
-    try {
-      const orderData =
-        req.body.datas !== undefined && req.body.datas.length !== 0
-          ? req.body.datas
-          : orderDatas;
+  try {
+  const orderData =
+    req.body.datas !== undefined && req.body.datas.length !== 0
+      ? req.body.datas
+      : orderDatas;
 
-      const ejsPagePath = path.join(__dirname, "../view/admin/report.ejs");
-      const ejsPage = await ejs.renderFile(ejsPagePath, { orderData });
+  const ejsPagePath = path.join(__dirname, "../view/admin/report.ejs");
+  const ejsPage = await ejs.renderFile(ejsPagePath, { orderData });
 
-      const browser = await puppeteer.launch({ headless: "new" });
-      const page = await browser.newPage();
-      await page.setContent(ejsPage);
-      const pdfBuffer = await page.pdf();
-      await browser.close();
+  const pdfOptions = {
+    format: 'A4', 
+    orientation: 'portrait', 
+    border: '10mm',
+  };
 
-      res.setHeader("Content-Type", "application/pdf");
-      res.setHeader("Content-Disposition", "attachment; filename=invoice.pdf");
-      res.send(pdfBuffer);
-    } catch (error) {
-      console.log("error on sales report generating :", error);
+  pdf.create(ejsPage, pdfOptions).toBuffer((err, pdfBuffer) => {
+    if (err) {
+      console.log("Error generating PDF:", error);
+      res.status(500).send("Error generating PDF");
+      return;
     }
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", "attachment; filename=invoice.pdf");
+    res.send(pdfBuffer);
+  });
+} catch (error) {
+  console.log("Error on sales report generating:", error);
+  res.status(500).send("Internal Server Error");
+}
+
   } else {
     try {
       const orderData =

@@ -13,12 +13,7 @@ const { ObjectId } = require("mongodb");
 const dotenv = require("dotenv");
 const pdf = require('html-pdf');
 const path = require('path');
-
-
-const puppeteer = require("puppeteer");
 const ejs = require("ejs")
-const puppeteerpdf = require("pdf-puppeteer")
-
 const { EventEmitterAsyncResource } = require("nodemailer/lib/xoauth2");
 const { default: mongoose } = require("mongoose");
 dotenv.config();
