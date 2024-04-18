@@ -2,6 +2,7 @@ const express = require('express');
 const adminRoute = express();
 
 //============view engine setup==============!!!
+
 adminRoute.set('view engine','ejs')
 adminRoute.set('views','view')
 
@@ -10,7 +11,7 @@ const config = require('../config/config');
 const { urlencoded } = require('body-parser');
 
 adminRoute.use(
-    session({
+  session({
         secret:config.sessionSecret,
         resave:false,
         saveUninitialized:true

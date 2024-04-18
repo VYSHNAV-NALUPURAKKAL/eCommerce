@@ -11,7 +11,9 @@ const randomstring = require("randomstring");
 const config = require("../config/config");
 const { ObjectId } = require("mongodb");
 const dotenv = require("dotenv");
-const path = require("path");
+const pdf = require('html-pdf');
+const path = require('path');
+
 
 const puppeteer = require("puppeteer");
 const ejs = require("ejs")
@@ -497,6 +499,7 @@ function generateCode() {
   return code;
 }
 
+
 const invoice = async (req, res) => {
   try {
     console.log("available order id :", req.query);
@@ -525,8 +528,8 @@ const invoice = async (req, res) => {
 
     const deliveryAddressId = totalOrders.deliveryAddress[0]._id;
 
-    console.log("delviery address id :", deliveryAddressId);
-    console.log("ordersssssssssssssssssss :", orders);
+    console.log("delivery address id :", deliveryAddressId);
+    console.log("orders :", orders);
     const userAddress = await User.findOne(
       { "address._id": deliveryAddressId },
       { "address.$": 1 }
@@ -541,24 +544,37 @@ const invoice = async (req, res) => {
       totalOrders,
     });
 
-    const browser = await puppeteer.launch({headless:"new"});
-    const page = await browser.newPage();
-    await page.setContent(ejsPage)
-    const pdfBuffer = await page.pdf();
-    await browser.close();
+    const pdfOptions = {
+      format: 'A4',
+      orientation: 'landscape',     
+      border: '10mm', 
+      header: {
+        height: '20mm', 
+        contents: '<div style="text-align: center;"><b>INVOICE</b></div>', 
+      },
+      footer: {
+        height: '20mm', 
+        contents: {
+          default: '<div style="text-align: center;">Page <span>{{page}}</span> of <span>{{pages}}</span></div>', // Content of the footer
+        },
+      },
+      base: '', 
+      timeout: 30000, 
+    };
     
-    console.log("user addresss :", userAddress);
 
-    res.setHeader("Content-Type","application/pdf");
-    res.setHeader("Content-Disposition","attachment; filename=Order-Invoice.pdf")
-    res.send(pdfBuffer);
-
-    console.log(
-      "pdf bufferrrrrrrrrrrrrrrr :",pdfBuffer
-    );
-    console.log("ejs page page page page :",ejsPage)
+    pdf.create(ejsPage, pdfOptions).toBuffer((err, buffer) => {
+      if (err) {
+        console.log("Error creating PDF:", err);
+        return res.status(500).send("Error generating PDF");
+      }
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader("Content-Disposition", "attachment; filename=Order-Invoice.pdf");
+      res.send(buffer);
+    });
   } catch (error) {
-    console.log("error on invoice :", error);
+    console.log("Error on invoice:", error);
+    res.status(500).send("Internal Server Error");
   }
 };
 
