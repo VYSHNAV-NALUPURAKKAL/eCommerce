@@ -1,4 +1,3 @@
-//require the database 
 const dotenv = require('dotenv');
 dotenv.config()
 
@@ -36,21 +35,27 @@ app.use(session({
     saveUninitialized:true
 }));
 
+// //for admin route
 const adminRoute = require('./routes/adminRoute');
 app.use('/admin',adminRoute);
 
 
 app.use('/public',express.static(path.join(__dirname,'public')));
 
-userRoute.use((req, res) => {
-    res.status(404).render('user/404'); // Render the 404 error page
+
+
+app.use((req, res) => {
+    try {
+        res.status(404).render('user/404');
+    } catch (error) {
+        console.log(error);
+        res.status(500).render('user/500');
+    }
 });
 
-app.listen(3000,()=>{
-    console.log("server is listening at port : 3000");
+
+
+
+app.listen(1001,()=>{
+    console.log("server is listening at port : 1001");
 })
-
-
-
-
-
