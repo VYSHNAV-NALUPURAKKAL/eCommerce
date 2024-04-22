@@ -24,10 +24,8 @@ app.use(nocache());
 app.set('view engine','ejs')
 app.set('views','view')
 
-const userRoute = require('./routes/userRoute');
-app.use('/',userRoute);
-
 app.use(express.urlencoded({extended:true}))
+app.use('/public',express.static(path.join(__dirname,'public')));
 
 app.use(session({
     secret:sessionSecret,
@@ -36,12 +34,12 @@ app.use(session({
 }));
 
 // //for admin route
+
+const userRoute = require('./routes/userRoute');
+app.use('/',userRoute);
+
 const adminRoute = require('./routes/adminRoute');
 app.use('/admin',adminRoute);
-
-
-app.use('/public',express.static(path.join(__dirname,'public')));
-
 
 
 // app.use((req, res) => {
