@@ -42,15 +42,9 @@ app.use('/admin',adminRoute);
 
 app.use('/public',express.static(path.join(__dirname,'public')));
 
-app.use((req, res) => {
-    try {
-        res.status(404).render('user/404');
-    } catch (error) {
-        console.log(error);
-        res.status(500).render('user/500');
-    }
+userRoute.use((req, res) => {
+    res.status(404).render('user/404'); // Render the 404 error page
 });
-
 
 app.listen(3000,()=>{
     console.log("server is listening at port : 3000");
