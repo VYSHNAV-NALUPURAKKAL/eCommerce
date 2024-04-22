@@ -561,7 +561,7 @@ const invoice = async (req, res) => {
     pdf.create(ejsPage, pdfOptions).toBuffer((err, buffer) => {
       if (err) {
         console.log("Error creating PDF:", err);
-        return res.status(500).send("Error generating PDF");
+        return res.status(500).render("user/500");
       }
       res.setHeader("Content-Type", "application/pdf");
       res.setHeader("Content-Disposition", "attachment; filename=Order-Invoice.pdf");
