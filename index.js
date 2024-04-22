@@ -5,7 +5,7 @@ const express = require('express');
 
 const app = express();
 
-const session = require("express-session")
+const session = require("express-session");
 
 const { sessionSecret } = require('./config/config');
 
@@ -57,6 +57,6 @@ app.get("*",(req,res)=>{
 
 
 
-app.listen(1001,()=>{
+app.listen(3000,()=>{
     console.log("server is listening at port : 1001");
 })
