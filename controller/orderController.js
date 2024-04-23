@@ -45,6 +45,7 @@ const checkoutPost = async (req, res) => {
       }
 
       for (let i = 0; i < quantity; i++) {
+
         const item = {
           productId,
           quantity: 1,
@@ -253,11 +254,14 @@ const cancelProduct = async (req, res) => {
     const orderData = await Order.findOne({ _id: orderId });
 
     const productLength = orderData.products.length;
+    console.log("product length :",productLength);
     let totalAmount = 0;
 
     if (productLength > 1) {
+      let count=0;
       orderData.products.forEach((item) => {
         if (item.productId == productId) {
+          count += item.quantity;
           item.productStatus = "returned or cancelled";
           totalAmount += item.price * item.quantity;
         }
@@ -268,11 +272,14 @@ const cancelProduct = async (req, res) => {
       );
       console.log("order stat thanneeee :", orderStat);
       if (orderStat === true) {
+        console.log("coutnnn ????????? ",count)
         await Order.updateOne(
           { _id: orderId },
           { $set: { orderStatus: "returned or cancelled" } }
         );
+        await Product.updateOne({_id:productId},{$inc:{quantity:count}})
       } else {
+        
         await Order.updateOne(
           {
             _id: orderId,
@@ -285,11 +292,11 @@ const cancelProduct = async (req, res) => {
           }
         );
         await Cart.deleteOne({ _id: userId });
+        await Product.updateOne(
+          { _id: productId },
+          { $inc: { quantity:count } }
+        );
       }
-      await Product.updateOne(
-        { _id: productId },
-        { $inc: { quantity: count } }
-      );
     } else {
       orderData.orderStatus = "returned or cancelled";
       const count = orderData.products[0].quantity;

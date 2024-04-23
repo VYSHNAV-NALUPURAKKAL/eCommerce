@@ -5,10 +5,7 @@ const Order = require("../model/orderModel");
 const Product = require("../model/productModel");
 const Category = require("../model/categoryModel")
 const moment = require("moment");
-const PDFDocument = require("pdfkit");
 const ExcelJS = require("exceljs");
-const pdf = require('html-pdf');
-const path = require('path');
 const ejs = require("ejs");
 require("dotenv").config();
 
@@ -679,39 +676,39 @@ const salesReport = async (req, res) => {
   const selectedformat = req.body.selectedformat;
   const startDate = req.body.startDate;
   const endDate = req.body.endDate;
+  console.log("selected format :",selectedformat);
+  // if (selectedformat === "PDF") {
+  // try {
+  // const orderData =
+  //   req.body.datas !== undefined && req.body.datas.length !== 0
+  //     ? req.body.datas
+  //     : orderDatas;
 
-  if (selectedformat === "PDF") {
-    try {
-    const orderData =
-    req.body.datas !== undefined && req.body.datas.length !== 0
-      ? req.body.datas
-      : orderDatas;
+  // const ejsPagePath = path.join(__dirname, "../view/admin/report.ejs");
+  // const ejsPage = await ejs.renderFile(ejsPagePath, { orderData });
 
-    const ejsPagePath = path.join(__dirname, "../view/admin/report.ejs");
-    const ejsPage = await ejs.renderFile(ejsPagePath, { orderData });
+  // const pdfOptions = {
+  //   format: 'A4', 
+  //   orientation: 'portrait', 
+  //   border: '10mm',
+  // };
 
-    const pdfOptions = {
-      format: 'A4', 
-      orientation: 'portrait', 
-      border: '10mm',
-    };
+  // pdf.create(ejsPage, pdfOptions).toBuffer((err, pdfBuffer) => {
+  //   if (err) {
+  //     console.log("Error generating PDF:", error);
+  //     res.status(500).send("Error generating PDF");
+  //     return;
+  //   }
+  //   res.setHeader("Content-Type", "application/pdf");
+  //   res.setHeader("Content-Disposition", "attachment; filename=invoice.pdf");
+  //   res.send(pdfBuffer);
+  //   });
+  // } catch (error) {
+  //   console.log("Error on sales report generating:", error);
+  //   res.status(500).send("Internal Server Error");
+  // }
 
-    pdf.create(ejsPage, pdfOptions).toBuffer((err, pdfBuffer) => {
-    if (err) {
-      console.log("Error generating PDF:", error);
-      res.status(500).send("Error generating PDF");
-      return;
-    }
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", "attachment; filename=invoice.pdf");
-    res.send(pdfBuffer);
-    });
-    } catch (error) {
-      console.log("Error on sales report generating:", error);
-      res.status(500).send("Internal Server Error");
-    }
-
-  } else {
+  // } else {
     try {
       const orderData =
         req.body.datas !== undefined && req.body.datas.length !== 0
@@ -763,7 +760,6 @@ const salesReport = async (req, res) => {
       console.log(error);
     }
   }
-};
 
 module.exports = {
   securePassword,

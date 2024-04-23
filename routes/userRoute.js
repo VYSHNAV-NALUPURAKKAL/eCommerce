@@ -130,6 +130,6 @@ userRoute.post("/otp-verification", userController.verifyOTP);
 
 userRoute.get("/resend-otp", userAuth.isLogout, userController.resendOtp);
 
-userRoute.get("/invoice",userController.invoice);
+userRoute.post("/invoice",userController.invoice);
 
 module.exports = userRoute;
