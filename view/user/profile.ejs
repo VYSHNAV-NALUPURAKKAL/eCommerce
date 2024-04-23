@@ -113,13 +113,14 @@
                                                                 </td>
                                                                 <td>
                                                                     <% if(order.invoice){%>
-                                                                        <% console.log("order id :",order._id)%>
-                                                                            <a href="/invoice?id=<%= order._id %>"
-                                                                                class=""
-                                                                                style="border: none; background-color: white; color: rgb(0, 0, 136);"><i
-                                                                                    class="fa-solid fa-download"></i>
-                                                                                <p style="font-size: 15px ;">invoice</p>
-                                                                            </a>
+                                                                        
+                                                                        <a onclick="downloadInvoice('<%= order._id %>')"
+                                                                            class=""
+                                                                            style="border: none; background-color: white; color: rgb(0, 0, 136);">
+                                                                            <i class="fa-solid fa-download"></i>
+                                                                            <p style="font-size: 15px;">invoice</p>
+                                                                         </a>
+                                                                         
 
                                                                             <%}%>
                                                                 </td>
@@ -392,6 +393,7 @@
 
 
 
+                            <script src="https://cdn.jsdelivr.net/npm/easyinvoice/dist/easyinvoice.min.js"></script>
 
                             <script>
                                 async function deleteAddress(addressId) {
@@ -418,22 +420,85 @@
                                 }
 
                                 $(document).ready(function () {
-                                    // Get the hash from the URL
                                     var hash = window.location.hash;
 
-                                    // If hash exists and it starts with '#tab-orders', activate the Orders tab
                                     if (hash && hash.startsWith('#tab-orders')) {
                                         $('#tab-orders').addClass('show active');
                                         $('#tab-account').removeClass('show active');
                                     }
-                                    // If hash is not defined or it doesn't start with '#tab-orders', activate the Profile tab
                                     else {
                                         $('#tab-orders').removeClass('show active');
                                         $('#tab-account').addClass('show active');
                                     }
                                 });
 
+                                function downloadInvoice(id) {
+                    const orderId = id;
+                    console.log("order Id:",orderId);
+                    fetch('/invoice',{
+                        method:"POST",
+                        headers:{
+                            "Content-Type":"application/json"
+                        },
+                        body:JSON.stringify({orderId})
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                    const invoiceData = getSampleData(data);
+      
+                    easyinvoice.createInvoice(invoiceData, function(result) {
+                    easyinvoice.download('myInvoice.pdf', result.pdf);
+                    });
+                })
+                .catch(error => {
+                console.error('Error fetching data:', error);
+                res.status(500).render("user/500")
+            });
+        }
+
+        function getSampleData(dataFromBackend) {
+            const userAddress = dataFromBackend.userAddress
+            const totalOrders = dataFromBackend.totalOrders
+            
+            const orderDate = totalOrders.orderDate ? new Date(totalOrders.orderDate).toLocaleDateString('en-US', {
+            weekday: 'short',
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+            }) : '';
+            const orders = dataFromBackend.orders.map(order => {
+            const { productId, ...rest } = order;
+            const description = productId.name; 
+            return { ...rest, description }; 
+            });
+            
+            return {
+            sender: {
+            company: "STREAK-X FRAMES",
+            address: "Malappuram,673638",
+            zip: 673638,
+            city: "MALAPPURAM",
+            country: "INDIA"
+        },
+        client: {
+        company: userAddress.address[0].fullName,
+        address: userAddress.address[0].houseName,
+        zip: userAddress.address[0].pin,
+        city: userAddress.address[0].city,
+        state: userAddress.address[0].state
+        },
+        information: {
+        number: totalOrders._id,
+        date: orderDate
+        },
+        products: orders,
+        'bottom-notice': "Thank you for choosing us! Your support keeps our dreams afloat and our passion alive. We're thrilled to serve you and look forward to delighting you again soon",
+         settings: {
+            currency: 'INR' 
+    }
+}
+}  
+
                             </script>
 
-
-                            <%- include('userLayouts/footer') %>
+<%- include('userLayouts/footer') %>

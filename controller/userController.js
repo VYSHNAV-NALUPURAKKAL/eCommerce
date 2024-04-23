@@ -497,81 +497,50 @@ function generateCode() {
 
 const invoice = async (req, res) => {
   try {
-    console.log("available order id :", req.query);
-    console.log("reached at invoice :");
-    const orderId = req.query.id;
+    const orderId = req.body.orderId;
     const totalOrders = await Order.findOne({ _id: orderId }).populate({
-      path: "products.productId",
+      path: 'products.productId',
       populate: {
-        path: "category",
+        path: 'category',
         populate: {
-          path: "offer",
+          path: 'offer',
         },
       },
-      populate: {
-        path: "offer",
-      },
     });
-
-    console.log("total orders after the populate :", totalOrders);
-
-    const orders = totalOrders.products.filter(
-      (val) =>
-        val.productStatus === "delivered" ||
-        val.productStatus === "returned or cancelled"
-    );
-
+   
+    const orders = totalOrders.products.reduce((acc, product) => {
+      const existingProductIndex = acc.findIndex(item => item.productId._id === product.productId._id);
+  
+      if (existingProductIndex !== -1) {
+          acc[existingProductIndex].quantity += product.quantity;
+          acc[existingProductIndex].totalPrice += product.totalPrice;
+      } else {
+          acc.push({
+              productId: product.productId,
+              quantity: product.quantity,
+              price: product.price,
+              totalPrice: product.totalPrice,
+              productStatus: product.productStatus,
+              _id: product._id
+          });
+      }
+  
+      return acc;
+  }, []);
+  
     const deliveryAddressId = totalOrders.deliveryAddress[0]._id;
 
-    console.log("delivery address id :", deliveryAddressId);
-    console.log("orders :", orders);
     const userAddress = await User.findOne(
-      { "address._id": deliveryAddressId },
-      { "address.$": 1 }
+      { 'address._id': deliveryAddressId },
+      { 'address.$': 1 }
     );
-
-    const ejsPagePath = path.join(__dirname, "../view/user/pdf.ejs");
-    console.log("ejs page path   :", ejsPagePath);
-
-    const ejsPage = await ejs.renderFile(ejsPagePath, {
-      orders,
-      userAddress,
-      totalOrders,
-    });
-
-    const pdfOptions = {
-      format: 'A4',
-      orientation: 'landscape',     
-      border: '10mm', 
-      header: {
-        height: '20mm', 
-        contents: '<div style="text-align: center;"><b>INVOICE</b></div>', 
-      },
-      footer: {
-        height: '20mm', 
-        contents: {
-          default: '<div style="text-align: center;">Page <span>{{page}}</span> of <span>{{pages}}</span></div>', // Content of the footer
-        },
-      },
-      base: '', 
-      timeout: 30000, 
-    };
-    
-
-    pdf.create(ejsPage, pdfOptions).toBuffer((err, buffer) => {
-      if (err) {
-        console.log("Error creating PDF:", err);
-        return res.status(500).render("user/500");
-      }
-      res.setHeader("Content-Type", "application/pdf");
-      res.setHeader("Content-Disposition", "attachment; filename=Order-Invoice.pdf");
-      res.send(buffer);
-    });
+    console.log("orderssssssssss ;",orders);
+    res.json({orders,userAddress,totalOrders,})
   } catch (error) {
-    console.log("Error on invoice:", error);
-    res.status(500).send("Internal Server Error");
+    res.status(500).render("user/500");
   }
 };
+
 
 module.exports = {
   loadSignup,
