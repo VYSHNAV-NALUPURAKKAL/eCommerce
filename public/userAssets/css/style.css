@@ -917,3 +917,28 @@ a {
 
 }
 
+.wallet{
+  text-align: center !important;
+  padding: 18px 20px 0px 20px;
+}
+.transactions{
+  text-align: center !important;
+  padding: 20px;
+}
+
+.balance{
+  font-weight: 900;
+  font-size: 25px;
+}
+
+
+
+
+.wallet-history{
+        border: 1px solid #cecece;
+        border-radius: 10px;
+        width: 50%;
+        
+
+}
+

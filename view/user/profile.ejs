@@ -196,16 +196,16 @@
 
 
                                     <!-- wallet startssss form hereeee -->
-                                    <div class="tab-pane fade" id="tab-downloads" role="tabpanel"
+                                    <div class="tab-pane fade wallet-history" id="tab-downloads" role="tabpanel"
                                         aria-labelledby="tab-downloads-link">
                                         <div class="walletContainer">
-                                            <div class="wallet">
-                                                <h3>Wallet Balance</h3>
+                                            <div class="wallet ">
+                                                <h3 class="">Wallet Balance</h3>
                                                 <div class="balance"> ₹ <%= userData.wallet %>
                                                 </div>
                                             </div>
                                             <div class="transactions">
-                                                <h3>Transaction History</h3>
+                                                <h3 class="mb-3">Transaction History</h3>
                                                 <!-- Button to open the modal -->
                                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                                     data-bs-target="#transactionHistoryModal">
@@ -221,27 +221,34 @@
                                                                 <h5 class="modal-title"
                                                                     id="transactionHistoryModalLabel">Transaction
                                                                     History</h5>
-                                                                <button type="button" class="btn-close"
+                                                                 <button type="button" class="btn-close"
                                                                     data-bs-dismiss="modal" aria-label="Close"></button>
                                                             </div>
                                                             <div class="modal-body">
-                                                                <% userData.walletHistory.forEach(function(transaction,
-                                                                    index) { %>
-                                                                    <div class="transaction">
-                                                                        <div class="info">
-                                                                            <div class="date">
-                                                                                <%= transaction.date.toLocaleDateString('en-US',
-                                                                                    { year: 'numeric' , month: 'short' ,
-                                                                                    day: '2-digit' }).replace(/\//g, '-'
-                                                                                    ) %>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div
-                                                                            class="amount <% if (transaction.amount < 0) { %>negative<% } else { %>positive<% } %>">
-                                                                            <%= transaction.amount %>
-                                                                        </div>
-                                                                    </div>
-                                                                    <% }); %>
+                                                                <table class="table">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Date</th>
+                                                                            <th>Amount</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <% userData.walletHistory.forEach(function(transaction, index) { %>
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <%= transaction.date.toLocaleDateString('en-US', { year: 'numeric' , month: 'short', day: '2-digit' }).replace(/\//g, '-') %>
+                                                                                </td>
+                                                                                <td class="<%= transaction.amount < 0 ? 'negative' : 'positive' %>">
+                                                                                    <% if (transaction.amount < 0) { %>
+                                                                                        <p style="color: red;"><%= "-" + Math.abs(transaction.amount) %></p>
+                                                                                    <% } else { %>
+                                                                                        <p style="color: green;"><%= "+" + transaction.amount %></p>
+                                                                                    <% } %>
+                                                                                </td>
+                                                                            </tr>
+                                                                        <% }); %>
+                                                                    </tbody>
+                                                                </table>
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <button type="button" class="btn btn-secondary"
@@ -392,10 +399,13 @@
 
 
 
-
                             <script src="https://cdn.jsdelivr.net/npm/easyinvoice/dist/easyinvoice.min.js"></script>
 
+
                             <script>
+
+                                
+
                                 async function deleteAddress(addressId) {
                                     try {
                                         event.preventDefault
@@ -432,7 +442,7 @@
                                     }
                                 });
 
-                                function downloadInvoice(id) {
+                function downloadInvoice(id) {
                     const orderId = id;
                     console.log("order Id:",orderId);
                     fetch('/invoice',{
@@ -497,8 +507,12 @@
             currency: 'INR' 
     }
 }
-}  
+}
 
-                            </script>
+
+                                
+
+                </script>
+
 
 <%- include('userLayouts/footer') %>
