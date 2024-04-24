@@ -1,53 +1,4 @@
-<!DOCTYPE html>
-<html lang="en" class="">
-
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Tables - Admin One Tailwind CSS Admin Dashboard</title>
-
-
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-
-  <!-- Tailwind is included -->
-  <link rel="stylesheet" href="/public/adminAssets/css/main.css?v=1628755089081">
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
-  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
-  <link rel="mask-icon" href="safari-pinned-tab.svg" color="#00b4b6" />
-
-  <meta name="description" content="Admin One - free Tailwind dashboard">
-
-  <meta property="og:url" content="https://justboil.github.io/admin-one-tailwind/">
-  <meta property="og:site_name" content="JustBoil.me">
-  <meta property="og:title" content="Admin One HTML">
-  <meta property="og:description" content="Admin One - free Tailwind dashboard">
-  <meta property="og:image" content="https://justboil.me/images/one-tailwind/repository-preview-hi-res.png">
-  <meta property="og:image:type" content="image/png">
-  <meta property="og:image:width" content="1920">
-  <meta property="og:image:height" content="960">
-
-  <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:title" content="Admin One HTML">
-  <meta property="twitter:description" content="Admin One - free Tailwind dashboard">
-  <meta property="twitter:image:src" content="https://justboil.me/images/one-tailwind/repository-preview-hi-res.png">
-  <meta property="twitter:image:width" content="1920">
-  <meta property="twitter:image:height" content="960">
-
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-130795909-1"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
-    gtag('config', 'UA-130795909-1');
-  </script>
-
-</head>
+<%- include('adminLayout/header')%>
 
 <body>
 
@@ -140,12 +91,11 @@
                         <div class="row align-items-center">
                             <div class="col-lg-3 col-md-6 mb-lg-0 mb-15">
                                 <!-- <span> <i class="material-icons md-calendar_today"></i> -->
-                                <select class="form-select d-inline-block mb-lg-0 mr-5 mw-200" id="selectformat"
-                                    onchange="downlode()">
-                                    <option selected disabled>--DOWNLODE SALESRIPORT--</option>
-                                    <option>PDF</option>
-                                    <option>Excel</option>
-                                </select>
+                                    <select class="form-select d-inline-block mb-lg-0 mr-5 mw-200" id="selectformat" onchange="handleDownload()">
+                                        <option selected disabled>--DOWNLOAD SALES REPORT--</option>
+                                        <option value="pdf">PDF</option>
+                                        <option value="Excel">Excel</option>
+                                    </select>
 
                             </div>
                             <div class="col-lg-9 col-md-6 ms-auto text-md-end">
@@ -179,9 +129,6 @@
 
                                 <script>
 
-
-
-
                                     function selctfilter() {
                                         const selectedOption = document.getElementById("selectoption").value;
                                         if (selectedOption === "Custom Date") {
@@ -214,7 +161,7 @@
                             </div>
                         </div>
                     </header>
-
+                   
                     <div class="pagination-area  mb-50 usertable">
 
                         <table id="" class="table table-hover">
@@ -316,7 +263,9 @@
         </footer>
 
     </main>
-
+    <!-- link for html2pdf -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+ 
     <script>
 
         let data = [];
@@ -340,6 +289,27 @@
             tableBody.appendChild(row);
         }
 
+        function handleDownload() {
+        const selectedOption = document.getElementById("selectformat").value;
+        if (selectedOption === "pdf") {
+            printSalesReport();
+        } else if (selectedOption === "Excel") {
+            
+            downlode();
+        }
+    }
+
+        function printSalesReport() {
+            const element = document.querySelector('.pagination-area');
+            html2pdf(element, {
+            margin: 10,
+            filename: 'sales_report.pdf',
+            image: { type: 'jpeg', quality: 1.0 },
+            html2canvas: { dpi: 192, letterRendering: true },
+            jsPDF: { unit: 'pt', format: 'a4', orientation: 'landscape' }
+            });
+        };
+    
         function downlode() {
             const selectedformat = document.getElementById("selectformat").value;
             const datas = data;
@@ -390,6 +360,7 @@
                 console.log(error);
             }
         }
+
         function applyfilter() {
             const selectedvalue = document.getElementById("selectoption").value;
             const startDate = document.getElementById("startDate").value
@@ -440,11 +411,11 @@
             $('#tablePagination').DataTable();
         });
     </script>
-
+  
+    
     <script src="/public/adminAssets/js/chart.sample.js"></script>
     <script src="/public/adminAssets/js/chart.sample.min.js"></script>
     <script src="/public/adminAssets/js/main.js"></script>
     <script src="/public/adminAssets/js/main.min.js"></script>
-</body>
-
-</html>
+    
+<%- include('adminLayout/footer')%>

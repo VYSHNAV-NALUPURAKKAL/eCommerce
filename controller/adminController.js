@@ -676,39 +676,6 @@ const salesReport = async (req, res) => {
   const selectedformat = req.body.selectedformat;
   const startDate = req.body.startDate;
   const endDate = req.body.endDate;
-  console.log("selected format :",selectedformat);
-  // if (selectedformat === "PDF") {
-  // try {
-  // const orderData =
-  //   req.body.datas !== undefined && req.body.datas.length !== 0
-  //     ? req.body.datas
-  //     : orderDatas;
-
-  // const ejsPagePath = path.join(__dirname, "../view/admin/report.ejs");
-  // const ejsPage = await ejs.renderFile(ejsPagePath, { orderData });
-
-  // const pdfOptions = {
-  //   format: 'A4', 
-  //   orientation: 'portrait', 
-  //   border: '10mm',
-  // };
-
-  // pdf.create(ejsPage, pdfOptions).toBuffer((err, pdfBuffer) => {
-  //   if (err) {
-  //     console.log("Error generating PDF:", error);
-  //     res.status(500).send("Error generating PDF");
-  //     return;
-  //   }
-  //   res.setHeader("Content-Type", "application/pdf");
-  //   res.setHeader("Content-Disposition", "attachment; filename=invoice.pdf");
-  //   res.send(pdfBuffer);
-  //   });
-  // } catch (error) {
-  //   console.log("Error on sales report generating:", error);
-  //   res.status(500).send("Internal Server Error");
-  // }
-
-  // } else {
     try {
       const orderData =
         req.body.datas !== undefined && req.body.datas.length !== 0
