@@ -11,9 +11,8 @@ const randomstring = require("randomstring");
 const config = require("../config/config");
 const { ObjectId } = require("mongodb");
 const dotenv = require("dotenv");
-const pdf = require('html-pdf');
 const path = require('path');
-const ejs = require("ejs")
+const ejs = require('ejs');
 const { EventEmitterAsyncResource } = require("nodemailer/lib/xoauth2");
 const { default: mongoose } = require("mongoose");
 dotenv.config();
@@ -217,7 +216,6 @@ const loadSignup = async (req, res) => {
 const insertUser = async (req, res) => {
   try {
     const code = req.body.referal;
-    console.log("req.body code ;", req.body, req.body.referal);
     let data;
     let data2;
     if (code) {
@@ -451,12 +449,9 @@ const showEditProfile = async (req, res) => {
 
 const editProfile = async (req, res) => {
   try {
+    console.log("req.body edit profile :",req.body);
     const user = req.session.user;
     if (user) {
-      console.log(
-        user._id,
-        `name:${req.body.name},email:${req.body.email},${req.body.mobile}`
-      );
       const userData = await User.findByIdAndUpdate(
         { _id: user._id },
         {
@@ -464,12 +459,10 @@ const editProfile = async (req, res) => {
             name: req.body.name,
             email: req.body.email,
             mobile: req.body.mobile,
-            password: req.body.password,
           },
         }
       );
       if (userData) {
-        console.log("userData :", userData);
         res.redirect("/profile");
       } else {
         res.redirect("/");
@@ -493,6 +486,8 @@ function generateCode() {
   console.log("code :", code);
   return code;
 }
+
+
 
 
 const invoice = async (req, res) => {
