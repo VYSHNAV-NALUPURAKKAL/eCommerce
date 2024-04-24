@@ -18,6 +18,8 @@
   <link rel="stylesheet" href="/public/userAssets/css/aos.css" />
 
   <link rel="stylesheet" href="/public/userAssets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 
 <body>
@@ -160,17 +162,17 @@
                               
                               <div class="input-group-prepend">
                                 <button class="btn btn-outline-primary js-btn-minus" type="button"
-                                  onclick="quantityChanger(-1, '<%= item.productId._id %>')" <%= item.quantity <= 1 ?'disabled':'' %> >
+                                  onclick="quantityChanger(-1, '<%= item.productId._id %>')"  >
                                   &minus;
                                 </button>
                               </div>
 
-                              <input type="text" class="form-control text-center" value="<%= item.quantity %>"
+                              <input min="1" type="text" class="form-control text-center" value="<%= item.quantity %>"
                                 placeholder="<%= item.quantity %>" id="<%= item.productId._id %>-quantity" />
                               
                                 <div class="input-group-append">
                                 <button class="btn btn-outline-primary js-btn-plus" type="button"
-                                  onclick="quantityChanger(1, '<%= item.productId._id %>')" <%= item.quantity >= item.productId.quantity ?'disabled':'' %>>
+                                  onclick="quantityChanger(1, '<%= item.productId._id %>')" >
                                   &plus;
                                 </button>
                               </div>
@@ -311,6 +313,8 @@
     function quantityChanger(count, productId) {
       const data = { productId: productId, count: count };
       console.log("data from quanty changer:", data);
+
+      
       fetch("/updateCartQuantity", {
         method: "POST",
         headers: {
@@ -325,13 +329,37 @@
             const cartTotalElement = document.getElementById('cartTotal');
             cartTotalElement.textContent = '₹' + data.cartTotal.toFixed(2)
             $("#reloadDiv").load("/cart #reloadDiv");
-          }
-        })
-        .catch((error) => {
-          console.log("Error on quantity changer :", error);
-        });
-    }
-
+          } else {
+            if (data.message === "Quantity cannot be less than 1") {
+            Swal.fire({
+            icon: 'warning',
+            title: 'Oops',
+            text: 'Quantity cannot be less than 1',
+          });
+        } else if (data.message === "Maximum quantity reached") {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Oops',
+            text: 'Maximum quantity reached',
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'An unexpected error occurred',
+          });
+        }
+      }
+    })
+    .catch((error) => {
+      console.log("Error on quantity changer:", error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'An unexpected error occurred',
+      });
+    });
+}
 
 
 

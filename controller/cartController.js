@@ -181,8 +181,6 @@ const updateCartQuantity = async (req, res) => {
     const cartData = await Cart.findOne({ userId: user_id });
     const product = cartData.items.filter((obj) => obj.productId == product_id);
     const productData = await Product.findById(product_id);
-    console.log("step 1");
-    console.log("product . quantity :", product[0].quantity);
     if (
       (product[0].quantity >= 1 &&
         count > 0 &&
@@ -195,14 +193,10 @@ const updateCartQuantity = async (req, res) => {
         { new: true }
       );
 
-      console.log("step 2");
       const item = cartData.items.find((item) => item.productId == product_id);
 
       let totalAmount;
       if (item) totalAmount = item.quantity * item.price;
-
-      console.log("step 3");
-
       await Cart.findOneAndUpdate(
         { userId: user_id, "items.productId": product_id },
         { $set: { "items.$.totalPrice": totalAmount } }
@@ -212,16 +206,14 @@ const updateCartQuantity = async (req, res) => {
         return total + item.quantity * item.price;
       }, 0);
       res.json({ stock: true, cartTotal });
-    } else {
-      if (product[0].quantity > 1) {
-        console.log("step 4");
-        res.json({ stock: false });
-      } else {
-        console.log("step 4");
-        res.json({ stock: true });
+      } else if(product[0].quantity >= 1 && count < 0) {
+       res.json({ stock: false, message: "Quantity cannot be less than 1" });
+      } else if(product[0].quantity >= productData.quantity && count > 0) {
+        res.json({ stock: false, message:"Maximum quantity reached" });
+      }else{
+        res.json({stock:false,message:"unexpected error"})
       }
-    }
-  } catch (error) {
+    } catch (error) {
     console.log(error.message);
     res.render("user/500");
   }
