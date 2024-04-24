@@ -308,6 +308,7 @@ const deletImage = async(req,res)=>{
       }else{
         const userData = await User.findById({_id:user._id})
         if(userData.blocked===1){
+          req.session.destroy()
           res.redirect("/user-blocked");
         }else{
           res.render("user/shop", { product, user, category });
