@@ -305,10 +305,13 @@ const deletImage = async(req,res)=>{
       const category = await Categories.find({ isBlocked: 1 });
       if(!user){
         res.render("user/shop", { product, user, category });
-      }else if(user.blocked===1){
-        res.redirect("/user-blocked");
       }else{
-        res.render("user/shop", { product, user, category });
+        const userData = await User.findById({_id:user._id})
+        if(userData.blocked===1){
+          res.redirect("/user-blocked");
+        }else{
+          res.render("user/shop", { product, user, category });
+        }
       }
     } catch (error) {
       console.log("error on shop rendering :", error);
