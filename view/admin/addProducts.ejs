@@ -154,8 +154,16 @@
           Add Product
         </p>
       </header>
+      <% if (typeof error === 'undefined') { %>
+        <% var error = null; %>
+      <% } %>
       <div class="card-content">
-        <form id="addForm" method="post" action="/admin/addProduct" onsubmit="return validateForm()" enctype="multipart/form-data">
+        <% if (error) { %>
+          <div class="alert alert-danger" role="alert">
+            <%= error %>
+          </div>
+          <% } %>
+        <form id="addForm" method="post" action="/admin/addProduct"  enctype="multipart/form-data">
           <div class="field">
             <label class="label">Product Name</label>
             <div class="control icons-left">
@@ -347,6 +355,7 @@
         event.preventDefault();
 
         const isValid = validateForm();
+        console.log("isvalid :",isValid);
         if (isValid) {
           form.submit();
         }
@@ -395,17 +404,18 @@ function createCropButton(img) {
     cropButton.innerText = 'Crop Image';
     cropButton.addEventListener('click', function(event) {
         event.preventDefault();
-        showConfirmModal(img); 
+        showConfirmModal(img); // Show confirmation modal before cropping
     });
     return cropButton;
 }
 
 
 function showConfirmModal(img) {
+  
     const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
     const confirmButton = document.getElementById('confirmCropButton');
     confirmButton.onclick = function() {
-        modal.hide(); 
+        modal.hide();
         cropImage(img); 
     };
     modal.show(); 
@@ -418,15 +428,15 @@ function cropImage(imageElement) {
     const cropper = new Cropper(imageElement, {
         aspectRatio: 1,
         crop(event) {
-           
             console.log('Crop area changed:', event.detail);
-                   },
+        },
     });
+
 
     cropper.on('crop', () => {
         const croppedImageData = cropper.getCroppedCanvas().toDataURL('image/jpeg');
 
-        fetch('/admin/cropImage', {
+        fetch('/cropImage', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

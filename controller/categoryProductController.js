@@ -177,9 +177,10 @@ const showAddProduct = async (req, res) => {
 const addProduct = async (req, res) => {
   try {
     let { name, description, category, price, quantity } = req.body;
+   
     name = name[0].toUpperCase() + name.slice(1).trim().toLowerCase();
     const images = req.files;
-    const categoryData = await Categories.find();
+    const categories = await Categories.find({ isBlocked: 1 });
     const category1 = await Categories.findById(category);
     const checkExistingProduct = await Product.findOne({ name: name });
     if (!category1) {
@@ -208,6 +209,8 @@ const addProduct = async (req, res) => {
         console.log("user/404", error);
       }
       res.redirect("/admin/products");
+    }else{
+      res.render("admin/addProducts",{categories,error:"Product name already exists!"})
     }
   } catch (error) {
     console.log("error on addProduct", error);
