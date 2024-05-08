@@ -258,9 +258,12 @@ const editProduct = async (req, res) => {
     }
     const latestImageIndex = parseInt(imageIndex[imageIndex.length - 1]);
     const existingProduct = await Product.findById(id);
+    
+    
     if (images.length > 0) {
       existingProduct.images[latestImageIndex] = images[0].filename;
     }
+
     const updateData = {
       name: name,
       description: description,
@@ -279,16 +282,45 @@ const editProduct = async (req, res) => {
   }
 };
 
+
+const checkDeleteImage = async (req, res) => {
+  try {
+      const index = req.body.index;
+      const productId = req.body.productId;
+      const productData = await Product.findById(productId);
+
+      if (productData.images.length === 1) {
+          return res.json({ success: false, message: "Cannot delete the only remaining image" });
+      } else {
+          
+          return res.json({ success: true });
+      }
+  } catch (error) {
+      console.log("Error occurred on checkDeleteImage:", error);
+      return res.render("user/500").json({ success: false, message: "Internal server error" });
+  }
+};
+
 const deletImage = async(req,res)=>{
   try {
+    console.log("req.body :",req.body);
     const index = req.body.index
     const productData = await Product.findById({_id:req.body.productId})
+    console.log("product data :",productData);
     productData.images.splice(index,1)
     await productData.save()
-    res.json({success:true,message:"image removed successfully"})
-    
+    res.json({success:true,message:"image removed successfully"})  
   } catch (error) {
     console.log("error occured on delete image :",error);
+  }
+}
+
+
+const cropImage = async(req,res)=>{
+  try {
+    console.log("entered to crop image ,req.body:",req.body);
+  } catch (error) {
+    console.log("error on crop Image :",error);
   }
 }
 
@@ -305,14 +337,10 @@ const deletImage = async(req,res)=>{
       const category = await Categories.find({ isBlocked: 1 });
       if(!user){
         res.render("user/shop", { product, user, category });
+      }else if(user.blocked===1){
+        res.redirect("/user-blocked");
       }else{
-        const userData = await User.findById({_id:user._id})
-        if(userData.blocked===1){
-          req.session.destroy()
-          res.redirect("/user-blocked");
-        }else{
-          res.render("user/shop", { product, user, category });
-        }
+        res.render("user/shop", { product, user, category });
       }
     } catch (error) {
       console.log("error on shop rendering :", error);
@@ -362,4 +390,7 @@ module.exports = {
   updateProductsList,
   showShop,
   singleProductPage,
+  cropImage,
+  checkDeleteImage
 };
+
