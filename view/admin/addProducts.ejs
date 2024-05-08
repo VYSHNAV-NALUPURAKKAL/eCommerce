@@ -16,8 +16,10 @@
   <link rel="mask-icon" href="safari-pinned-tab.svg" color="#00b4b6" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
-  <meta name="description" content="Admin One - free Tailwind dashboard">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
+  
+    <meta name="description" content="Admin One - free Tailwind dashboard">
 
   <meta property="og:url" content="https://justboil.github.io/admin-one-tailwind/">
   <meta property="og:site_name" content="JustBoil.me">
@@ -47,19 +49,22 @@
     .flex-container {
       display: flex;
       flex-wrap: nowrap;
-      /* Ensure images stay in a single line */
       overflow-x: auto;
-      /* Enable horizontal scrolling if images exceed container width */
     }
 
     .preview-image {
       max-width: 100px;
-      /* Adjust as needed */
       max-height: 100px;
-      /* Adjust as needed */
       margin-right: 10px;
-      /* Adjust as needed */
     }
+
+    .cropper-controls {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 0;
+    z-index: 1;
+}
   </style>
 
 </head>
@@ -150,7 +155,7 @@
         </p>
       </header>
       <div class="card-content">
-        <form id="addForm" method="post" onsubmit="return validateForm()" enctype="multipart/form-data">
+        <form id="addForm" method="post" action="/admin/addProduct" onsubmit="return validateForm()" enctype="multipart/form-data">
           <div class="field">
             <label class="label">Product Name</label>
             <div class="control icons-left">
@@ -210,30 +215,25 @@
           <div class="field">
             <label class="label">Product Images</label>
             <div class="control">
-              <input type="file" id="product-images" name="product-images" multiple required
-                onchange="previewImages(event)">
+                <input type="file" id="product-images" name="product-images" multiple required onchange="previewImages(event)">
             </div>
-
+        
             <div class="selected-images">
               <label class="label">Selected Images:</label>
-              <div id="image-carousel" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner" id="image-carousel-inner">
-                  <!-- Carousel items will be added dynamically here -->
-                </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#image-carousel"
-                  data-bs-slide="prev">
-                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                  <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#image-carousel"
-                  data-bs-slide="next">
-                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                  <span class="visually-hidden">Next</span>
-                </button>
+              <div id="image-carousel" class="carousel slide">
+                  <div class="carousel-inner" id="image-carousel-inner"></div>
+                  <button class="carousel-control-prev" type="button" data-bs-target="#image-carousel" data-bs-slide="prev">
+                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span class="visually-hidden">Previous</span>
+                  </button>
+                  <button class="carousel-control-next" type="button" data-bs-target="#image-carousel" data-bs-slide="next">
+                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                      <span class="visually-hidden">Next</span>
+                  </button>
               </div>
-            </div>
-          
-
+              <div id="crop-buttons-container"></div>
+          </div>
+      </div>
           <hr>
           <div class="field grouped">
             <div class="control">
@@ -258,13 +258,13 @@
 
 
 
-  <script type="text/javascript" src="/public/adminAssets/js/main.min.js?v=1628755089081"></script>
-  <noscript><img height="1" width="1" style="display:none"
+      <script type="text/javascript" src="/public/adminAssets/js/main.min.js?v=1628755089081"></script>
+      <noscript><img height="1" width="1" style="display:none"
       src="https://www.facebook.com/tr?id=658339141622648&ev=PageView&noscript=1" /></noscript>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.9.95/css/materialdesignicons.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+      <link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.9.95/css/materialdesignicons.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
   <script>
 
@@ -352,12 +352,14 @@
         }
       });
     });
-
     function previewImages(event) {
     const carouselInner = document.getElementById('image-carousel-inner');
     carouselInner.innerHTML = ''; 
 
     const files = event.target.files;
+    const cropButtonsContainer = document.getElementById('crop-buttons-container');
+    cropButtonsContainer.innerHTML = ''; 
+
     for (let i = 0; i < files.length; i++) {
         const file = files[i];
         if (file.type.match('image.*')) {
@@ -369,17 +371,76 @@
                     item.classList.add('active');
                 }
                 const img = document.createElement('img');
+                img.onload = function() {
+                    if (i === 0) {
+                        const cropButton = createCropButton(img);
+                        cropButtonsContainer.appendChild(cropButton);
+                    }
+                };
                 img.src = e.target.result;
                 img.classList.add('d-block', 'w-100');
                 item.appendChild(img);
+
                 carouselInner.appendChild(item);
             };
             reader.readAsDataURL(file);
         }
     }
-
     const carousel = new bootstrap.Carousel(document.getElementById('image-carousel'));
 }
+
+function createCropButton(img) {
+    const cropButton = document.createElement('button');
+    cropButton.classList.add('crop-button', 'btn', 'btn-primary', 'mt-2');
+    cropButton.innerText = 'Crop Image';
+    cropButton.addEventListener('click', function(event) {
+        event.preventDefault();
+        showConfirmModal(img); 
+    });
+    return cropButton;
+}
+
+
+function showConfirmModal(img) {
+    const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
+    const confirmButton = document.getElementById('confirmCropButton');
+    confirmButton.onclick = function() {
+        modal.hide(); 
+        cropImage(img); 
+    };
+    modal.show(); 
+}
+
+
+function cropImage(imageElement) {
+    console.log("image element :", imageElement);
+    
+    const cropper = new Cropper(imageElement, {
+        aspectRatio: 1,
+        crop(event) {
+           
+            console.log('Crop area changed:', event.detail);
+                   },
+    });
+
+    cropper.on('crop', () => {
+        const croppedImageData = cropper.getCroppedCanvas().toDataURL('image/jpeg');
+
+        fetch('/cropImage', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ imageData: croppedImageData }),
+        })
+        .then(response => {
+        })
+        .catch(error => {
+            console.error('Error cropping image:', error);
+        });
+    });
+}
+
 
 
 
