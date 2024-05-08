@@ -426,7 +426,7 @@ function cropImage(imageElement) {
     cropper.on('crop', () => {
         const croppedImageData = cropper.getCroppedCanvas().toDataURL('image/jpeg');
 
-        fetch('/cropImage', {
+        fetch('/admin/cropImage', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
