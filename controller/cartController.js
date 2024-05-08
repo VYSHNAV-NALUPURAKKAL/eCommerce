@@ -266,6 +266,7 @@ const loadCheckOut = async (req, res) => {
         coupon: eligibleCoupons,
         stock: stock,
         wallet: walletBalance,
+        currentUrl:req.originalUrl
       });
     } else {
       res.redirect("/");
