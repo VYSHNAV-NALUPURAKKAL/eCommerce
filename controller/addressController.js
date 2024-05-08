@@ -77,7 +77,6 @@ const showEditAddress = async (req, res) => {
     const userData = req.session.user;
     const ind = req.query.ind;
 
-    // Find the user and populate the 'address' field
     const user = await User.findOne({ _id: userData._id });
 
     if (

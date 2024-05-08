@@ -61,38 +61,85 @@
     <h5>OTP Verification</h5>
     <form action="/otp-verification" method="post" id="otpForm">
       <div class="otp-input-container">
-        <input type="text" class="form-control  otp-input" maxlength="1" name="otp" required>
         <input type="text" class="form-control otp-input" maxlength="1" name="otp" required>
         <input type="text" class="form-control otp-input" maxlength="1" name="otp" required>
         <input type="text" class="form-control otp-input" maxlength="1" name="otp" required>
-        <input type="text" class="form-control otp-input" maxlength="1" name="otp"required>
+        <input type="text" class="form-control otp-input" maxlength="1" name="otp" required>
+        <input type="text" class="form-control otp-input" maxlength="1" name="otp" required>
         <input type="text" class="form-control otp-input" maxlength="1" name="otp" required>
       </div>
       <button type="submit" class="btn btn-primary mt-3 btn-verify" disabled>Verify</button>
+      <button type="button" class="btn btn-secondary mt-3 btn-resend-otp" disabled>Resend OTP</button>
+      <span id="countdown-timer"></span>
       <% if (message) { %>
-        <p style="color: red;"><%= message %></p>
+      <p style="color: red;"><%= message %></p>
       <% } %>
     </form>
   </div>
-
+  
   <!-- Bootstrap JavaScript and Popper.js -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
+  
   <script>
     const otpForm = document.getElementById('otpForm');
     const otpInputs = otpForm.querySelectorAll('.otp-input');
     const btnVerify = otpForm.querySelector('.btn-verify');
-
+    const btnResendOTP = otpForm.querySelector('.btn-resend-otp');
+    const countdownTimer = document.getElementById('countdown-timer');
+  
     otpInputs.forEach(input => {
       input.addEventListener('input', () => {
-        // Enable the Verify button only if all OTP inputs are filled
         btnVerify.disabled = !Array.from(otpInputs).every(input => input.value.length === 1);
       });
     });
-  </script>
+  
+    function enableResendOTP() {
+      btnResendOTP.disabled = false;
+    }
+  
+    function startCountdown() {
+      let seconds = 30;
+      countdownTimer.textContent = `Resend OTP in ${seconds} seconds`;
+  
+      const interval = setInterval(() => {
+        seconds--;
+        countdownTimer.textContent = `Resend OTP in ${seconds} seconds`;
+        if (seconds === 0) {
+          clearInterval(interval);
+          enableResendOTP();
+          countdownTimer.textContent = '';
+        }
+      }, 1000);
+    }
+  
+    setTimeout(() => {
+      startCountdown();
+    }, 1000);
+    btnResendOTP.addEventListener('click', () => {
+  fetch("/resend-otp", {
+    method: "GET",
+  })
+  .then(response => {
+    if (response.ok) {
+      return response.json();
+    } else {
+      throw new Error('Failed to resend OTP');
+    }
+  })
+  .then(data => {
+    console.log(data.message);
+    btnResendOTP.disabled = true;
+    startCountdown();
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+});
 
+  </script>
+  
 </body>
 
 </html>

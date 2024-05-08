@@ -277,6 +277,7 @@
     document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById("editForm");
     const productId = window.location.pathname.split("/").pop();
+    console.log("productID : ", productId);
     form.addEventListener("submit", function (event) {
         event.preventDefault();
 
@@ -298,6 +299,7 @@
             }
         })
         .then((data) => {
+            console.log("data:", data);
             if (data && data.success === true) {
                 swal.fire({
                     icon: "success",
@@ -384,18 +386,12 @@
         button.addEventListener('click', function() {
             const index = this.getAttribute('data-index');
             const productId = window.location.pathname.split("/").pop();
-            console.log("image to be deleted :", index);
+            console.log("Image to be deleted:", index);
 
-            // Remove the image and associated input fields from the DOM
-            document.querySelectorAll('.img-thumbnail')[index].parentNode.remove();
-            document.querySelectorAll(`input[type="file"][id^="fileInput${index}"]`).forEach(input => {
-                input.remove();
-            });
-
-            // Send request to delete image from backend
-            fetch(`/admin/editProduct/${productId}`, {
-                method: "PATCH",
-                body: JSON.stringify({ index, productId }),
+            // Send request to check if deletion is allowed
+            fetch(`/admin/checkDeleteImage/${productId}`, {
+                method: "POST",
+                body: JSON.stringify({ index,productId }),
                 headers: {
                     "Content-Type": "application/json"
                 }
@@ -407,13 +403,17 @@
                 throw new Error("Network response was not ok.");
             })
             .then(data => {
-                console.log("Response from backend:", data);
-                if(data.success===true){
-                  swal.fire({
-                    icon: "success",
-                    title: "Success",
-                    text: "image deleted successfully"
-                })
+                console.log("Response from checkDeleteImage:", data);
+                if (data.success) {
+                    // If deletion is allowed, proceed with deletion
+                    deleteImage(productId, index);
+                } else {
+                    // If deletion is not allowed, display a message
+                    swal.fire({
+                        icon: "warning",
+                        title: "Warning",
+                        text: data.message
+                    });
                 }
             })
             .catch(error => {
@@ -421,6 +421,40 @@
             });
         });
     });
+
+    function deleteImage(productId, index) {
+        fetch(`/admin/editProduct/${productId}`, {
+            method: "PATCH",
+            body: JSON.stringify({ index,productId }),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error("Network response was not ok.");
+        })
+        .then(data => {
+            console.log("Response from deleteImage:", data);
+            if (data.success) {
+
+              document.querySelectorAll('.img-thumbnail')[index].parentNode.remove();
+              document.querySelectorAll(`input[type="file"][id^="fileInput${index}"]`).forEach(input => {
+                input.remove();
+            });
+                swal.fire({
+                    icon: "success",
+                    title: "Success",
+                    text: "Image deleted successfully"
+                });
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
+    }
 });
 
   </script>

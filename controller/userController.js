@@ -165,43 +165,20 @@ const showVerifyOTPPage = async (req, res) => {
 
 //=================RESEND OTP====================
 
-const resendOtp = (req, res) => {
+const resendOtp = async (req, res) => {
+  console.log("entered to resend otp backend ");
   try {
-    const currentTime = Date.now() / 1000;
-
-    if (req.session.otp.expire != null) {
-      if (currentTime > req.session.otp.expire) {
-        const newDigit = otpGenerator.generate(6, {
-          digits: true,
-          alphabets: false,
-          specialChars: false,
-          upperCaseAlphabets: false,
-          lowerCaseAlphabets: false,
-        });
-        req.session.otp.code = newDigit;
-        const newExpiry = currentTime + 30;
-
-        req.session.otp.expire = newExpiry;
-        sendVerifyMail(
-          req.session.name,
-          req.session.email,
-          req.session.otp.code
-        );
-        res.render("user/otp-verification", {
-          message: `New OTP send to ${req.session.email}`,
-        });
-      } else {
-        res.render("user/otp-verification", {
-          message: `OTP send to ${req.session.email},resend after 30 second`,
-        });
-      }
-    } else {
-      res.send("Already Registered");
-    }
+    const currentTime = new Date();
+    const newOtp = generateOTP();
+    req.session.otp = newOtp;
+    await sendVerifyMail(req.session.user.name, req.session.user.email, newOtp);
+    res.status(200).json({ message: `New OTP sent to ${req.session.user.email}` });
   } catch (error) {
-    res.render("user/500");
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
 
 //--------------LOAD SIGNUP----------------
 const loadSignup = async (req, res) => {
@@ -252,7 +229,6 @@ const insertUser = async (req, res) => {
     const securepassword = await securePassword(req.body.password);
 
     if (!securepassword) {
-      // Handle the case where password hashing failed
       return res.render("user/signup", { message: "Error creating user" });
     }
 

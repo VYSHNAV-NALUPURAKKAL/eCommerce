@@ -2,7 +2,6 @@ const express = require('express');
 const adminRoute = express();
 
 //============view engine setup==============!!!
-
 adminRoute.set('view engine','ejs')
 adminRoute.set('views','view')
 
@@ -11,8 +10,8 @@ const config = require('../config/config');
 const { urlencoded } = require('body-parser');
 
 adminRoute.use(
-  session({
-        secret:config.sessionSecret,
+    session({
+        session:config.sessionSecret,
         resave:false,
         saveUninitialized:true
     })
@@ -52,7 +51,6 @@ const offerController = require("../controller/offerController");
 adminRoute.get('/',adminAuth.isLogout,adminController.loadLogin)
 adminRoute.post('/',adminController.verifyLogin)
 
-
 adminRoute.get('/adminLogout',adminAuth.isLogin,adminController.loadLogout)
 
 //customersssssss
@@ -76,8 +74,10 @@ adminRoute.get('/addProduct',adminAuth.isLogin,categoryProductController.showAdd
 adminRoute.post('/addProduct',upload.array('product-images',4),categoryProductController.addProduct)
 adminRoute.get('/editProduct/:id',adminAuth.isLogin,categoryProductController.showEditProduct)
 adminRoute.post('/editProduct/:id', upload.array('product-images',4), categoryProductController.editProduct);
+adminRoute.post("/cropImage",adminAuth.isLogin,categoryProductController.cropImage)
+adminRoute.patch("/editProduct/:id",adminAuth.isLogin,categoryProductController.deletImage)
 adminRoute.post('/updateProductList',adminAuth.isLogin,categoryProductController.updateProductsList);
-
+adminRoute.post('/checkDeleteImage/:id',adminAuth.isLogin,categoryProductController.checkDeleteImage)
 // ================Order Management======================
 
 adminRoute.get('/orders',adminAuth.isLogin,orderController.loadOrderManagement)
@@ -106,6 +106,6 @@ adminRoute.post("/salesFilter",adminAuth.isLogin,adminController.Sales)
 adminRoute.post("/salesReport",adminAuth.isLogin,adminController.salesReport)
 
 //======================Dashboard Managment ========================================
-adminRoute.get('/home',adminAuth.isLogin,adminController.loadHome)
+adminRoute.get("/home",adminController.loadHome)
 
 module.exports = adminRoute

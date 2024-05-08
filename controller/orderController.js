@@ -263,7 +263,8 @@ const cancelProduct = async (req, res) => {
         if (item.productId == productId) {
           count += item.quantity;
           item.productStatus = "returned or cancelled";
-          totalAmount += item.price * item.quantity;
+          const price = item.totalPrice
+          totalAmount += price * item.quantity;
         }
       });
 
@@ -304,15 +305,15 @@ const cancelProduct = async (req, res) => {
       orderData.products.forEach((item) => {
         if (item.productId == productId) {
           item.productStatus = "returned or cancelled";
-          totalAmount += item.price * item.quantity;
-        }
+          const price = item.totalPrice;
+          totalAmount += price * item.quantity;        }
       });
       await Product.updateOne(
         { _id: productId },
         { $inc: { quantity: count } }
       );
     }
-
+    totalAmount = Number(totalAmount.toFixed(2));
     if (orderData.payment === "Razorpay" || orderData.payment === "Wallet") {
       console.log("total amount :", totalAmount);
       const data = {

@@ -203,6 +203,9 @@
                                 <span>Add Address</span>
                                 <i class="icon-long-arrow-right"></i>
                               </button>
+                              <input type="hidden" name="referer" value="<%= req.originalUrl %>">
+
+
                         </form>
                       </div>
                   </div>
@@ -226,8 +229,9 @@
                                         House Name: <%= address.houseName %><br>
                                           Pincode: <%= address.pin %><br>
                                             <% console.log(address._id)%>
-                                              <a href="/editAddress?ind=<%= index %>">Edit <i class="icon-edit"></i></a>
-                            </label>
+                                            <% console.log(currentUrl)%>
+                                            <a href="/editAddress?ind=<%= index %>&referer=<%= currentUrl %>">Edit <i class="icon-edit"></i></a>
+                                          </label>
                           </div>
                         </div>
                       </div>
@@ -243,7 +247,6 @@
                 href="#ship_different_address" role="button" aria-expanded="false"
                 aria-controls="ship_different_address"><input type="checkbox" value="1" id="c_ship_different_address">
                 Ship To A Different Address?</label>
-              <form action="/addAddress" id="form" method="post">
                 <div class="collapse" id="ship_different_address">
                   <div class="py-2">
                     <div class="form-group row">
@@ -439,7 +442,6 @@
 
 
               <!-- Wallet  -->
-              <%console.log("wallett :",wallet.wallet)%>
               <%if(wallet.wallet>0) {%>
                 <div class="border p-3 mb-5">
                   <h3 class="h6 mb-0">
@@ -574,7 +576,7 @@
           emailError.textContent = "Email is required.";
           event.preventDefault();
         } else if (!emailPattern.test(emailInput.value)) {
-          emailError.textContent = "Invalid email format.";
+          emailError.textContent = "Invalid email format";
           event.preventDefault();
         } else {
           emailError.textContent = "";

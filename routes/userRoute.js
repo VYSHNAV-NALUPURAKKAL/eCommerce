@@ -128,7 +128,7 @@ userRoute.get("/otp-verification", userController.showVerifyOTPPage);
 
 userRoute.post("/otp-verification", userController.verifyOTP);
 
-userRoute.get("/resend-otp", userAuth.isLogout, userController.resendOtp);
+userRoute.get("/resend-otp", userController.resendOtp);
 
 userRoute.post("/invoice",userController.invoice);
 
